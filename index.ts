@@ -1,4 +1,5 @@
 import * as $ from "jquery";
+import * as Promise from "bluebird";
 
 export interface Config 
 {
@@ -32,6 +33,22 @@ export class Client
 
     private loadWidget(container: Element)
     {
-        
+        // TODO: Load the widget + jquery datepicker.
+        this.ensureJqueryDatepicker().then((result) =>
+        {
+            
+        })
+    }
+
+    private ensureJqueryDatepicker()
+    {
+        return new Promise<void>((resolve, reject) =>
+        {
+            // TODO: If jquery datepicker exists, resolve immediately. Else load it from npmcdn.
+
+            const script = document.createElement("script");
+            script.src = "";
+            script.type = "text/javascript";
+        });
     }
 }
