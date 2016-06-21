@@ -1,3 +1,5 @@
+import * as $ from "jquery";
+
 export interface Config 
 {
     label?: string;
@@ -6,13 +8,7 @@ export interface Config
     allowChangeFromCheckout?: boolean;
 }
 
-// Make DeliverOn available to the browser window without requirejs or systemjs
-if (typeof window !== "undefined")
-{
-    window["DeliverOn"] = DeliverOn;
-}
-
-export default class DeliverOn
+export class Client
 {
     constructor(config: Config)
     {
