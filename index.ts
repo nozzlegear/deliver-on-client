@@ -10,7 +10,7 @@ export class DeliverOn
 {
     constructor(config: Config)
     {
-        console.log("Starting Deliver On with settings", config);
+        console.log("Starting Deliveron Client with settings", config);
 
         // Search for a data-deliveronhost to load the widget into. If it doesn't exist,
         // determine which theme the shop is using and load the widget into the appropriate element.
@@ -33,6 +33,3 @@ export class DeliverOn
         
     }
 }
-
-// Make the class available to the browser window
-self["DeliverOn"] = DeliverOn;
