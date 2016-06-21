@@ -6,7 +6,13 @@ export interface Config
     allowChangeFromCheckout?: boolean;
 }
 
-export class DeliverOn
+// Make DeliverOn available to the browser window without requirejs or systemjs
+if (typeof window !== "undefined")
+{
+    window["DeliverOn"] = DeliverOn;
+}
+
+export default class DeliverOn
 {
     constructor(config: Config)
     {

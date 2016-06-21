@@ -7,6 +7,10 @@
     }
 })(function (require, exports) {
     "use strict";
+    // Make DeliverOn available to the browser window without requirejs or systemjs
+    if (typeof window !== "undefined") {
+        window["DeliverOn"] = DeliverOn;
+    }
     var DeliverOn = (function () {
         function DeliverOn(config) {
             this.jquery = $.noConflict();
@@ -22,5 +26,6 @@
         };
         return DeliverOn;
     }());
-    exports.DeliverOn = DeliverOn;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = DeliverOn;
 });
