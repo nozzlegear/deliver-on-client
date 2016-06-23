@@ -2,7 +2,7 @@ export interface Theme {
     id: number,
     name: string,
     element: {
-        placement: "before" | "after" | "in",
+        placement: "before" | "in",
         selector: string,
     }
 }

@@ -2,257 +2,2845 @@ var DeliverOn =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-
-
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
-
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var $ = __webpack_require__(21);
+	var themes_1 = __webpack_require__(3);
+	//Import libs and styles
+	__webpack_require__(14);
+	__webpack_require__(6);
+	__webpack_require__(7);
+	__webpack_require__(8);
+	__webpack_require__(9);
+	__webpack_require__(11);
+	__webpack_require__(10);
+	__webpack_require__(12);
+	__webpack_require__(13);
+	__webpack_require__(19);
+	__webpack_require__(20);
+	var Client = (function () {
+	    function Client(config) {
+	        var _this = this;
+	        this.config = config;
+	        this.theme = {
+	            id: Shopify.theme.id,
+	            name: Shopify.theme.name,
+	            element: {
+	                selector: "[data-deliveronhost]",
+	                placement: "in",
+	            }
+	        };
+	        console.log("Starting Deliveron Client with settings", config);
+	        // Search for a data-deliveronhost to load the widget into. If it doesn't exist,
+	        // determine which theme the shop is using and load the widget into the appropriate element.
+	        if (!document.querySelector(this.theme.element.selector)) {
+	            var themeId_1 = Shopify.theme.id;
+	            var matchingThemes = themes_1.Themes.filter(function (theme, index) { return theme.id === themeId_1; });
+	            // Try to find a matching theme and container
+	            matchingThemes.forEach(function (theme, index) {
+	                if (document.querySelector(theme.element.selector)) {
+	                    _this.theme = theme;
+	                    return false;
+	                }
+	            });
+	            if (!this.theme) {
+	                // TODO: Make an educated guess as to where the widget should be inserted into the DOM.
+	                throw new Error("No suitable Deliveron picker host found.");
+	            }
+	        }
+	        //Add the theme name as a class on the body element
+	        document.body.classList.add(Shopify.theme.name);
+	        this.loadWidget();
+	    }
+	    Client.prototype.loadWidget = function () {
+	        var container = document.createElement("div");
+	        container.id = "deliveron-container";
+	        var input = document.createElement("input");
+	        input.placeholder = this.config.label;
+	        input.type = "text";
+	        input.id = "deliveron-picker";
+	        container.appendChild(input);
+	        var placement = this.theme.element.placement;
+	        var element = document.querySelector(this.theme.element.selector);
+	        if (placement === "in") {
+	            element.appendChild(container);
+	        }
+	        else {
+	            element.parentNode.insertBefore(container, element);
+	        }
+	        $(input)["datepicker"]({
+	            minDate: new Date(),
+	            language: "en",
+	        });
+	    };
+	    return Client;
+	}());
+	exports.Client = Client;
+	if (false) {
+	    window["deli"] = new Client({
+	        label: "Pick your delivery date:",
+	        format: "mm/dd/yyyy",
+	        addPickerToCheckout: false,
+	        allowChangeFromCheckout: false,
+	    });
+	}
+
+
+/***/ },
+/* 1 */
 /***/ function(module, exports) {
 
-	"use strict";var _typeof6=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj;};var DeliverOn=/******/function(modules){// webpackBootstrap
-	/******/// The module cache
-	/******/var installedModules={};/******/// The require function
-	/******/function __webpack_require__(moduleId){/******/// Check if module is in cache
-	/******/if(installedModules[moduleId])/******/return installedModules[moduleId].exports;/******/// Create a new module (and put it into the cache)
-	/******/var module=installedModules[moduleId]={/******/exports:{},/******/id:moduleId,/******/loaded:false/******/};/******/// Execute the module function
-	/******/modules[moduleId].call(module.exports,module,module.exports,__webpack_require__);/******/// Flag the module as loaded
-	/******/module.loaded=true;/******/// Return the exports of the module
-	/******/return module.exports;/******/}/******/// expose the modules object (__webpack_modules__)
-	/******/__webpack_require__.m=modules;/******/// expose the module cache
-	/******/__webpack_require__.c=installedModules;/******/// __webpack_public_path__
-	/******/__webpack_require__.p="";/******/// Load entry module and return exports
-	/******/return __webpack_require__(0);/******/}(/************************************************************************//******/[/* 0 *//***/function(module,exports){"use strict";var _typeof5=typeof Symbol==="function"&&_typeof6(Symbol.iterator)==="symbol"?function(obj){return typeof obj==="undefined"?"undefined":_typeof6(obj);}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj==="undefined"?"undefined":_typeof6(obj);};var DeliverOn=/******/function(modules){// webpackBootstrap
-	/******/// The module cache
-	/******/var installedModules={};/******/// The require function
-	/******/function __webpack_require__(moduleId){/******/// Check if module is in cache
-	/******/if(installedModules[moduleId])/******/return installedModules[moduleId].exports;/******/// Create a new module (and put it into the cache)
-	/******/var module=installedModules[moduleId]={/******/exports:{},/******/id:moduleId,/******/loaded:false/******/};/******/// Execute the module function
-	/******/modules[moduleId].call(module.exports,module,module.exports,__webpack_require__);/******/// Flag the module as loaded
-	/******/module.loaded=true;/******/// Return the exports of the module
-	/******/return module.exports;/******/}/******/// expose the modules object (__webpack_modules__)
-	/******/__webpack_require__.m=modules;/******/// expose the module cache
-	/******/__webpack_require__.c=installedModules;/******/// __webpack_public_path__
-	/******/__webpack_require__.p="";/******/// Load entry module and return exports
-	/******/return __webpack_require__(0);/******/}(/************************************************************************//******/[/* 0 *//***/function(module,exports){"use strict";var _typeof4=typeof Symbol==="function"&&_typeof5(Symbol.iterator)==="symbol"?function(obj){return typeof obj==="undefined"?"undefined":_typeof5(obj);}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj==="undefined"?"undefined":_typeof5(obj);};var DeliverOn=/******/function(modules){// webpackBootstrap
-	/******/// The module cache
-	/******/var installedModules={};/******/// The require function
-	/******/function __webpack_require__(moduleId){/******/// Check if module is in cache
-	/******/if(installedModules[moduleId])/******/return installedModules[moduleId].exports;/******/// Create a new module (and put it into the cache)
-	/******/var module=installedModules[moduleId]={/******/exports:{},/******/id:moduleId,/******/loaded:false/******/};/******/// Execute the module function
-	/******/modules[moduleId].call(module.exports,module,module.exports,__webpack_require__);/******/// Flag the module as loaded
-	/******/module.loaded=true;/******/// Return the exports of the module
-	/******/return module.exports;/******/}/******/// expose the modules object (__webpack_modules__)
-	/******/__webpack_require__.m=modules;/******/// expose the module cache
-	/******/__webpack_require__.c=installedModules;/******/// __webpack_public_path__
-	/******/__webpack_require__.p="";/******/// Load entry module and return exports
-	/******/return __webpack_require__(0);/******/}(/************************************************************************//******/[/* 0 *//***/function(module,exports){"use strict";var _typeof3=typeof Symbol==="function"&&_typeof4(Symbol.iterator)==="symbol"?function(obj){return typeof obj==="undefined"?"undefined":_typeof4(obj);}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj==="undefined"?"undefined":_typeof4(obj);};var DeliverOn=/******/function(modules){// webpackBootstrap
-	/******/// The module cache
-	/******/var installedModules={};/******/// The require function
-	/******/function __webpack_require__(moduleId){/******/// Check if module is in cache
-	/******/if(installedModules[moduleId])/******/return installedModules[moduleId].exports;/******/// Create a new module (and put it into the cache)
-	/******/var module=installedModules[moduleId]={/******/exports:{},/******/id:moduleId,/******/loaded:false/******/};/******/// Execute the module function
-	/******/modules[moduleId].call(module.exports,module,module.exports,__webpack_require__);/******/// Flag the module as loaded
-	/******/module.loaded=true;/******/// Return the exports of the module
-	/******/return module.exports;/******/}/******/// expose the modules object (__webpack_modules__)
-	/******/__webpack_require__.m=modules;/******/// expose the module cache
-	/******/__webpack_require__.c=installedModules;/******/// __webpack_public_path__
-	/******/__webpack_require__.p="";/******/// Load entry module and return exports
-	/******/return __webpack_require__(0);/******/}(/************************************************************************//******/[/* 0 *//***/function(module,exports){"use strict";var _typeof2=typeof Symbol==="function"&&_typeof3(Symbol.iterator)==="symbol"?function(obj){return typeof obj==="undefined"?"undefined":_typeof3(obj);}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj==="undefined"?"undefined":_typeof3(obj);};var DeliverOn=/******/function(modules){// webpackBootstrap
-	/******/// The module cache
-	/******/var installedModules={};/******/// The require function
-	/******/function __webpack_require__(moduleId){/******/// Check if module is in cache
-	/******/if(installedModules[moduleId])/******/return installedModules[moduleId].exports;/******/// Create a new module (and put it into the cache)
-	/******/var module=installedModules[moduleId]={/******/exports:{},/******/id:moduleId,/******/loaded:false/******/};/******/// Execute the module function
-	/******/modules[moduleId].call(module.exports,module,module.exports,__webpack_require__);/******/// Flag the module as loaded
-	/******/module.loaded=true;/******/// Return the exports of the module
-	/******/return module.exports;/******/}/******/// expose the modules object (__webpack_modules__)
-	/******/__webpack_require__.m=modules;/******/// expose the module cache
-	/******/__webpack_require__.c=installedModules;/******/// __webpack_public_path__
-	/******/__webpack_require__.p="";/******/// Load entry module and return exports
-	/******/return __webpack_require__(0);/******/}(/************************************************************************//******/[/* 0 *//***/function(module,exports){"use strict";var _typeof=typeof Symbol==="function"&&_typeof2(Symbol.iterator)==="symbol"?function(obj){return typeof obj==="undefined"?"undefined":_typeof2(obj);}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj==="undefined"?"undefined":_typeof2(obj);};var DeliverOn=/******/function(modules){// webpackBootstrap
-	/******/// The module cache
-	/******/var installedModules={};/******/// The require function
-	/******/function __webpack_require__(moduleId){/******/// Check if module is in cache
-	/******/if(installedModules[moduleId])/******/return installedModules[moduleId].exports;/******/// Create a new module (and put it into the cache)
-	/******/var module=installedModules[moduleId]={/******/exports:{},/******/id:moduleId,/******/loaded:false/******/};/******/// Execute the module function
-	/******/modules[moduleId].call(module.exports,module,module.exports,__webpack_require__);/******/// Flag the module as loaded
-	/******/module.loaded=true;/******/// Return the exports of the module
-	/******/return module.exports;/******/}/******/// expose the modules object (__webpack_modules__)
-	/******/__webpack_require__.m=modules;/******/// expose the module cache
-	/******/__webpack_require__.c=installedModules;/******/// __webpack_public_path__
-	/******/__webpack_require__.p="";/******/// Load entry module and return exports
-	/******/return __webpack_require__(0);/******/}(/************************************************************************//******/[/* 0 *//***/function(module,exports,__webpack_require__){"use strict";var $=__webpack_require__(5);var Promise=__webpack_require__(4);var themes_1=__webpack_require__(3);var Client=function(){function Client(config){var _this=this;this.config=config;this.theme={id:Shopify.theme.id,name:Shopify.theme.name,element:{selector:"[data-deliveronhost]",placement:"in"}};this.jquery=$.noConflict();console.log("Starting Deliveron Client with settings",config);// Search for a data-deliveronhost to load the widget into. If it doesn't exist,
-	// determine which theme the shop is using and load the widget into the appropriate element.
-	if(!document.querySelector(this.theme.element.selector)){var themeId_1=Shopify.theme.id;var matchingThemes=themes_1.Themes.filter(function(theme,index){return theme.id===themeId_1;});// Try to find a matching theme and container
-	matchingThemes.forEach(function(theme,index){if(document.querySelector(theme.element.selector)){_this.theme=theme;return false;}});if(!this.theme){}}this.loadWidget();}Client.prototype.loadWidget=function(){console.log("Ensuring jQuery datepicker");// TODO: Load the widget + jquery datepicker.
-	this.ensureJqueryDatepicker().then(function(result){});};Client.prototype.ensureJqueryDatepicker=function(){return new Promise(function(resolve,reject){// TODO: If jquery datepicker exists, resolve immediately. Else load it from npmcdn.
-	var script=document.createElement("script");script.src="";script.type="text/javascript";});};return Client;}();exports.Client=Client;if(true){window["deli"]=new Client({label:"Pick your delivery date:",format:"mm/dd/yyyy",addPickerToCheckout:false,allowChangeFromCheckout:false});}/***/},/* 1 *//***/function(module,exports,__webpack_require__){/* WEBPACK VAR INJECTION */(function(setImmediate,clearImmediate){var nextTick=__webpack_require__(2).nextTick;var apply=Function.prototype.apply;var slice=Array.prototype.slice;var immediateIds={};var nextImmediateId=0;// DOM APIs, for completeness
-	exports.setTimeout=function(){return new Timeout(apply.call(setTimeout,window,arguments),clearTimeout);};exports.setInterval=function(){return new Timeout(apply.call(setInterval,window,arguments),clearInterval);};exports.clearTimeout=exports.clearInterval=function(timeout){timeout.close();};function Timeout(id,clearFn){this._id=id;this._clearFn=clearFn;}Timeout.prototype.unref=Timeout.prototype.ref=function(){};Timeout.prototype.close=function(){this._clearFn.call(window,this._id);};// Does not start the time, just sets up the members needed.
-	exports.enroll=function(item,msecs){clearTimeout(item._idleTimeoutId);item._idleTimeout=msecs;};exports.unenroll=function(item){clearTimeout(item._idleTimeoutId);item._idleTimeout=-1;};exports._unrefActive=exports.active=function(item){clearTimeout(item._idleTimeoutId);var msecs=item._idleTimeout;if(msecs>=0){item._idleTimeoutId=setTimeout(function onTimeout(){if(item._onTimeout)item._onTimeout();},msecs);}};// That's not how node.js implements it but the exposed api is the same.
-	exports.setImmediate=typeof setImmediate==="function"?setImmediate:function(fn){var id=nextImmediateId++;var args=arguments.length<2?false:slice.call(arguments,1);immediateIds[id]=true;nextTick(function onNextTick(){if(immediateIds[id]){// fn.call() is faster so we optimize for the common use-case
-	// @see http://jsperf.com/call-apply-segu
-	if(args){fn.apply(null,args);}else{fn.call(null);}// Prevent ids from leaking
-	exports.clearImmediate(id);}});return id;};exports.clearImmediate=typeof clearImmediate==="function"?clearImmediate:function(id){delete immediateIds[id];};/* WEBPACK VAR INJECTION */}).call(exports,__webpack_require__(1).setImmediate,__webpack_require__(1).clearImmediate);/***/},/* 2 *//***/function(module,exports){// shim for using process in browser
-	var process=module.exports={};// cached from whatever global is present so that test runners that stub it
-	// don't break things.  But we need to wrap it in a try catch in case it is
-	// wrapped in strict mode code which doesn't define any globals.  It's inside a
-	// function because try/catches deoptimize in certain engines.
-	var cachedSetTimeout;var cachedClearTimeout;(function(){try{cachedSetTimeout=setTimeout;}catch(e){cachedSetTimeout=function cachedSetTimeout(){throw new Error('setTimeout is not defined');};}try{cachedClearTimeout=clearTimeout;}catch(e){cachedClearTimeout=function cachedClearTimeout(){throw new Error('clearTimeout is not defined');};}})();var queue=[];var draining=false;var currentQueue;var queueIndex=-1;function cleanUpNextTick(){if(!draining||!currentQueue){return;}draining=false;if(currentQueue.length){queue=currentQueue.concat(queue);}else{queueIndex=-1;}if(queue.length){drainQueue();}}function drainQueue(){if(draining){return;}var timeout=cachedSetTimeout(cleanUpNextTick);draining=true;var len=queue.length;while(len){currentQueue=queue;queue=[];while(++queueIndex<len){if(currentQueue){currentQueue[queueIndex].run();}}queueIndex=-1;len=queue.length;}currentQueue=null;draining=false;cachedClearTimeout(timeout);}process.nextTick=function(fun){var args=new Array(arguments.length-1);if(arguments.length>1){for(var i=1;i<arguments.length;i++){args[i-1]=arguments[i];}}queue.push(new Item(fun,args));if(queue.length===1&&!draining){cachedSetTimeout(drainQueue,0);}};// v8 likes predictible objects
-	function Item(fun,array){this.fun=fun;this.array=array;}Item.prototype.run=function(){this.fun.apply(null,this.array);};process.title='browser';process.browser=true;process.env={};process.argv=[];process.version='';// empty string to avoid regexp issues
-	process.versions={};function noop(){}process.on=noop;process.addListener=noop;process.once=noop;process.off=noop;process.removeListener=noop;process.removeAllListeners=noop;process.emit=noop;process.binding=function(name){throw new Error('process.binding is not supported');};process.cwd=function(){return'/';};process.chdir=function(dir){throw new Error('process.chdir is not supported');};process.umask=function(){return 0;};/***/},/* 3 *//***/function(module,exports){"use strict";/**
-							 * Known themes used to tell the client where to insert the datepicker.
-							 */exports.Themes=[{id:79146374,name:"launchpad-star",element:{placement:"before",selector:"input.btn--secondary.update-cart[name=update]"}}];/***/},/* 4 *//***/function(module,exports,__webpack_require__){/* WEBPACK VAR INJECTION */(function(process,global,setImmediate){/* @preserve
-							 * The MIT License (MIT)
-							 * 
-							 * Copyright (c) 2013-2015 Petka Antonov
-							 * 
-							 * Permission is hereby granted, free of charge, to any person obtaining a copy
-							 * of this software and associated documentation files (the "Software"), to deal
-							 * in the Software without restriction, including without limitation the rights
-							 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-							 * copies of the Software, and to permit persons to whom the Software is
-							 * furnished to do so, subject to the following conditions:
-							 * 
-							 * The above copyright notice and this permission notice shall be included in
-							 * all copies or substantial portions of the Software.
-							 * 
-							 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-							 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-							 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-							 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-							 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-							 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-							 * THE SOFTWARE.
-							 * 
-							 *//**
-							 * bluebird build version 3.4.1
-							 * Features enabled: core, race, call_get, generators, map, nodeify, promisify, props, reduce, settle, some, using, timers, filter, any, each
-							*/!function(e){if(true)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.Promise=e();}}(function(){var define,module,exports;return function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof _dereq_=="function"&&_dereq_;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f;}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e);},l,l.exports,e,t,n,r);}return n[o].exports;}var i=typeof _dereq_=="function"&&_dereq_;for(var o=0;o<r.length;o++){s(r[o]);}return s;}({1:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise){var SomePromiseArray=Promise._SomePromiseArray;function any(promises){var ret=new SomePromiseArray(promises);var promise=ret.promise();ret.setHowMany(1);ret.setUnwrap();ret.init();return promise;}Promise.any=function(promises){return any(promises);};Promise.prototype.any=function(){return any(this);};};},{}],2:[function(_dereq_,module,exports){"use strict";var firstLineError;try{throw new Error();}catch(e){firstLineError=e;}var schedule=_dereq_("./schedule");var Queue=_dereq_("./queue");var util=_dereq_("./util");function Async(){this._customScheduler=false;this._isTickUsed=false;this._lateQueue=new Queue(16);this._normalQueue=new Queue(16);this._haveDrainedQueues=false;this._trampolineEnabled=true;var self=this;this.drainQueues=function(){self._drainQueues();};this._schedule=schedule;}Async.prototype.setScheduler=function(fn){var prev=this._schedule;this._schedule=fn;this._customScheduler=true;return prev;};Async.prototype.hasCustomScheduler=function(){return this._customScheduler;};Async.prototype.enableTrampoline=function(){this._trampolineEnabled=true;};Async.prototype.disableTrampolineIfNecessary=function(){if(util.hasDevTools){this._trampolineEnabled=false;}};Async.prototype.haveItemsQueued=function(){return this._isTickUsed||this._haveDrainedQueues;};Async.prototype.fatalError=function(e,isNode){if(isNode){process.stderr.write("Fatal "+(e instanceof Error?e.stack:e)+"\n");process.exit(2);}else{this.throwLater(e);}};Async.prototype.throwLater=function(fn,arg){if(arguments.length===1){arg=fn;fn=function fn(){throw arg;};}if(typeof setTimeout!=="undefined"){setTimeout(function(){fn(arg);},0);}else try{this._schedule(function(){fn(arg);});}catch(e){throw new Error("No async scheduler available\n\n    See http://goo.gl/MqrFmX\n");}};function AsyncInvokeLater(fn,receiver,arg){this._lateQueue.push(fn,receiver,arg);this._queueTick();}function AsyncInvoke(fn,receiver,arg){this._normalQueue.push(fn,receiver,arg);this._queueTick();}function AsyncSettlePromises(promise){this._normalQueue._pushOne(promise);this._queueTick();}if(!util.hasDevTools){Async.prototype.invokeLater=AsyncInvokeLater;Async.prototype.invoke=AsyncInvoke;Async.prototype.settlePromises=AsyncSettlePromises;}else{Async.prototype.invokeLater=function(fn,receiver,arg){if(this._trampolineEnabled){AsyncInvokeLater.call(this,fn,receiver,arg);}else{this._schedule(function(){setTimeout(function(){fn.call(receiver,arg);},100);});}};Async.prototype.invoke=function(fn,receiver,arg){if(this._trampolineEnabled){AsyncInvoke.call(this,fn,receiver,arg);}else{this._schedule(function(){fn.call(receiver,arg);});}};Async.prototype.settlePromises=function(promise){if(this._trampolineEnabled){AsyncSettlePromises.call(this,promise);}else{this._schedule(function(){promise._settlePromises();});}};}Async.prototype.invokeFirst=function(fn,receiver,arg){this._normalQueue.unshift(fn,receiver,arg);this._queueTick();};Async.prototype._drainQueue=function(queue){while(queue.length()>0){var fn=queue.shift();if(typeof fn!=="function"){fn._settlePromises();continue;}var receiver=queue.shift();var arg=queue.shift();fn.call(receiver,arg);}};Async.prototype._drainQueues=function(){this._drainQueue(this._normalQueue);this._reset();this._haveDrainedQueues=true;this._drainQueue(this._lateQueue);};Async.prototype._queueTick=function(){if(!this._isTickUsed){this._isTickUsed=true;this._schedule(this.drainQueues);}};Async.prototype._reset=function(){this._isTickUsed=false;};module.exports=Async;module.exports.firstLineError=firstLineError;},{"./queue":26,"./schedule":29,"./util":36}],3:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise,INTERNAL,tryConvertToPromise,debug){var calledBind=false;var rejectThis=function rejectThis(_,e){this._reject(e);};var targetRejected=function targetRejected(e,context){context.promiseRejectionQueued=true;context.bindingPromise._then(rejectThis,rejectThis,null,this,e);};var bindingResolved=function bindingResolved(thisArg,context){if((this._bitField&50397184)===0){this._resolveCallback(context.target);}};var bindingRejected=function bindingRejected(e,context){if(!context.promiseRejectionQueued)this._reject(e);};Promise.prototype.bind=function(thisArg){if(!calledBind){calledBind=true;Promise.prototype._propagateFrom=debug.propagateFromFunction();Promise.prototype._boundValue=debug.boundValueFunction();}var maybePromise=tryConvertToPromise(thisArg);var ret=new Promise(INTERNAL);ret._propagateFrom(this,1);var target=this._target();ret._setBoundTo(maybePromise);if(maybePromise instanceof Promise){var context={promiseRejectionQueued:false,promise:ret,target:target,bindingPromise:maybePromise};target._then(INTERNAL,targetRejected,undefined,ret,context);maybePromise._then(bindingResolved,bindingRejected,undefined,ret,context);ret._setOnCancel(maybePromise);}else{ret._resolveCallback(target);}return ret;};Promise.prototype._setBoundTo=function(obj){if(obj!==undefined){this._bitField=this._bitField|2097152;this._boundTo=obj;}else{this._bitField=this._bitField&~2097152;}};Promise.prototype._isBound=function(){return(this._bitField&2097152)===2097152;};Promise.bind=function(thisArg,value){return Promise.resolve(value).bind(thisArg);};};},{}],4:[function(_dereq_,module,exports){"use strict";var old;if(typeof Promise!=="undefined")old=Promise;function noConflict(){try{if(Promise===bluebird)Promise=old;}catch(e){}return bluebird;}var bluebird=_dereq_("./promise")();bluebird.noConflict=noConflict;module.exports=bluebird;},{"./promise":22}],5:[function(_dereq_,module,exports){"use strict";var cr=Object.create;if(cr){var callerCache=cr(null);var getterCache=cr(null);callerCache[" size"]=getterCache[" size"]=0;}module.exports=function(Promise){var util=_dereq_("./util");var canEvaluate=util.canEvaluate;var isIdentifier=util.isIdentifier;var getMethodCaller;var getGetter;if(false){var makeMethodCaller=function makeMethodCaller(methodName){return new Function("ensureMethod","                                    \n\
-							        return function(obj) {                                               \n\
-							            'use strict'                                                     \n\
-							            var len = this.length;                                           \n\
-							            ensureMethod(obj, 'methodName');                                 \n\
-							            switch(len) {                                                    \n\
-							                case 1: return obj.methodName(this[0]);                      \n\
-							                case 2: return obj.methodName(this[0], this[1]);             \n\
-							                case 3: return obj.methodName(this[0], this[1], this[2]);    \n\
-							                case 0: return obj.methodName();                             \n\
-							                default:                                                     \n\
-							                    return obj.methodName.apply(obj, this);                  \n\
-							            }                                                                \n\
-							        };                                                                   \n\
-							        ".replace(/methodName/g,methodName))(ensureMethod);};var makeGetter=function makeGetter(propertyName){return new Function("obj","                                             \n\
-							        'use strict';                                                        \n\
-							        return obj.propertyName;                                             \n\
-							        ".replace("propertyName",propertyName));};var getCompiled=function getCompiled(name,compiler,cache){var ret=cache[name];if(typeof ret!=="function"){if(!isIdentifier(name)){return null;}ret=compiler(name);cache[name]=ret;cache[" size"]++;if(cache[" size"]>512){var keys=Object.keys(cache);for(var i=0;i<256;++i){delete cache[keys[i]];}cache[" size"]=keys.length-256;}}return ret;};getMethodCaller=function getMethodCaller(name){return getCompiled(name,makeMethodCaller,callerCache);};getGetter=function getGetter(name){return getCompiled(name,makeGetter,getterCache);};}function ensureMethod(obj,methodName){var fn;if(obj!=null)fn=obj[methodName];if(typeof fn!=="function"){var message="Object "+util.classString(obj)+" has no method '"+util.toString(methodName)+"'";throw new Promise.TypeError(message);}return fn;}function caller(obj){var methodName=this.pop();var fn=ensureMethod(obj,methodName);return fn.apply(obj,this);}Promise.prototype.call=function(methodName){var args=[].slice.call(arguments,1);;if(false){if(canEvaluate){var maybeCaller=getMethodCaller(methodName);if(maybeCaller!==null){return this._then(maybeCaller,undefined,undefined,args,undefined);}}}args.push(methodName);return this._then(caller,undefined,undefined,args,undefined);};function namedGetter(obj){return obj[this];}function indexedGetter(obj){var index=+this;if(index<0)index=Math.max(0,index+obj.length);return obj[index];}Promise.prototype.get=function(propertyName){var isIndex=typeof propertyName==="number";var getter;if(!isIndex){if(canEvaluate){var maybeGetter=getGetter(propertyName);getter=maybeGetter!==null?maybeGetter:namedGetter;}else{getter=namedGetter;}}else{getter=indexedGetter;}return this._then(getter,undefined,undefined,propertyName,undefined);};};},{"./util":36}],6:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise,PromiseArray,apiRejection,debug){var util=_dereq_("./util");var tryCatch=util.tryCatch;var errorObj=util.errorObj;var async=Promise._async;Promise.prototype["break"]=Promise.prototype.cancel=function(){if(!debug.cancellation())return this._warn("cancellation is disabled");var promise=this;var child=promise;while(promise.isCancellable()){if(!promise._cancelBy(child)){if(child._isFollowing()){child._followee().cancel();}else{child._cancelBranched();}break;}var parent=promise._cancellationParent;if(parent==null||!parent.isCancellable()){if(promise._isFollowing()){promise._followee().cancel();}else{promise._cancelBranched();}break;}else{if(promise._isFollowing())promise._followee().cancel();child=promise;promise=parent;}}};Promise.prototype._branchHasCancelled=function(){this._branchesRemainingToCancel--;};Promise.prototype._enoughBranchesHaveCancelled=function(){return this._branchesRemainingToCancel===undefined||this._branchesRemainingToCancel<=0;};Promise.prototype._cancelBy=function(canceller){if(canceller===this){this._branchesRemainingToCancel=0;this._invokeOnCancel();return true;}else{this._branchHasCancelled();if(this._enoughBranchesHaveCancelled()){this._invokeOnCancel();return true;}}return false;};Promise.prototype._cancelBranched=function(){if(this._enoughBranchesHaveCancelled()){this._cancel();}};Promise.prototype._cancel=function(){if(!this.isCancellable())return;this._setCancelled();async.invoke(this._cancelPromises,this,undefined);};Promise.prototype._cancelPromises=function(){if(this._length()>0)this._settlePromises();};Promise.prototype._unsetOnCancel=function(){this._onCancelField=undefined;};Promise.prototype.isCancellable=function(){return this.isPending()&&!this.isCancelled();};Promise.prototype._doInvokeOnCancel=function(onCancelCallback,internalOnly){if(util.isArray(onCancelCallback)){for(var i=0;i<onCancelCallback.length;++i){this._doInvokeOnCancel(onCancelCallback[i],internalOnly);}}else if(onCancelCallback!==undefined){if(typeof onCancelCallback==="function"){if(!internalOnly){var e=tryCatch(onCancelCallback).call(this._boundValue());if(e===errorObj){this._attachExtraTrace(e.e);async.throwLater(e.e);}}}else{onCancelCallback._resultCancelled(this);}}};Promise.prototype._invokeOnCancel=function(){var onCancelCallback=this._onCancel();this._unsetOnCancel();async.invoke(this._doInvokeOnCancel,this,onCancelCallback);};Promise.prototype._invokeInternalOnCancel=function(){if(this.isCancellable()){this._doInvokeOnCancel(this._onCancel(),true);this._unsetOnCancel();}};Promise.prototype._resultCancelled=function(){this.cancel();};};},{"./util":36}],7:[function(_dereq_,module,exports){"use strict";module.exports=function(NEXT_FILTER){var util=_dereq_("./util");var getKeys=_dereq_("./es5").keys;var tryCatch=util.tryCatch;var errorObj=util.errorObj;function catchFilter(instances,cb,promise){return function(e){var boundTo=promise._boundValue();predicateLoop:for(var i=0;i<instances.length;++i){var item=instances[i];if(item===Error||item!=null&&item.prototype instanceof Error){if(e instanceof item){return tryCatch(cb).call(boundTo,e);}}else if(typeof item==="function"){var matchesPredicate=tryCatch(item).call(boundTo,e);if(matchesPredicate===errorObj){return matchesPredicate;}else if(matchesPredicate){return tryCatch(cb).call(boundTo,e);}}else if(util.isObject(e)){var keys=getKeys(item);for(var j=0;j<keys.length;++j){var key=keys[j];if(item[key]!=e[key]){continue predicateLoop;}}return tryCatch(cb).call(boundTo,e);}}return NEXT_FILTER;};}return catchFilter;};},{"./es5":13,"./util":36}],8:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise){var longStackTraces=false;var contextStack=[];Promise.prototype._promiseCreated=function(){};Promise.prototype._pushContext=function(){};Promise.prototype._popContext=function(){return null;};Promise._peekContext=Promise.prototype._peekContext=function(){};function Context(){this._trace=new Context.CapturedTrace(peekContext());}Context.prototype._pushContext=function(){if(this._trace!==undefined){this._trace._promiseCreated=null;contextStack.push(this._trace);}};Context.prototype._popContext=function(){if(this._trace!==undefined){var trace=contextStack.pop();var ret=trace._promiseCreated;trace._promiseCreated=null;return ret;}return null;};function createContext(){if(longStackTraces)return new Context();}function peekContext(){var lastIndex=contextStack.length-1;if(lastIndex>=0){return contextStack[lastIndex];}return undefined;}Context.CapturedTrace=null;Context.create=createContext;Context.deactivateLongStackTraces=function(){};Context.activateLongStackTraces=function(){var Promise_pushContext=Promise.prototype._pushContext;var Promise_popContext=Promise.prototype._popContext;var Promise_PeekContext=Promise._peekContext;var Promise_peekContext=Promise.prototype._peekContext;var Promise_promiseCreated=Promise.prototype._promiseCreated;Context.deactivateLongStackTraces=function(){Promise.prototype._pushContext=Promise_pushContext;Promise.prototype._popContext=Promise_popContext;Promise._peekContext=Promise_PeekContext;Promise.prototype._peekContext=Promise_peekContext;Promise.prototype._promiseCreated=Promise_promiseCreated;longStackTraces=false;};longStackTraces=true;Promise.prototype._pushContext=Context.prototype._pushContext;Promise.prototype._popContext=Context.prototype._popContext;Promise._peekContext=Promise.prototype._peekContext=peekContext;Promise.prototype._promiseCreated=function(){var ctx=this._peekContext();if(ctx&&ctx._promiseCreated==null)ctx._promiseCreated=this;};};return Context;};},{}],9:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise,Context){var getDomain=Promise._getDomain;var async=Promise._async;var Warning=_dereq_("./errors").Warning;var util=_dereq_("./util");var canAttachTrace=util.canAttachTrace;var unhandledRejectionHandled;var possiblyUnhandledRejection;var bluebirdFramePattern=/[\\\/]bluebird[\\\/]js[\\\/](release|debug|instrumented)/;var stackFramePattern=null;var formatStack=null;var indentStackFrames=false;var printWarning;var debugging=!!(util.env("BLUEBIRD_DEBUG")!=0&&(true||util.env("BLUEBIRD_DEBUG")||util.env("NODE_ENV")==="development"));var warnings=!!(util.env("BLUEBIRD_WARNINGS")!=0&&(debugging||util.env("BLUEBIRD_WARNINGS")));var longStackTraces=!!(util.env("BLUEBIRD_LONG_STACK_TRACES")!=0&&(debugging||util.env("BLUEBIRD_LONG_STACK_TRACES")));var wForgottenReturn=util.env("BLUEBIRD_W_FORGOTTEN_RETURN")!=0&&(warnings||!!util.env("BLUEBIRD_W_FORGOTTEN_RETURN"));Promise.prototype.suppressUnhandledRejections=function(){var target=this._target();target._bitField=target._bitField&~1048576|524288;};Promise.prototype._ensurePossibleRejectionHandled=function(){if((this._bitField&524288)!==0)return;this._setRejectionIsUnhandled();async.invokeLater(this._notifyUnhandledRejection,this,undefined);};Promise.prototype._notifyUnhandledRejectionIsHandled=function(){fireRejectionEvent("rejectionHandled",unhandledRejectionHandled,undefined,this);};Promise.prototype._setReturnedNonUndefined=function(){this._bitField=this._bitField|268435456;};Promise.prototype._returnedNonUndefined=function(){return(this._bitField&268435456)!==0;};Promise.prototype._notifyUnhandledRejection=function(){if(this._isRejectionUnhandled()){var reason=this._settledValue();this._setUnhandledRejectionIsNotified();fireRejectionEvent("unhandledRejection",possiblyUnhandledRejection,reason,this);}};Promise.prototype._setUnhandledRejectionIsNotified=function(){this._bitField=this._bitField|262144;};Promise.prototype._unsetUnhandledRejectionIsNotified=function(){this._bitField=this._bitField&~262144;};Promise.prototype._isUnhandledRejectionNotified=function(){return(this._bitField&262144)>0;};Promise.prototype._setRejectionIsUnhandled=function(){this._bitField=this._bitField|1048576;};Promise.prototype._unsetRejectionIsUnhandled=function(){this._bitField=this._bitField&~1048576;if(this._isUnhandledRejectionNotified()){this._unsetUnhandledRejectionIsNotified();this._notifyUnhandledRejectionIsHandled();}};Promise.prototype._isRejectionUnhandled=function(){return(this._bitField&1048576)>0;};Promise.prototype._warn=function(message,shouldUseOwnTrace,promise){return warn(message,shouldUseOwnTrace,promise||this);};Promise.onPossiblyUnhandledRejection=function(fn){var domain=getDomain();possiblyUnhandledRejection=typeof fn==="function"?domain===null?fn:domain.bind(fn):undefined;};Promise.onUnhandledRejectionHandled=function(fn){var domain=getDomain();unhandledRejectionHandled=typeof fn==="function"?domain===null?fn:domain.bind(fn):undefined;};var disableLongStackTraces=function disableLongStackTraces(){};Promise.longStackTraces=function(){if(async.haveItemsQueued()&&!config.longStackTraces){throw new Error("cannot enable long stack traces after promises have been created\n\n    See http://goo.gl/MqrFmX\n");}if(!config.longStackTraces&&longStackTracesIsSupported()){var Promise_captureStackTrace=Promise.prototype._captureStackTrace;var Promise_attachExtraTrace=Promise.prototype._attachExtraTrace;config.longStackTraces=true;disableLongStackTraces=function disableLongStackTraces(){if(async.haveItemsQueued()&&!config.longStackTraces){throw new Error("cannot enable long stack traces after promises have been created\n\n    See http://goo.gl/MqrFmX\n");}Promise.prototype._captureStackTrace=Promise_captureStackTrace;Promise.prototype._attachExtraTrace=Promise_attachExtraTrace;Context.deactivateLongStackTraces();async.enableTrampoline();config.longStackTraces=false;};Promise.prototype._captureStackTrace=longStackTracesCaptureStackTrace;Promise.prototype._attachExtraTrace=longStackTracesAttachExtraTrace;Context.activateLongStackTraces();async.disableTrampolineIfNecessary();}};Promise.hasLongStackTraces=function(){return config.longStackTraces&&longStackTracesIsSupported();};var fireDomEvent=function(){try{var event=document.createEvent("CustomEvent");event.initCustomEvent("testingtheevent",false,true,{});util.global.dispatchEvent(event);return function(name,event){var domEvent=document.createEvent("CustomEvent");domEvent.initCustomEvent(name.toLowerCase(),false,true,event);return!util.global.dispatchEvent(domEvent);};}catch(e){}return function(){return false;};}();var fireGlobalEvent=function(){if(util.isNode){return function(){return process.emit.apply(process,arguments);};}else{if(!util.global){return function(){return false;};}return function(name){var methodName="on"+name.toLowerCase();var method=util.global[methodName];if(!method)return false;method.apply(util.global,[].slice.call(arguments,1));return true;};}}();function generatePromiseLifecycleEventObject(name,promise){return{promise:promise};}var eventToObjectGenerator={promiseCreated:generatePromiseLifecycleEventObject,promiseFulfilled:generatePromiseLifecycleEventObject,promiseRejected:generatePromiseLifecycleEventObject,promiseResolved:generatePromiseLifecycleEventObject,promiseCancelled:generatePromiseLifecycleEventObject,promiseChained:function promiseChained(name,promise,child){return{promise:promise,child:child};},warning:function warning(name,_warning){return{warning:_warning};},unhandledRejection:function unhandledRejection(name,reason,promise){return{reason:reason,promise:promise};},rejectionHandled:generatePromiseLifecycleEventObject};var activeFireEvent=function activeFireEvent(name){var globalEventFired=false;try{globalEventFired=fireGlobalEvent.apply(null,arguments);}catch(e){async.throwLater(e);globalEventFired=true;}var domEventFired=false;try{domEventFired=fireDomEvent(name,eventToObjectGenerator[name].apply(null,arguments));}catch(e){async.throwLater(e);domEventFired=true;}return domEventFired||globalEventFired;};Promise.config=function(opts){opts=Object(opts);if("longStackTraces"in opts){if(opts.longStackTraces){Promise.longStackTraces();}else if(!opts.longStackTraces&&Promise.hasLongStackTraces()){disableLongStackTraces();}}if("warnings"in opts){var warningsOption=opts.warnings;config.warnings=!!warningsOption;wForgottenReturn=config.warnings;if(util.isObject(warningsOption)){if("wForgottenReturn"in warningsOption){wForgottenReturn=!!warningsOption.wForgottenReturn;}}}if("cancellation"in opts&&opts.cancellation&&!config.cancellation){if(async.haveItemsQueued()){throw new Error("cannot enable cancellation after promises are in use");}Promise.prototype._clearCancellationData=cancellationClearCancellationData;Promise.prototype._propagateFrom=cancellationPropagateFrom;Promise.prototype._onCancel=cancellationOnCancel;Promise.prototype._setOnCancel=cancellationSetOnCancel;Promise.prototype._attachCancellationCallback=cancellationAttachCancellationCallback;Promise.prototype._execute=cancellationExecute;_propagateFromFunction=cancellationPropagateFrom;config.cancellation=true;}if("monitoring"in opts){if(opts.monitoring&&!config.monitoring){config.monitoring=true;Promise.prototype._fireEvent=activeFireEvent;}else if(!opts.monitoring&&config.monitoring){config.monitoring=false;Promise.prototype._fireEvent=defaultFireEvent;}}};function defaultFireEvent(){return false;}Promise.prototype._fireEvent=defaultFireEvent;Promise.prototype._execute=function(executor,resolve,reject){try{executor(resolve,reject);}catch(e){return e;}};Promise.prototype._onCancel=function(){};Promise.prototype._setOnCancel=function(handler){;};Promise.prototype._attachCancellationCallback=function(onCancel){;};Promise.prototype._captureStackTrace=function(){};Promise.prototype._attachExtraTrace=function(){};Promise.prototype._clearCancellationData=function(){};Promise.prototype._propagateFrom=function(parent,flags){;;};function cancellationExecute(executor,resolve,reject){var promise=this;try{executor(resolve,reject,function(onCancel){if(typeof onCancel!=="function"){throw new TypeError("onCancel must be a function, got: "+util.toString(onCancel));}promise._attachCancellationCallback(onCancel);});}catch(e){return e;}}function cancellationAttachCancellationCallback(onCancel){if(!this.isCancellable())return this;var previousOnCancel=this._onCancel();if(previousOnCancel!==undefined){if(util.isArray(previousOnCancel)){previousOnCancel.push(onCancel);}else{this._setOnCancel([previousOnCancel,onCancel]);}}else{this._setOnCancel(onCancel);}}function cancellationOnCancel(){return this._onCancelField;}function cancellationSetOnCancel(onCancel){this._onCancelField=onCancel;}function cancellationClearCancellationData(){this._cancellationParent=undefined;this._onCancelField=undefined;}function cancellationPropagateFrom(parent,flags){if((flags&1)!==0){this._cancellationParent=parent;var branchesRemainingToCancel=parent._branchesRemainingToCancel;if(branchesRemainingToCancel===undefined){branchesRemainingToCancel=0;}parent._branchesRemainingToCancel=branchesRemainingToCancel+1;}if((flags&2)!==0&&parent._isBound()){this._setBoundTo(parent._boundTo);}}function bindingPropagateFrom(parent,flags){if((flags&2)!==0&&parent._isBound()){this._setBoundTo(parent._boundTo);}}var _propagateFromFunction=bindingPropagateFrom;function _boundValueFunction(){var ret=this._boundTo;if(ret!==undefined){if(ret instanceof Promise){if(ret.isFulfilled()){return ret.value();}else{return undefined;}}}return ret;}function longStackTracesCaptureStackTrace(){this._trace=new CapturedTrace(this._peekContext());}function longStackTracesAttachExtraTrace(error,ignoreSelf){if(canAttachTrace(error)){var trace=this._trace;if(trace!==undefined){if(ignoreSelf)trace=trace._parent;}if(trace!==undefined){trace.attachExtraTrace(error);}else if(!error.__stackCleaned__){var parsed=parseStackAndMessage(error);util.notEnumerableProp(error,"stack",parsed.message+"\n"+parsed.stack.join("\n"));util.notEnumerableProp(error,"__stackCleaned__",true);}}}function checkForgottenReturns(returnValue,promiseCreated,name,promise,parent){if(returnValue===undefined&&promiseCreated!==null&&wForgottenReturn){if(parent!==undefined&&parent._returnedNonUndefined())return;if((promise._bitField&65535)===0)return;if(name)name=name+" ";var msg="a promise was created in a "+name+"handler but was not returned from it";promise._warn(msg,true,promiseCreated);}}function deprecated(name,replacement){var message=name+" is deprecated and will be removed in a future version.";if(replacement)message+=" Use "+replacement+" instead.";return warn(message);}function warn(message,shouldUseOwnTrace,promise){if(!config.warnings)return;var warning=new Warning(message);var ctx;if(shouldUseOwnTrace){promise._attachExtraTrace(warning);}else if(config.longStackTraces&&(ctx=Promise._peekContext())){ctx.attachExtraTrace(warning);}else{var parsed=parseStackAndMessage(warning);warning.stack=parsed.message+"\n"+parsed.stack.join("\n");}if(!activeFireEvent("warning",warning)){formatAndLogError(warning,"",true);}}function reconstructStack(message,stacks){for(var i=0;i<stacks.length-1;++i){stacks[i].push("From previous event:");stacks[i]=stacks[i].join("\n");}if(i<stacks.length){stacks[i]=stacks[i].join("\n");}return message+"\n"+stacks.join("\n");}function removeDuplicateOrEmptyJumps(stacks){for(var i=0;i<stacks.length;++i){if(stacks[i].length===0||i+1<stacks.length&&stacks[i][0]===stacks[i+1][0]){stacks.splice(i,1);i--;}}}function removeCommonRoots(stacks){var current=stacks[0];for(var i=1;i<stacks.length;++i){var prev=stacks[i];var currentLastIndex=current.length-1;var currentLastLine=current[currentLastIndex];var commonRootMeetPoint=-1;for(var j=prev.length-1;j>=0;--j){if(prev[j]===currentLastLine){commonRootMeetPoint=j;break;}}for(var j=commonRootMeetPoint;j>=0;--j){var line=prev[j];if(current[currentLastIndex]===line){current.pop();currentLastIndex--;}else{break;}}current=prev;}}function cleanStack(stack){var ret=[];for(var i=0;i<stack.length;++i){var line=stack[i];var isTraceLine="    (No stack trace)"===line||stackFramePattern.test(line);var isInternalFrame=isTraceLine&&shouldIgnore(line);if(isTraceLine&&!isInternalFrame){if(indentStackFrames&&line.charAt(0)!==" "){line="    "+line;}ret.push(line);}}return ret;}function stackFramesAsArray(error){var stack=error.stack.replace(/\s+$/g,"").split("\n");for(var i=0;i<stack.length;++i){var line=stack[i];if("    (No stack trace)"===line||stackFramePattern.test(line)){break;}}if(i>0){stack=stack.slice(i);}return stack;}function parseStackAndMessage(error){var stack=error.stack;var message=error.toString();stack=typeof stack==="string"&&stack.length>0?stackFramesAsArray(error):["    (No stack trace)"];return{message:message,stack:cleanStack(stack)};}function formatAndLogError(error,title,isSoft){if(typeof console!=="undefined"){var message;if(util.isObject(error)){var stack=error.stack;message=title+formatStack(stack,error);}else{message=title+String(error);}if(typeof printWarning==="function"){printWarning(message,isSoft);}else if(typeof console.log==="function"||_typeof(console.log)==="object"){console.log(message);}}}function fireRejectionEvent(name,localHandler,reason,promise){var localEventFired=false;try{if(typeof localHandler==="function"){localEventFired=true;if(name==="rejectionHandled"){localHandler(promise);}else{localHandler(reason,promise);}}}catch(e){async.throwLater(e);}if(name==="unhandledRejection"){if(!activeFireEvent(name,reason,promise)&&!localEventFired){formatAndLogError(reason,"Unhandled rejection ");}}else{activeFireEvent(name,promise);}}function formatNonError(obj){var str;if(typeof obj==="function"){str="[function "+(obj.name||"anonymous")+"]";}else{str=obj&&typeof obj.toString==="function"?obj.toString():util.toString(obj);var ruselessToString=/\[object [a-zA-Z0-9$_]+\]/;if(ruselessToString.test(str)){try{var newStr=JSON.stringify(obj);str=newStr;}catch(e){}}if(str.length===0){str="(empty array)";}}return"(<"+snip(str)+">, no stack trace)";}function snip(str){var maxChars=41;if(str.length<maxChars){return str;}return str.substr(0,maxChars-3)+"...";}function longStackTracesIsSupported(){return typeof captureStackTrace==="function";}var shouldIgnore=function shouldIgnore(){return false;};var parseLineInfoRegex=/[\/<\(]([^:\/]+):(\d+):(?:\d+)\)?\s*$/;function parseLineInfo(line){var matches=line.match(parseLineInfoRegex);if(matches){return{fileName:matches[1],line:parseInt(matches[2],10)};}}function setBounds(firstLineError,lastLineError){if(!longStackTracesIsSupported())return;var firstStackLines=firstLineError.stack.split("\n");var lastStackLines=lastLineError.stack.split("\n");var firstIndex=-1;var lastIndex=-1;var firstFileName;var lastFileName;for(var i=0;i<firstStackLines.length;++i){var result=parseLineInfo(firstStackLines[i]);if(result){firstFileName=result.fileName;firstIndex=result.line;break;}}for(var i=0;i<lastStackLines.length;++i){var result=parseLineInfo(lastStackLines[i]);if(result){lastFileName=result.fileName;lastIndex=result.line;break;}}if(firstIndex<0||lastIndex<0||!firstFileName||!lastFileName||firstFileName!==lastFileName||firstIndex>=lastIndex){return;}shouldIgnore=function shouldIgnore(line){if(bluebirdFramePattern.test(line))return true;var info=parseLineInfo(line);if(info){if(info.fileName===firstFileName&&firstIndex<=info.line&&info.line<=lastIndex){return true;}}return false;};}function CapturedTrace(parent){this._parent=parent;this._promisesCreated=0;var length=this._length=1+(parent===undefined?0:parent._length);captureStackTrace(this,CapturedTrace);if(length>32)this.uncycle();}util.inherits(CapturedTrace,Error);Context.CapturedTrace=CapturedTrace;CapturedTrace.prototype.uncycle=function(){var length=this._length;if(length<2)return;var nodes=[];var stackToIndex={};for(var i=0,node=this;node!==undefined;++i){nodes.push(node);node=node._parent;}length=this._length=i;for(var i=length-1;i>=0;--i){var stack=nodes[i].stack;if(stackToIndex[stack]===undefined){stackToIndex[stack]=i;}}for(var i=0;i<length;++i){var currentStack=nodes[i].stack;var index=stackToIndex[currentStack];if(index!==undefined&&index!==i){if(index>0){nodes[index-1]._parent=undefined;nodes[index-1]._length=1;}nodes[i]._parent=undefined;nodes[i]._length=1;var cycleEdgeNode=i>0?nodes[i-1]:this;if(index<length-1){cycleEdgeNode._parent=nodes[index+1];cycleEdgeNode._parent.uncycle();cycleEdgeNode._length=cycleEdgeNode._parent._length+1;}else{cycleEdgeNode._parent=undefined;cycleEdgeNode._length=1;}var currentChildLength=cycleEdgeNode._length+1;for(var j=i-2;j>=0;--j){nodes[j]._length=currentChildLength;currentChildLength++;}return;}}};CapturedTrace.prototype.attachExtraTrace=function(error){if(error.__stackCleaned__)return;this.uncycle();var parsed=parseStackAndMessage(error);var message=parsed.message;var stacks=[parsed.stack];var trace=this;while(trace!==undefined){stacks.push(cleanStack(trace.stack.split("\n")));trace=trace._parent;}removeCommonRoots(stacks);removeDuplicateOrEmptyJumps(stacks);util.notEnumerableProp(error,"stack",reconstructStack(message,stacks));util.notEnumerableProp(error,"__stackCleaned__",true);};var captureStackTrace=function stackDetection(){var v8stackFramePattern=/^\s*at\s*/;var v8stackFormatter=function v8stackFormatter(stack,error){if(typeof stack==="string")return stack;if(error.name!==undefined&&error.message!==undefined){return error.toString();}return formatNonError(error);};if(typeof Error.stackTraceLimit==="number"&&typeof Error.captureStackTrace==="function"){Error.stackTraceLimit+=6;stackFramePattern=v8stackFramePattern;formatStack=v8stackFormatter;var captureStackTrace=Error.captureStackTrace;shouldIgnore=function shouldIgnore(line){return bluebirdFramePattern.test(line);};return function(receiver,ignoreUntil){Error.stackTraceLimit+=6;captureStackTrace(receiver,ignoreUntil);Error.stackTraceLimit-=6;};}var err=new Error();if(typeof err.stack==="string"&&err.stack.split("\n")[0].indexOf("stackDetection@")>=0){stackFramePattern=/@/;formatStack=v8stackFormatter;indentStackFrames=true;return function captureStackTrace(o){o.stack=new Error().stack;};}var hasStackAfterThrow;try{throw new Error();}catch(e){hasStackAfterThrow="stack"in e;}if(!("stack"in err)&&hasStackAfterThrow&&typeof Error.stackTraceLimit==="number"){stackFramePattern=v8stackFramePattern;formatStack=v8stackFormatter;return function captureStackTrace(o){Error.stackTraceLimit+=6;try{throw new Error();}catch(e){o.stack=e.stack;}Error.stackTraceLimit-=6;};}formatStack=function formatStack(stack,error){if(typeof stack==="string")return stack;if(((typeof error==="undefined"?"undefined":_typeof(error))==="object"||typeof error==="function")&&error.name!==undefined&&error.message!==undefined){return error.toString();}return formatNonError(error);};return null;}([]);if(typeof console!=="undefined"&&typeof console.warn!=="undefined"){printWarning=function printWarning(message){console.warn(message);};if(util.isNode&&process.stderr.isTTY){printWarning=function printWarning(message,isSoft){var color=isSoft?"\u001b[33m":"\u001b[31m";console.warn(color+message+"\u001b[0m\n");};}else if(!util.isNode&&typeof new Error().stack==="string"){printWarning=function printWarning(message,isSoft){console.warn("%c"+message,isSoft?"color: darkorange":"color: red");};}}var config={warnings:warnings,longStackTraces:false,cancellation:false,monitoring:false};if(longStackTraces)Promise.longStackTraces();return{longStackTraces:function longStackTraces(){return config.longStackTraces;},warnings:function warnings(){return config.warnings;},cancellation:function cancellation(){return config.cancellation;},monitoring:function monitoring(){return config.monitoring;},propagateFromFunction:function propagateFromFunction(){return _propagateFromFunction;},boundValueFunction:function boundValueFunction(){return _boundValueFunction;},checkForgottenReturns:checkForgottenReturns,setBounds:setBounds,warn:warn,deprecated:deprecated,CapturedTrace:CapturedTrace,fireDomEvent:fireDomEvent,fireGlobalEvent:fireGlobalEvent};};},{"./errors":12,"./util":36}],10:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise){function returner(){return this.value;}function thrower(){throw this.reason;}Promise.prototype["return"]=Promise.prototype.thenReturn=function(value){if(value instanceof Promise)value.suppressUnhandledRejections();return this._then(returner,undefined,undefined,{value:value},undefined);};Promise.prototype["throw"]=Promise.prototype.thenThrow=function(reason){return this._then(thrower,undefined,undefined,{reason:reason},undefined);};Promise.prototype.catchThrow=function(reason){if(arguments.length<=1){return this._then(undefined,thrower,undefined,{reason:reason},undefined);}else{var _reason=arguments[1];var handler=function handler(){throw _reason;};return this.caught(reason,handler);}};Promise.prototype.catchReturn=function(value){if(arguments.length<=1){if(value instanceof Promise)value.suppressUnhandledRejections();return this._then(undefined,returner,undefined,{value:value},undefined);}else{var _value=arguments[1];if(_value instanceof Promise)_value.suppressUnhandledRejections();var handler=function handler(){return _value;};return this.caught(value,handler);}};};},{}],11:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise,INTERNAL){var PromiseReduce=Promise.reduce;var PromiseAll=Promise.all;function promiseAllThis(){return PromiseAll(this);}function PromiseMapSeries(promises,fn){return PromiseReduce(promises,fn,INTERNAL,INTERNAL);}Promise.prototype.each=function(fn){return this.mapSeries(fn)._then(promiseAllThis,undefined,undefined,this,undefined);};Promise.prototype.mapSeries=function(fn){return PromiseReduce(this,fn,INTERNAL,INTERNAL);};Promise.each=function(promises,fn){return PromiseMapSeries(promises,fn)._then(promiseAllThis,undefined,undefined,promises,undefined);};Promise.mapSeries=PromiseMapSeries;};},{}],12:[function(_dereq_,module,exports){"use strict";var es5=_dereq_("./es5");var Objectfreeze=es5.freeze;var util=_dereq_("./util");var inherits=util.inherits;var notEnumerableProp=util.notEnumerableProp;function subError(nameProperty,defaultMessage){function SubError(message){if(!(this instanceof SubError))return new SubError(message);notEnumerableProp(this,"message",typeof message==="string"?message:defaultMessage);notEnumerableProp(this,"name",nameProperty);if(Error.captureStackTrace){Error.captureStackTrace(this,this.constructor);}else{Error.call(this);}}inherits(SubError,Error);return SubError;}var _TypeError,_RangeError;var Warning=subError("Warning","warning");var CancellationError=subError("CancellationError","cancellation error");var TimeoutError=subError("TimeoutError","timeout error");var AggregateError=subError("AggregateError","aggregate error");try{_TypeError=TypeError;_RangeError=RangeError;}catch(e){_TypeError=subError("TypeError","type error");_RangeError=subError("RangeError","range error");}var methods=("join pop push shift unshift slice filter forEach some "+"every map indexOf lastIndexOf reduce reduceRight sort reverse").split(" ");for(var i=0;i<methods.length;++i){if(typeof Array.prototype[methods[i]]==="function"){AggregateError.prototype[methods[i]]=Array.prototype[methods[i]];}}es5.defineProperty(AggregateError.prototype,"length",{value:0,configurable:false,writable:true,enumerable:true});AggregateError.prototype["isOperational"]=true;var level=0;AggregateError.prototype.toString=function(){var indent=Array(level*4+1).join(" ");var ret="\n"+indent+"AggregateError of:"+"\n";level++;indent=Array(level*4+1).join(" ");for(var i=0;i<this.length;++i){var str=this[i]===this?"[Circular AggregateError]":this[i]+"";var lines=str.split("\n");for(var j=0;j<lines.length;++j){lines[j]=indent+lines[j];}str=lines.join("\n");ret+=str+"\n";}level--;return ret;};function OperationalError(message){if(!(this instanceof OperationalError))return new OperationalError(message);notEnumerableProp(this,"name","OperationalError");notEnumerableProp(this,"message",message);this.cause=message;this["isOperational"]=true;if(message instanceof Error){notEnumerableProp(this,"message",message.message);notEnumerableProp(this,"stack",message.stack);}else if(Error.captureStackTrace){Error.captureStackTrace(this,this.constructor);}}inherits(OperationalError,Error);var errorTypes=Error["__BluebirdErrorTypes__"];if(!errorTypes){errorTypes=Objectfreeze({CancellationError:CancellationError,TimeoutError:TimeoutError,OperationalError:OperationalError,RejectionError:OperationalError,AggregateError:AggregateError});es5.defineProperty(Error,"__BluebirdErrorTypes__",{value:errorTypes,writable:false,enumerable:false,configurable:false});}module.exports={Error:Error,TypeError:_TypeError,RangeError:_RangeError,CancellationError:errorTypes.CancellationError,OperationalError:errorTypes.OperationalError,TimeoutError:errorTypes.TimeoutError,AggregateError:errorTypes.AggregateError,Warning:Warning};},{"./es5":13,"./util":36}],13:[function(_dereq_,module,exports){var isES5=function(){"use strict";return this===undefined;}();if(isES5){module.exports={freeze:Object.freeze,defineProperty:Object.defineProperty,getDescriptor:Object.getOwnPropertyDescriptor,keys:Object.keys,names:Object.getOwnPropertyNames,getPrototypeOf:Object.getPrototypeOf,isArray:Array.isArray,isES5:isES5,propertyIsWritable:function propertyIsWritable(obj,prop){var descriptor=Object.getOwnPropertyDescriptor(obj,prop);return!!(!descriptor||descriptor.writable||descriptor.set);}};}else{var has={}.hasOwnProperty;var str={}.toString;var proto={}.constructor.prototype;var ObjectKeys=function ObjectKeys(o){var ret=[];for(var key in o){if(has.call(o,key)){ret.push(key);}}return ret;};var ObjectGetDescriptor=function ObjectGetDescriptor(o,key){return{value:o[key]};};var ObjectDefineProperty=function ObjectDefineProperty(o,key,desc){o[key]=desc.value;return o;};var ObjectFreeze=function ObjectFreeze(obj){return obj;};var ObjectGetPrototypeOf=function ObjectGetPrototypeOf(obj){try{return Object(obj).constructor.prototype;}catch(e){return proto;}};var ArrayIsArray=function ArrayIsArray(obj){try{return str.call(obj)==="[object Array]";}catch(e){return false;}};module.exports={isArray:ArrayIsArray,keys:ObjectKeys,names:ObjectKeys,defineProperty:ObjectDefineProperty,getDescriptor:ObjectGetDescriptor,freeze:ObjectFreeze,getPrototypeOf:ObjectGetPrototypeOf,isES5:isES5,propertyIsWritable:function propertyIsWritable(){return true;}};}},{}],14:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise,INTERNAL){var PromiseMap=Promise.map;Promise.prototype.filter=function(fn,options){return PromiseMap(this,fn,options,INTERNAL);};Promise.filter=function(promises,fn,options){return PromiseMap(promises,fn,options,INTERNAL);};};},{}],15:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise,tryConvertToPromise){var util=_dereq_("./util");var CancellationError=Promise.CancellationError;var errorObj=util.errorObj;function PassThroughHandlerContext(promise,type,handler){this.promise=promise;this.type=type;this.handler=handler;this.called=false;this.cancelPromise=null;}PassThroughHandlerContext.prototype.isFinallyHandler=function(){return this.type===0;};function FinallyHandlerCancelReaction(finallyHandler){this.finallyHandler=finallyHandler;}FinallyHandlerCancelReaction.prototype._resultCancelled=function(){checkCancel(this.finallyHandler);};function checkCancel(ctx,reason){if(ctx.cancelPromise!=null){if(arguments.length>1){ctx.cancelPromise._reject(reason);}else{ctx.cancelPromise._cancel();}ctx.cancelPromise=null;return true;}return false;}function succeed(){return finallyHandler.call(this,this.promise._target()._settledValue());}function fail(reason){if(checkCancel(this,reason))return;errorObj.e=reason;return errorObj;}function finallyHandler(reasonOrValue){var promise=this.promise;var handler=this.handler;if(!this.called){this.called=true;var ret=this.isFinallyHandler()?handler.call(promise._boundValue()):handler.call(promise._boundValue(),reasonOrValue);if(ret!==undefined){promise._setReturnedNonUndefined();var maybePromise=tryConvertToPromise(ret,promise);if(maybePromise instanceof Promise){if(this.cancelPromise!=null){if(maybePromise.isCancelled()){var reason=new CancellationError("late cancellation observer");promise._attachExtraTrace(reason);errorObj.e=reason;return errorObj;}else if(maybePromise.isPending()){maybePromise._attachCancellationCallback(new FinallyHandlerCancelReaction(this));}}return maybePromise._then(succeed,fail,undefined,this,undefined);}}}if(promise.isRejected()){checkCancel(this);errorObj.e=reasonOrValue;return errorObj;}else{checkCancel(this);return reasonOrValue;}}Promise.prototype._passThrough=function(handler,type,success,fail){if(typeof handler!=="function")return this.then();return this._then(success,fail,undefined,new PassThroughHandlerContext(this,type,handler),undefined);};Promise.prototype.lastly=Promise.prototype["finally"]=function(handler){return this._passThrough(handler,0,finallyHandler,finallyHandler);};Promise.prototype.tap=function(handler){return this._passThrough(handler,1,finallyHandler);};return PassThroughHandlerContext;};},{"./util":36}],16:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise,apiRejection,INTERNAL,tryConvertToPromise,Proxyable,debug){var errors=_dereq_("./errors");var TypeError=errors.TypeError;var util=_dereq_("./util");var errorObj=util.errorObj;var tryCatch=util.tryCatch;var yieldHandlers=[];function promiseFromYieldHandler(value,yieldHandlers,traceParent){for(var i=0;i<yieldHandlers.length;++i){traceParent._pushContext();var result=tryCatch(yieldHandlers[i])(value);traceParent._popContext();if(result===errorObj){traceParent._pushContext();var ret=Promise.reject(errorObj.e);traceParent._popContext();return ret;}var maybePromise=tryConvertToPromise(result,traceParent);if(maybePromise instanceof Promise)return maybePromise;}return null;}function PromiseSpawn(generatorFunction,receiver,yieldHandler,stack){if(debug.cancellation()){var internal=new Promise(INTERNAL);var _finallyPromise=this._finallyPromise=new Promise(INTERNAL);this._promise=internal.lastly(function(){return _finallyPromise;});internal._captureStackTrace();internal._setOnCancel(this);}else{var promise=this._promise=new Promise(INTERNAL);promise._captureStackTrace();}this._stack=stack;this._generatorFunction=generatorFunction;this._receiver=receiver;this._generator=undefined;this._yieldHandlers=typeof yieldHandler==="function"?[yieldHandler].concat(yieldHandlers):yieldHandlers;this._yieldedPromise=null;this._cancellationPhase=false;}util.inherits(PromiseSpawn,Proxyable);PromiseSpawn.prototype._isResolved=function(){return this._promise===null;};PromiseSpawn.prototype._cleanup=function(){this._promise=this._generator=null;if(debug.cancellation()&&this._finallyPromise!==null){this._finallyPromise._fulfill();this._finallyPromise=null;}};PromiseSpawn.prototype._promiseCancelled=function(){if(this._isResolved())return;var implementsReturn=typeof this._generator["return"]!=="undefined";var result;if(!implementsReturn){var reason=new Promise.CancellationError("generator .return() sentinel");Promise.coroutine.returnSentinel=reason;this._promise._attachExtraTrace(reason);this._promise._pushContext();result=tryCatch(this._generator["throw"]).call(this._generator,reason);this._promise._popContext();}else{this._promise._pushContext();result=tryCatch(this._generator["return"]).call(this._generator,undefined);this._promise._popContext();}this._cancellationPhase=true;this._yieldedPromise=null;this._continue(result);};PromiseSpawn.prototype._promiseFulfilled=function(value){this._yieldedPromise=null;this._promise._pushContext();var result=tryCatch(this._generator.next).call(this._generator,value);this._promise._popContext();this._continue(result);};PromiseSpawn.prototype._promiseRejected=function(reason){this._yieldedPromise=null;this._promise._attachExtraTrace(reason);this._promise._pushContext();var result=tryCatch(this._generator["throw"]).call(this._generator,reason);this._promise._popContext();this._continue(result);};PromiseSpawn.prototype._resultCancelled=function(){if(this._yieldedPromise instanceof Promise){var promise=this._yieldedPromise;this._yieldedPromise=null;promise.cancel();}};PromiseSpawn.prototype.promise=function(){return this._promise;};PromiseSpawn.prototype._run=function(){this._generator=this._generatorFunction.call(this._receiver);this._receiver=this._generatorFunction=undefined;this._promiseFulfilled(undefined);};PromiseSpawn.prototype._continue=function(result){var promise=this._promise;if(result===errorObj){this._cleanup();if(this._cancellationPhase){return promise.cancel();}else{return promise._rejectCallback(result.e,false);}}var value=result.value;if(result.done===true){this._cleanup();if(this._cancellationPhase){return promise.cancel();}else{return promise._resolveCallback(value);}}else{var maybePromise=tryConvertToPromise(value,this._promise);if(!(maybePromise instanceof Promise)){maybePromise=promiseFromYieldHandler(maybePromise,this._yieldHandlers,this._promise);if(maybePromise===null){this._promiseRejected(new TypeError("A value %s was yielded that could not be treated as a promise\n\n    See http://goo.gl/MqrFmX\n\n".replace("%s",value)+"From coroutine:\n"+this._stack.split("\n").slice(1,-7).join("\n")));return;}}maybePromise=maybePromise._target();var bitField=maybePromise._bitField;;if((bitField&50397184)===0){this._yieldedPromise=maybePromise;maybePromise._proxy(this,null);}else if((bitField&33554432)!==0){this._promiseFulfilled(maybePromise._value());}else if((bitField&16777216)!==0){this._promiseRejected(maybePromise._reason());}else{this._promiseCancelled();}}};Promise.coroutine=function(generatorFunction,options){if(typeof generatorFunction!=="function"){throw new TypeError("generatorFunction must be a function\n\n    See http://goo.gl/MqrFmX\n");}var yieldHandler=Object(options).yieldHandler;var PromiseSpawn$=PromiseSpawn;var stack=new Error().stack;return function(){var generator=generatorFunction.apply(this,arguments);var spawn=new PromiseSpawn$(undefined,undefined,yieldHandler,stack);var ret=spawn.promise();spawn._generator=generator;spawn._promiseFulfilled(undefined);return ret;};};Promise.coroutine.addYieldHandler=function(fn){if(typeof fn!=="function"){throw new TypeError("expecting a function but got "+util.classString(fn));}yieldHandlers.push(fn);};Promise.spawn=function(generatorFunction){debug.deprecated("Promise.spawn()","Promise.coroutine()");if(typeof generatorFunction!=="function"){return apiRejection("generatorFunction must be a function\n\n    See http://goo.gl/MqrFmX\n");}var spawn=new PromiseSpawn(generatorFunction,this);var ret=spawn.promise();spawn._run(Promise.spawn);return ret;};};},{"./errors":12,"./util":36}],17:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise,PromiseArray,tryConvertToPromise,INTERNAL){var util=_dereq_("./util");var canEvaluate=util.canEvaluate;var tryCatch=util.tryCatch;var errorObj=util.errorObj;var reject;if(false){if(canEvaluate){var thenCallback=function thenCallback(i){return new Function("value","holder","                             \n\
-							            'use strict';                                                    \n\
-							            holder.pIndex = value;                                           \n\
-							            holder.checkFulfillment(this);                                   \n\
-							            ".replace(/Index/g,i));};var promiseSetter=function promiseSetter(i){return new Function("promise","holder","                           \n\
-							            'use strict';                                                    \n\
-							            holder.pIndex = promise;                                         \n\
-							            ".replace(/Index/g,i));};var generateHolderClass=function generateHolderClass(total){var props=new Array(total);for(var i=0;i<props.length;++i){props[i]="this.p"+(i+1);}var assignment=props.join(" = ")+" = null;";var cancellationCode="var promise;\n"+props.map(function(prop){return"                                                         \n\
-							                promise = "+prop+";                                      \n\
-							                if (promise instanceof Promise) {                            \n\
-							                    promise.cancel();                                        \n\
-							                }                                                            \n\
-							            ";}).join("\n");var passedArguments=props.join(", ");var name="Holder$"+total;var code="return function(tryCatch, errorObj, Promise) {           \n\
-							            'use strict';                                                    \n\
-							            function [TheName](fn) {                                         \n\
-							                [TheProperties]                                              \n\
-							                this.fn = fn;                                                \n\
-							                this.now = 0;                                                \n\
-							            }                                                                \n\
-							            [TheName].prototype.checkFulfillment = function(promise) {       \n\
-							                var now = ++this.now;                                        \n\
-							                if (now === [TheTotal]) {                                    \n\
-							                    promise._pushContext();                                  \n\
-							                    var callback = this.fn;                                  \n\
-							                    var ret = tryCatch(callback)([ThePassedArguments]);      \n\
-							                    promise._popContext();                                   \n\
-							                    if (ret === errorObj) {                                  \n\
-							                        promise._rejectCallback(ret.e, false);               \n\
-							                    } else {                                                 \n\
-							                        promise._resolveCallback(ret);                       \n\
-							                    }                                                        \n\
-							                }                                                            \n\
-							            };                                                               \n\
-							                                                                             \n\
-							            [TheName].prototype._resultCancelled = function() {              \n\
-							                [CancellationCode]                                           \n\
-							            };                                                               \n\
-							                                                                             \n\
-							            return [TheName];                                                \n\
-							        }(tryCatch, errorObj, Promise);                                      \n\
-							        ";code=code.replace(/\[TheName\]/g,name).replace(/\[TheTotal\]/g,total).replace(/\[ThePassedArguments\]/g,passedArguments).replace(/\[TheProperties\]/g,assignment).replace(/\[CancellationCode\]/g,cancellationCode);return new Function("tryCatch","errorObj","Promise",code)(tryCatch,errorObj,Promise);};var holderClasses=[];var thenCallbacks=[];var promiseSetters=[];for(var i=0;i<8;++i){holderClasses.push(generateHolderClass(i+1));thenCallbacks.push(thenCallback(i+1));promiseSetters.push(promiseSetter(i+1));}reject=function reject(reason){this._reject(reason);};}}Promise.join=function(){var last=arguments.length-1;var fn;if(last>0&&typeof arguments[last]==="function"){fn=arguments[last];if(false){if(last<=8&&canEvaluate){var ret=new Promise(INTERNAL);ret._captureStackTrace();var HolderClass=holderClasses[last-1];var holder=new HolderClass(fn);var callbacks=thenCallbacks;for(var i=0;i<last;++i){var maybePromise=tryConvertToPromise(arguments[i],ret);if(maybePromise instanceof Promise){maybePromise=maybePromise._target();var bitField=maybePromise._bitField;;if((bitField&50397184)===0){maybePromise._then(callbacks[i],reject,undefined,ret,holder);promiseSetters[i](maybePromise,holder);}else if((bitField&33554432)!==0){callbacks[i].call(ret,maybePromise._value(),holder);}else if((bitField&16777216)!==0){ret._reject(maybePromise._reason());}else{ret._cancel();}}else{callbacks[i].call(ret,maybePromise,holder);}}if(!ret._isFateSealed()){ret._setAsyncGuaranteed();ret._setOnCancel(holder);}return ret;}}}var args=[].slice.call(arguments);;if(fn)args.pop();var ret=new PromiseArray(args).promise();return fn!==undefined?ret.spread(fn):ret;};};},{"./util":36}],18:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise,PromiseArray,apiRejection,tryConvertToPromise,INTERNAL,debug){var getDomain=Promise._getDomain;var util=_dereq_("./util");var tryCatch=util.tryCatch;var errorObj=util.errorObj;var EMPTY_ARRAY=[];function MappingPromiseArray(promises,fn,limit,_filter){this.constructor$(promises);this._promise._captureStackTrace();var domain=getDomain();this._callback=domain===null?fn:domain.bind(fn);this._preservedValues=_filter===INTERNAL?new Array(this.length()):null;this._limit=limit;this._inFlight=0;this._queue=limit>=1?[]:EMPTY_ARRAY;this._init$(undefined,-2);}util.inherits(MappingPromiseArray,PromiseArray);MappingPromiseArray.prototype._init=function(){};MappingPromiseArray.prototype._promiseFulfilled=function(value,index){var values=this._values;var length=this.length();var preservedValues=this._preservedValues;var limit=this._limit;if(index<0){index=index*-1-1;values[index]=value;if(limit>=1){this._inFlight--;this._drainQueue();if(this._isResolved())return true;}}else{if(limit>=1&&this._inFlight>=limit){values[index]=value;this._queue.push(index);return false;}if(preservedValues!==null)preservedValues[index]=value;var promise=this._promise;var callback=this._callback;var receiver=promise._boundValue();promise._pushContext();var ret=tryCatch(callback).call(receiver,value,index,length);var promiseCreated=promise._popContext();debug.checkForgottenReturns(ret,promiseCreated,preservedValues!==null?"Promise.filter":"Promise.map",promise);if(ret===errorObj){this._reject(ret.e);return true;}var maybePromise=tryConvertToPromise(ret,this._promise);if(maybePromise instanceof Promise){maybePromise=maybePromise._target();var bitField=maybePromise._bitField;;if((bitField&50397184)===0){if(limit>=1)this._inFlight++;values[index]=maybePromise;maybePromise._proxy(this,(index+1)*-1);return false;}else if((bitField&33554432)!==0){ret=maybePromise._value();}else if((bitField&16777216)!==0){this._reject(maybePromise._reason());return true;}else{this._cancel();return true;}}values[index]=ret;}var totalResolved=++this._totalResolved;if(totalResolved>=length){if(preservedValues!==null){this._filter(values,preservedValues);}else{this._resolve(values);}return true;}return false;};MappingPromiseArray.prototype._drainQueue=function(){var queue=this._queue;var limit=this._limit;var values=this._values;while(queue.length>0&&this._inFlight<limit){if(this._isResolved())return;var index=queue.pop();this._promiseFulfilled(values[index],index);}};MappingPromiseArray.prototype._filter=function(booleans,values){var len=values.length;var ret=new Array(len);var j=0;for(var i=0;i<len;++i){if(booleans[i])ret[j++]=values[i];}ret.length=j;this._resolve(ret);};MappingPromiseArray.prototype.preservedValues=function(){return this._preservedValues;};function map(promises,fn,options,_filter){if(typeof fn!=="function"){return apiRejection("expecting a function but got "+util.classString(fn));}var limit=0;if(options!==undefined){if((typeof options==="undefined"?"undefined":_typeof(options))==="object"&&options!==null){if(typeof options.concurrency!=="number"){return Promise.reject(new TypeError("'concurrency' must be a number but it is "+util.classString(options.concurrency)));}limit=options.concurrency;}else{return Promise.reject(new TypeError("options argument must be an object but it is "+util.classString(options)));}}limit=typeof limit==="number"&&isFinite(limit)&&limit>=1?limit:0;return new MappingPromiseArray(promises,fn,limit,_filter).promise();}Promise.prototype.map=function(fn,options){return map(this,fn,options,null);};Promise.map=function(promises,fn,options,_filter){return map(promises,fn,options,_filter);};};},{"./util":36}],19:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise,INTERNAL,tryConvertToPromise,apiRejection,debug){var util=_dereq_("./util");var tryCatch=util.tryCatch;Promise.method=function(fn){if(typeof fn!=="function"){throw new Promise.TypeError("expecting a function but got "+util.classString(fn));}return function(){var ret=new Promise(INTERNAL);ret._captureStackTrace();ret._pushContext();var value=tryCatch(fn).apply(this,arguments);var promiseCreated=ret._popContext();debug.checkForgottenReturns(value,promiseCreated,"Promise.method",ret);ret._resolveFromSyncValue(value);return ret;};};Promise.attempt=Promise["try"]=function(fn){if(typeof fn!=="function"){return apiRejection("expecting a function but got "+util.classString(fn));}var ret=new Promise(INTERNAL);ret._captureStackTrace();ret._pushContext();var value;if(arguments.length>1){debug.deprecated("calling Promise.try with more than 1 argument");var arg=arguments[1];var ctx=arguments[2];value=util.isArray(arg)?tryCatch(fn).apply(ctx,arg):tryCatch(fn).call(ctx,arg);}else{value=tryCatch(fn)();}var promiseCreated=ret._popContext();debug.checkForgottenReturns(value,promiseCreated,"Promise.try",ret);ret._resolveFromSyncValue(value);return ret;};Promise.prototype._resolveFromSyncValue=function(value){if(value===util.errorObj){this._rejectCallback(value.e,false);}else{this._resolveCallback(value,true);}};};},{"./util":36}],20:[function(_dereq_,module,exports){"use strict";var util=_dereq_("./util");var maybeWrapAsError=util.maybeWrapAsError;var errors=_dereq_("./errors");var OperationalError=errors.OperationalError;var es5=_dereq_("./es5");function isUntypedError(obj){return obj instanceof Error&&es5.getPrototypeOf(obj)===Error.prototype;}var rErrorKey=/^(?:name|message|stack|cause)$/;function wrapAsOperationalError(obj){var ret;if(isUntypedError(obj)){ret=new OperationalError(obj);ret.name=obj.name;ret.message=obj.message;ret.stack=obj.stack;var keys=es5.keys(obj);for(var i=0;i<keys.length;++i){var key=keys[i];if(!rErrorKey.test(key)){ret[key]=obj[key];}}return ret;}util.markAsOriginatingFromRejection(obj);return obj;}function nodebackForPromise(promise,multiArgs){return function(err,value){if(promise===null)return;if(err){var wrapped=wrapAsOperationalError(maybeWrapAsError(err));promise._attachExtraTrace(wrapped);promise._reject(wrapped);}else if(!multiArgs){promise._fulfill(value);}else{var args=[].slice.call(arguments,1);;promise._fulfill(args);}promise=null;};}module.exports=nodebackForPromise;},{"./errors":12,"./es5":13,"./util":36}],21:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise){var util=_dereq_("./util");var async=Promise._async;var tryCatch=util.tryCatch;var errorObj=util.errorObj;function spreadAdapter(val,nodeback){var promise=this;if(!util.isArray(val))return successAdapter.call(promise,val,nodeback);var ret=tryCatch(nodeback).apply(promise._boundValue(),[null].concat(val));if(ret===errorObj){async.throwLater(ret.e);}}function successAdapter(val,nodeback){var promise=this;var receiver=promise._boundValue();var ret=val===undefined?tryCatch(nodeback).call(receiver,null):tryCatch(nodeback).call(receiver,null,val);if(ret===errorObj){async.throwLater(ret.e);}}function errorAdapter(reason,nodeback){var promise=this;if(!reason){var newReason=new Error(reason+"");newReason.cause=reason;reason=newReason;}var ret=tryCatch(nodeback).call(promise._boundValue(),reason);if(ret===errorObj){async.throwLater(ret.e);}}Promise.prototype.asCallback=Promise.prototype.nodeify=function(nodeback,options){if(typeof nodeback=="function"){var adapter=successAdapter;if(options!==undefined&&Object(options).spread){adapter=spreadAdapter;}this._then(adapter,errorAdapter,undefined,this,nodeback);}return this;};};},{"./util":36}],22:[function(_dereq_,module,exports){"use strict";module.exports=function(){var makeSelfResolutionError=function makeSelfResolutionError(){return new TypeError("circular promise resolution chain\n\n    See http://goo.gl/MqrFmX\n");};var reflectHandler=function reflectHandler(){return new Promise.PromiseInspection(this._target());};var apiRejection=function apiRejection(msg){return Promise.reject(new TypeError(msg));};function Proxyable(){}var UNDEFINED_BINDING={};var util=_dereq_("./util");var getDomain;if(util.isNode){getDomain=function getDomain(){var ret=process.domain;if(ret===undefined)ret=null;return ret;};}else{getDomain=function getDomain(){return null;};}util.notEnumerableProp(Promise,"_getDomain",getDomain);var es5=_dereq_("./es5");var Async=_dereq_("./async");var async=new Async();es5.defineProperty(Promise,"_async",{value:async});var errors=_dereq_("./errors");var TypeError=Promise.TypeError=errors.TypeError;Promise.RangeError=errors.RangeError;var CancellationError=Promise.CancellationError=errors.CancellationError;Promise.TimeoutError=errors.TimeoutError;Promise.OperationalError=errors.OperationalError;Promise.RejectionError=errors.OperationalError;Promise.AggregateError=errors.AggregateError;var INTERNAL=function INTERNAL(){};var APPLY={};var NEXT_FILTER={};var tryConvertToPromise=_dereq_("./thenables")(Promise,INTERNAL);var PromiseArray=_dereq_("./promise_array")(Promise,INTERNAL,tryConvertToPromise,apiRejection,Proxyable);var Context=_dereq_("./context")(Promise);/*jshint unused:false*/var createContext=Context.create;var debug=_dereq_("./debuggability")(Promise,Context);var CapturedTrace=debug.CapturedTrace;var PassThroughHandlerContext=_dereq_("./finally")(Promise,tryConvertToPromise);var catchFilter=_dereq_("./catch_filter")(NEXT_FILTER);var nodebackForPromise=_dereq_("./nodeback");var errorObj=util.errorObj;var tryCatch=util.tryCatch;function check(self,executor){if(typeof executor!=="function"){throw new TypeError("expecting a function but got "+util.classString(executor));}if(self.constructor!==Promise){throw new TypeError("the promise constructor cannot be invoked directly\n\n    See http://goo.gl/MqrFmX\n");}}function Promise(executor){this._bitField=0;this._fulfillmentHandler0=undefined;this._rejectionHandler0=undefined;this._promise0=undefined;this._receiver0=undefined;if(executor!==INTERNAL){check(this,executor);this._resolveFromExecutor(executor);}this._promiseCreated();this._fireEvent("promiseCreated",this);}Promise.prototype.toString=function(){return"[object Promise]";};Promise.prototype.caught=Promise.prototype["catch"]=function(fn){var len=arguments.length;if(len>1){var catchInstances=new Array(len-1),j=0,i;for(i=0;i<len-1;++i){var item=arguments[i];if(util.isObject(item)){catchInstances[j++]=item;}else{return apiRejection("expecting an object but got "+util.classString(item));}}catchInstances.length=j;fn=arguments[i];return this.then(undefined,catchFilter(catchInstances,fn,this));}return this.then(undefined,fn);};Promise.prototype.reflect=function(){return this._then(reflectHandler,reflectHandler,undefined,this,undefined);};Promise.prototype.then=function(didFulfill,didReject){if(debug.warnings()&&arguments.length>0&&typeof didFulfill!=="function"&&typeof didReject!=="function"){var msg=".then() only accepts functions but was passed: "+util.classString(didFulfill);if(arguments.length>1){msg+=", "+util.classString(didReject);}this._warn(msg);}return this._then(didFulfill,didReject,undefined,undefined,undefined);};Promise.prototype.done=function(didFulfill,didReject){var promise=this._then(didFulfill,didReject,undefined,undefined,undefined);promise._setIsFinal();};Promise.prototype.spread=function(fn){if(typeof fn!=="function"){return apiRejection("expecting a function but got "+util.classString(fn));}return this.all()._then(fn,undefined,undefined,APPLY,undefined);};Promise.prototype.toJSON=function(){var ret={isFulfilled:false,isRejected:false,fulfillmentValue:undefined,rejectionReason:undefined};if(this.isFulfilled()){ret.fulfillmentValue=this.value();ret.isFulfilled=true;}else if(this.isRejected()){ret.rejectionReason=this.reason();ret.isRejected=true;}return ret;};Promise.prototype.all=function(){if(arguments.length>0){this._warn(".all() was passed arguments but it does not take any");}return new PromiseArray(this).promise();};Promise.prototype.error=function(fn){return this.caught(util.originatesFromRejection,fn);};Promise.getNewLibraryCopy=module.exports;Promise.is=function(val){return val instanceof Promise;};Promise.fromNode=Promise.fromCallback=function(fn){var ret=new Promise(INTERNAL);ret._captureStackTrace();var multiArgs=arguments.length>1?!!Object(arguments[1]).multiArgs:false;var result=tryCatch(fn)(nodebackForPromise(ret,multiArgs));if(result===errorObj){ret._rejectCallback(result.e,true);}if(!ret._isFateSealed())ret._setAsyncGuaranteed();return ret;};Promise.all=function(promises){return new PromiseArray(promises).promise();};Promise.cast=function(obj){var ret=tryConvertToPromise(obj);if(!(ret instanceof Promise)){ret=new Promise(INTERNAL);ret._captureStackTrace();ret._setFulfilled();ret._rejectionHandler0=obj;}return ret;};Promise.resolve=Promise.fulfilled=Promise.cast;Promise.reject=Promise.rejected=function(reason){var ret=new Promise(INTERNAL);ret._captureStackTrace();ret._rejectCallback(reason,true);return ret;};Promise.setScheduler=function(fn){if(typeof fn!=="function"){throw new TypeError("expecting a function but got "+util.classString(fn));}return async.setScheduler(fn);};Promise.prototype._then=function(didFulfill,didReject,_,receiver,internalData){var haveInternalData=internalData!==undefined;var promise=haveInternalData?internalData:new Promise(INTERNAL);var target=this._target();var bitField=target._bitField;if(!haveInternalData){promise._propagateFrom(this,3);promise._captureStackTrace();if(receiver===undefined&&(this._bitField&2097152)!==0){if(!((bitField&50397184)===0)){receiver=this._boundValue();}else{receiver=target===this?undefined:this._boundTo;}}this._fireEvent("promiseChained",this,promise);}var domain=getDomain();if(!((bitField&50397184)===0)){var handler,value,settler=target._settlePromiseCtx;if((bitField&33554432)!==0){value=target._rejectionHandler0;handler=didFulfill;}else if((bitField&16777216)!==0){value=target._fulfillmentHandler0;handler=didReject;target._unsetRejectionIsUnhandled();}else{settler=target._settlePromiseLateCancellationObserver;value=new CancellationError("late cancellation observer");target._attachExtraTrace(value);handler=didReject;}async.invoke(settler,target,{handler:domain===null?handler:typeof handler==="function"&&domain.bind(handler),promise:promise,receiver:receiver,value:value});}else{target._addCallbacks(didFulfill,didReject,promise,receiver,domain);}return promise;};Promise.prototype._length=function(){return this._bitField&65535;};Promise.prototype._isFateSealed=function(){return(this._bitField&117506048)!==0;};Promise.prototype._isFollowing=function(){return(this._bitField&67108864)===67108864;};Promise.prototype._setLength=function(len){this._bitField=this._bitField&-65536|len&65535;};Promise.prototype._setFulfilled=function(){this._bitField=this._bitField|33554432;this._fireEvent("promiseFulfilled",this);};Promise.prototype._setRejected=function(){this._bitField=this._bitField|16777216;this._fireEvent("promiseRejected",this);};Promise.prototype._setFollowing=function(){this._bitField=this._bitField|67108864;this._fireEvent("promiseResolved",this);};Promise.prototype._setIsFinal=function(){this._bitField=this._bitField|4194304;};Promise.prototype._isFinal=function(){return(this._bitField&4194304)>0;};Promise.prototype._unsetCancelled=function(){this._bitField=this._bitField&~65536;};Promise.prototype._setCancelled=function(){this._bitField=this._bitField|65536;this._fireEvent("promiseCancelled",this);};Promise.prototype._setAsyncGuaranteed=function(){if(async.hasCustomScheduler())return;this._bitField=this._bitField|134217728;};Promise.prototype._receiverAt=function(index){var ret=index===0?this._receiver0:this[index*4-4+3];if(ret===UNDEFINED_BINDING){return undefined;}else if(ret===undefined&&this._isBound()){return this._boundValue();}return ret;};Promise.prototype._promiseAt=function(index){return this[index*4-4+2];};Promise.prototype._fulfillmentHandlerAt=function(index){return this[index*4-4+0];};Promise.prototype._rejectionHandlerAt=function(index){return this[index*4-4+1];};Promise.prototype._boundValue=function(){};Promise.prototype._migrateCallback0=function(follower){var bitField=follower._bitField;var fulfill=follower._fulfillmentHandler0;var reject=follower._rejectionHandler0;var promise=follower._promise0;var receiver=follower._receiverAt(0);if(receiver===undefined)receiver=UNDEFINED_BINDING;this._addCallbacks(fulfill,reject,promise,receiver,null);};Promise.prototype._migrateCallbackAt=function(follower,index){var fulfill=follower._fulfillmentHandlerAt(index);var reject=follower._rejectionHandlerAt(index);var promise=follower._promiseAt(index);var receiver=follower._receiverAt(index);if(receiver===undefined)receiver=UNDEFINED_BINDING;this._addCallbacks(fulfill,reject,promise,receiver,null);};Promise.prototype._addCallbacks=function(fulfill,reject,promise,receiver,domain){var index=this._length();if(index>=65535-4){index=0;this._setLength(0);}if(index===0){this._promise0=promise;this._receiver0=receiver;if(typeof fulfill==="function"){this._fulfillmentHandler0=domain===null?fulfill:domain.bind(fulfill);}if(typeof reject==="function"){this._rejectionHandler0=domain===null?reject:domain.bind(reject);}}else{var base=index*4-4;this[base+2]=promise;this[base+3]=receiver;if(typeof fulfill==="function"){this[base+0]=domain===null?fulfill:domain.bind(fulfill);}if(typeof reject==="function"){this[base+1]=domain===null?reject:domain.bind(reject);}}this._setLength(index+1);return index;};Promise.prototype._proxy=function(proxyable,arg){this._addCallbacks(undefined,undefined,arg,proxyable,null);};Promise.prototype._resolveCallback=function(value,shouldBind){if((this._bitField&117506048)!==0)return;if(value===this)return this._rejectCallback(makeSelfResolutionError(),false);var maybePromise=tryConvertToPromise(value,this);if(!(maybePromise instanceof Promise))return this._fulfill(value);if(shouldBind)this._propagateFrom(maybePromise,2);var promise=maybePromise._target();if(promise===this){this._reject(makeSelfResolutionError());return;}var bitField=promise._bitField;if((bitField&50397184)===0){var len=this._length();if(len>0)promise._migrateCallback0(this);for(var i=1;i<len;++i){promise._migrateCallbackAt(this,i);}this._setFollowing();this._setLength(0);this._setFollowee(promise);}else if((bitField&33554432)!==0){this._fulfill(promise._value());}else if((bitField&16777216)!==0){this._reject(promise._reason());}else{var reason=new CancellationError("late cancellation observer");promise._attachExtraTrace(reason);this._reject(reason);}};Promise.prototype._rejectCallback=function(reason,synchronous,ignoreNonErrorWarnings){var trace=util.ensureErrorObject(reason);var hasStack=trace===reason;if(!hasStack&&!ignoreNonErrorWarnings&&debug.warnings()){var message="a promise was rejected with a non-error: "+util.classString(reason);this._warn(message,true);}this._attachExtraTrace(trace,synchronous?hasStack:false);this._reject(reason);};Promise.prototype._resolveFromExecutor=function(executor){var promise=this;this._captureStackTrace();this._pushContext();var synchronous=true;var r=this._execute(executor,function(value){promise._resolveCallback(value);},function(reason){promise._rejectCallback(reason,synchronous);});synchronous=false;this._popContext();if(r!==undefined){promise._rejectCallback(r,true);}};Promise.prototype._settlePromiseFromHandler=function(handler,receiver,value,promise){var bitField=promise._bitField;if((bitField&65536)!==0)return;promise._pushContext();var x;if(receiver===APPLY){if(!value||typeof value.length!=="number"){x=errorObj;x.e=new TypeError("cannot .spread() a non-array: "+util.classString(value));}else{x=tryCatch(handler).apply(this._boundValue(),value);}}else{x=tryCatch(handler).call(receiver,value);}var promiseCreated=promise._popContext();bitField=promise._bitField;if((bitField&65536)!==0)return;if(x===NEXT_FILTER){promise._reject(value);}else if(x===errorObj){promise._rejectCallback(x.e,false);}else{debug.checkForgottenReturns(x,promiseCreated,"",promise,this);promise._resolveCallback(x);}};Promise.prototype._target=function(){var ret=this;while(ret._isFollowing()){ret=ret._followee();}return ret;};Promise.prototype._followee=function(){return this._rejectionHandler0;};Promise.prototype._setFollowee=function(promise){this._rejectionHandler0=promise;};Promise.prototype._settlePromise=function(promise,handler,receiver,value){var isPromise=promise instanceof Promise;var bitField=this._bitField;var asyncGuaranteed=(bitField&134217728)!==0;if((bitField&65536)!==0){if(isPromise)promise._invokeInternalOnCancel();if(receiver instanceof PassThroughHandlerContext&&receiver.isFinallyHandler()){receiver.cancelPromise=promise;if(tryCatch(handler).call(receiver,value)===errorObj){promise._reject(errorObj.e);}}else if(handler===reflectHandler){promise._fulfill(reflectHandler.call(receiver));}else if(receiver instanceof Proxyable){receiver._promiseCancelled(promise);}else if(isPromise||promise instanceof PromiseArray){promise._cancel();}else{receiver.cancel();}}else if(typeof handler==="function"){if(!isPromise){handler.call(receiver,value,promise);}else{if(asyncGuaranteed)promise._setAsyncGuaranteed();this._settlePromiseFromHandler(handler,receiver,value,promise);}}else if(receiver instanceof Proxyable){if(!receiver._isResolved()){if((bitField&33554432)!==0){receiver._promiseFulfilled(value,promise);}else{receiver._promiseRejected(value,promise);}}}else if(isPromise){if(asyncGuaranteed)promise._setAsyncGuaranteed();if((bitField&33554432)!==0){promise._fulfill(value);}else{promise._reject(value);}}};Promise.prototype._settlePromiseLateCancellationObserver=function(ctx){var handler=ctx.handler;var promise=ctx.promise;var receiver=ctx.receiver;var value=ctx.value;if(typeof handler==="function"){if(!(promise instanceof Promise)){handler.call(receiver,value,promise);}else{this._settlePromiseFromHandler(handler,receiver,value,promise);}}else if(promise instanceof Promise){promise._reject(value);}};Promise.prototype._settlePromiseCtx=function(ctx){this._settlePromise(ctx.promise,ctx.handler,ctx.receiver,ctx.value);};Promise.prototype._settlePromise0=function(handler,value,bitField){var promise=this._promise0;var receiver=this._receiverAt(0);this._promise0=undefined;this._receiver0=undefined;this._settlePromise(promise,handler,receiver,value);};Promise.prototype._clearCallbackDataAtIndex=function(index){var base=index*4-4;this[base+2]=this[base+3]=this[base+0]=this[base+1]=undefined;};Promise.prototype._fulfill=function(value){var bitField=this._bitField;if((bitField&117506048)>>>16)return;if(value===this){var err=makeSelfResolutionError();this._attachExtraTrace(err);return this._reject(err);}this._setFulfilled();this._rejectionHandler0=value;if((bitField&65535)>0){if((bitField&134217728)!==0){this._settlePromises();}else{async.settlePromises(this);}}};Promise.prototype._reject=function(reason){var bitField=this._bitField;if((bitField&117506048)>>>16)return;this._setRejected();this._fulfillmentHandler0=reason;if(this._isFinal()){return async.fatalError(reason,util.isNode);}if((bitField&65535)>0){async.settlePromises(this);}else{this._ensurePossibleRejectionHandled();}};Promise.prototype._fulfillPromises=function(len,value){for(var i=1;i<len;i++){var handler=this._fulfillmentHandlerAt(i);var promise=this._promiseAt(i);var receiver=this._receiverAt(i);this._clearCallbackDataAtIndex(i);this._settlePromise(promise,handler,receiver,value);}};Promise.prototype._rejectPromises=function(len,reason){for(var i=1;i<len;i++){var handler=this._rejectionHandlerAt(i);var promise=this._promiseAt(i);var receiver=this._receiverAt(i);this._clearCallbackDataAtIndex(i);this._settlePromise(promise,handler,receiver,reason);}};Promise.prototype._settlePromises=function(){var bitField=this._bitField;var len=bitField&65535;if(len>0){if((bitField&16842752)!==0){var reason=this._fulfillmentHandler0;this._settlePromise0(this._rejectionHandler0,reason,bitField);this._rejectPromises(len,reason);}else{var value=this._rejectionHandler0;this._settlePromise0(this._fulfillmentHandler0,value,bitField);this._fulfillPromises(len,value);}this._setLength(0);}this._clearCancellationData();};Promise.prototype._settledValue=function(){var bitField=this._bitField;if((bitField&33554432)!==0){return this._rejectionHandler0;}else if((bitField&16777216)!==0){return this._fulfillmentHandler0;}};function deferResolve(v){this.promise._resolveCallback(v);}function deferReject(v){this.promise._rejectCallback(v,false);}Promise.defer=Promise.pending=function(){debug.deprecated("Promise.defer","new Promise");var promise=new Promise(INTERNAL);return{promise:promise,resolve:deferResolve,reject:deferReject};};util.notEnumerableProp(Promise,"_makeSelfResolutionError",makeSelfResolutionError);_dereq_("./method")(Promise,INTERNAL,tryConvertToPromise,apiRejection,debug);_dereq_("./bind")(Promise,INTERNAL,tryConvertToPromise,debug);_dereq_("./cancel")(Promise,PromiseArray,apiRejection,debug);_dereq_("./direct_resolve")(Promise);_dereq_("./synchronous_inspection")(Promise);_dereq_("./join")(Promise,PromiseArray,tryConvertToPromise,INTERNAL,debug);Promise.Promise=Promise;Promise.version="3.4.0";_dereq_('./map.js')(Promise,PromiseArray,apiRejection,tryConvertToPromise,INTERNAL,debug);_dereq_('./call_get.js')(Promise);_dereq_('./using.js')(Promise,apiRejection,tryConvertToPromise,createContext,INTERNAL,debug);_dereq_('./timers.js')(Promise,INTERNAL,debug);_dereq_('./generators.js')(Promise,apiRejection,INTERNAL,tryConvertToPromise,Proxyable,debug);_dereq_('./nodeify.js')(Promise);_dereq_('./promisify.js')(Promise,INTERNAL);_dereq_('./props.js')(Promise,PromiseArray,tryConvertToPromise,apiRejection);_dereq_('./race.js')(Promise,INTERNAL,tryConvertToPromise,apiRejection);_dereq_('./reduce.js')(Promise,PromiseArray,apiRejection,tryConvertToPromise,INTERNAL,debug);_dereq_('./settle.js')(Promise,PromiseArray,debug);_dereq_('./some.js')(Promise,PromiseArray,apiRejection);_dereq_('./filter.js')(Promise,INTERNAL);_dereq_('./each.js')(Promise,INTERNAL);_dereq_('./any.js')(Promise);util.toFastProperties(Promise);util.toFastProperties(Promise.prototype);function fillTypes(value){var p=new Promise(INTERNAL);p._fulfillmentHandler0=value;p._rejectionHandler0=value;p._promise0=value;p._receiver0=value;}// Complete slack tracking, opt out of field-type tracking and           
-	// stabilize map                                                         
-	fillTypes({a:1});fillTypes({b:2});fillTypes({c:3});fillTypes(1);fillTypes(function(){});fillTypes(undefined);fillTypes(false);fillTypes(new Promise(INTERNAL));debug.setBounds(Async.firstLineError,util.lastLineError);return Promise;};},{"./any.js":1,"./async":2,"./bind":3,"./call_get.js":5,"./cancel":6,"./catch_filter":7,"./context":8,"./debuggability":9,"./direct_resolve":10,"./each.js":11,"./errors":12,"./es5":13,"./filter.js":14,"./finally":15,"./generators.js":16,"./join":17,"./map.js":18,"./method":19,"./nodeback":20,"./nodeify.js":21,"./promise_array":23,"./promisify.js":24,"./props.js":25,"./race.js":27,"./reduce.js":28,"./settle.js":30,"./some.js":31,"./synchronous_inspection":32,"./thenables":33,"./timers.js":34,"./using.js":35,"./util":36}],23:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise,INTERNAL,tryConvertToPromise,apiRejection,Proxyable){var util=_dereq_("./util");var isArray=util.isArray;function toResolutionValue(val){switch(val){case-2:return[];case-3:return{};}}function PromiseArray(values){var promise=this._promise=new Promise(INTERNAL);if(values instanceof Promise){promise._propagateFrom(values,3);}promise._setOnCancel(this);this._values=values;this._length=0;this._totalResolved=0;this._init(undefined,-2);}util.inherits(PromiseArray,Proxyable);PromiseArray.prototype.length=function(){return this._length;};PromiseArray.prototype.promise=function(){return this._promise;};PromiseArray.prototype._init=function init(_,resolveValueIfEmpty){var values=tryConvertToPromise(this._values,this._promise);if(values instanceof Promise){values=values._target();var bitField=values._bitField;;this._values=values;if((bitField&50397184)===0){this._promise._setAsyncGuaranteed();return values._then(init,this._reject,undefined,this,resolveValueIfEmpty);}else if((bitField&33554432)!==0){values=values._value();}else if((bitField&16777216)!==0){return this._reject(values._reason());}else{return this._cancel();}}values=util.asArray(values);if(values===null){var err=apiRejection("expecting an array or an iterable object but got "+util.classString(values)).reason();this._promise._rejectCallback(err,false);return;}if(values.length===0){if(resolveValueIfEmpty===-5){this._resolveEmptyArray();}else{this._resolve(toResolutionValue(resolveValueIfEmpty));}return;}this._iterate(values);};PromiseArray.prototype._iterate=function(values){var len=this.getActualLength(values.length);this._length=len;this._values=this.shouldCopyValues()?new Array(len):this._values;var result=this._promise;var isResolved=false;var bitField=null;for(var i=0;i<len;++i){var maybePromise=tryConvertToPromise(values[i],result);if(maybePromise instanceof Promise){maybePromise=maybePromise._target();bitField=maybePromise._bitField;}else{bitField=null;}if(isResolved){if(bitField!==null){maybePromise.suppressUnhandledRejections();}}else if(bitField!==null){if((bitField&50397184)===0){maybePromise._proxy(this,i);this._values[i]=maybePromise;}else if((bitField&33554432)!==0){isResolved=this._promiseFulfilled(maybePromise._value(),i);}else if((bitField&16777216)!==0){isResolved=this._promiseRejected(maybePromise._reason(),i);}else{isResolved=this._promiseCancelled(i);}}else{isResolved=this._promiseFulfilled(maybePromise,i);}}if(!isResolved)result._setAsyncGuaranteed();};PromiseArray.prototype._isResolved=function(){return this._values===null;};PromiseArray.prototype._resolve=function(value){this._values=null;this._promise._fulfill(value);};PromiseArray.prototype._cancel=function(){if(this._isResolved()||!this._promise.isCancellable())return;this._values=null;this._promise._cancel();};PromiseArray.prototype._reject=function(reason){this._values=null;this._promise._rejectCallback(reason,false);};PromiseArray.prototype._promiseFulfilled=function(value,index){this._values[index]=value;var totalResolved=++this._totalResolved;if(totalResolved>=this._length){this._resolve(this._values);return true;}return false;};PromiseArray.prototype._promiseCancelled=function(){this._cancel();return true;};PromiseArray.prototype._promiseRejected=function(reason){this._totalResolved++;this._reject(reason);return true;};PromiseArray.prototype._resultCancelled=function(){if(this._isResolved())return;var values=this._values;this._cancel();if(values instanceof Promise){values.cancel();}else{for(var i=0;i<values.length;++i){if(values[i]instanceof Promise){values[i].cancel();}}}};PromiseArray.prototype.shouldCopyValues=function(){return true;};PromiseArray.prototype.getActualLength=function(len){return len;};return PromiseArray;};},{"./util":36}],24:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise,INTERNAL){var THIS={};var util=_dereq_("./util");var nodebackForPromise=_dereq_("./nodeback");var withAppended=util.withAppended;var maybeWrapAsError=util.maybeWrapAsError;var canEvaluate=util.canEvaluate;var TypeError=_dereq_("./errors").TypeError;var defaultSuffix="Async";var defaultPromisified={__isPromisified__:true};var noCopyProps=["arity","length","name","arguments","caller","callee","prototype","__isPromisified__"];var noCopyPropsPattern=new RegExp("^(?:"+noCopyProps.join("|")+")$");var defaultFilter=function defaultFilter(name){return util.isIdentifier(name)&&name.charAt(0)!=="_"&&name!=="constructor";};function propsFilter(key){return!noCopyPropsPattern.test(key);}function isPromisified(fn){try{return fn.__isPromisified__===true;}catch(e){return false;}}function hasPromisified(obj,key,suffix){var val=util.getDataPropertyOrDefault(obj,key+suffix,defaultPromisified);return val?isPromisified(val):false;}function checkValid(ret,suffix,suffixRegexp){for(var i=0;i<ret.length;i+=2){var key=ret[i];if(suffixRegexp.test(key)){var keyWithoutAsyncSuffix=key.replace(suffixRegexp,"");for(var j=0;j<ret.length;j+=2){if(ret[j]===keyWithoutAsyncSuffix){throw new TypeError("Cannot promisify an API that has normal methods with '%s'-suffix\n\n    See http://goo.gl/MqrFmX\n".replace("%s",suffix));}}}}}function promisifiableMethods(obj,suffix,suffixRegexp,filter){var keys=util.inheritedDataKeys(obj);var ret=[];for(var i=0;i<keys.length;++i){var key=keys[i];var value=obj[key];var passesDefaultFilter=filter===defaultFilter?true:defaultFilter(key,value,obj);if(typeof value==="function"&&!isPromisified(value)&&!hasPromisified(obj,key,suffix)&&filter(key,value,obj,passesDefaultFilter)){ret.push(key,value);}}checkValid(ret,suffix,suffixRegexp);return ret;}var escapeIdentRegex=function escapeIdentRegex(str){return str.replace(/([$])/,"\\$");};var makeNodePromisifiedEval;if(false){var switchCaseArgumentOrder=function switchCaseArgumentOrder(likelyArgumentCount){var ret=[likelyArgumentCount];var min=Math.max(0,likelyArgumentCount-1-3);for(var i=likelyArgumentCount-1;i>=min;--i){ret.push(i);}for(var i=likelyArgumentCount+1;i<=3;++i){ret.push(i);}return ret;};var argumentSequence=function argumentSequence(argumentCount){return util.filledRange(argumentCount,"_arg","");};var parameterDeclaration=function parameterDeclaration(parameterCount){return util.filledRange(Math.max(parameterCount,3),"_arg","");};var parameterCount=function parameterCount(fn){if(typeof fn.length==="number"){return Math.max(Math.min(fn.length,1023+1),0);}return 0;};makeNodePromisifiedEval=function makeNodePromisifiedEval(callback,receiver,originalName,fn,_,multiArgs){var newParameterCount=Math.max(0,parameterCount(fn)-1);var argumentOrder=switchCaseArgumentOrder(newParameterCount);var shouldProxyThis=typeof callback==="string"||receiver===THIS;function generateCallForArgumentCount(count){var args=argumentSequence(count).join(", ");var comma=count>0?", ":"";var ret;if(shouldProxyThis){ret="ret = callback.call(this, {{args}}, nodeback); break;\n";}else{ret=receiver===undefined?"ret = callback({{args}}, nodeback); break;\n":"ret = callback.call(receiver, {{args}}, nodeback); break;\n";}return ret.replace("{{args}}",args).replace(", ",comma);}function generateArgumentSwitchCase(){var ret="";for(var i=0;i<argumentOrder.length;++i){ret+="case "+argumentOrder[i]+":"+generateCallForArgumentCount(argumentOrder[i]);}ret+="                                                             \n\
-							        default:                                                             \n\
-							            var args = new Array(len + 1);                                   \n\
-							            var i = 0;                                                       \n\
-							            for (var i = 0; i < len; ++i) {                                  \n\
-							               args[i] = arguments[i];                                       \n\
-							            }                                                                \n\
-							            args[i] = nodeback;                                              \n\
-							            [CodeForCall]                                                    \n\
-							            break;                                                           \n\
-							        ".replace("[CodeForCall]",shouldProxyThis?"ret = callback.apply(this, args);\n":"ret = callback.apply(receiver, args);\n");return ret;}var getFunctionCode=typeof callback==="string"?"this != null ? this['"+callback+"'] : fn":"fn";var body="'use strict';                                                \n\
-							        var ret = function (Parameters) {                                    \n\
-							            'use strict';                                                    \n\
-							            var len = arguments.length;                                      \n\
-							            var promise = new Promise(INTERNAL);                             \n\
-							            promise._captureStackTrace();                                    \n\
-							            var nodeback = nodebackForPromise(promise, "+multiArgs+");   \n\
-							            var ret;                                                         \n\
-							            var callback = tryCatch([GetFunctionCode]);                      \n\
-							            switch(len) {                                                    \n\
-							                [CodeForSwitchCase]                                          \n\
-							            }                                                                \n\
-							            if (ret === errorObj) {                                          \n\
-							                promise._rejectCallback(maybeWrapAsError(ret.e), true, true);\n\
-							            }                                                                \n\
-							            if (!promise._isFateSealed()) promise._setAsyncGuaranteed();     \n\
-							            return promise;                                                  \n\
-							        };                                                                   \n\
-							        notEnumerableProp(ret, '__isPromisified__', true);                   \n\
-							        return ret;                                                          \n\
-							    ".replace("[CodeForSwitchCase]",generateArgumentSwitchCase()).replace("[GetFunctionCode]",getFunctionCode);body=body.replace("Parameters",parameterDeclaration(newParameterCount));return new Function("Promise","fn","receiver","withAppended","maybeWrapAsError","nodebackForPromise","tryCatch","errorObj","notEnumerableProp","INTERNAL",body)(Promise,fn,receiver,withAppended,maybeWrapAsError,nodebackForPromise,util.tryCatch,util.errorObj,util.notEnumerableProp,INTERNAL);};}function makeNodePromisifiedClosure(callback,receiver,_,fn,__,multiArgs){var defaultThis=function(){return this;}();var method=callback;if(typeof method==="string"){callback=fn;}function promisified(){var _receiver=receiver;if(receiver===THIS)_receiver=this;var promise=new Promise(INTERNAL);promise._captureStackTrace();var cb=typeof method==="string"&&this!==defaultThis?this[method]:callback;var fn=nodebackForPromise(promise,multiArgs);try{cb.apply(_receiver,withAppended(arguments,fn));}catch(e){promise._rejectCallback(maybeWrapAsError(e),true,true);}if(!promise._isFateSealed())promise._setAsyncGuaranteed();return promise;}util.notEnumerableProp(promisified,"__isPromisified__",true);return promisified;}var makeNodePromisified=canEvaluate?makeNodePromisifiedEval:makeNodePromisifiedClosure;function promisifyAll(obj,suffix,filter,promisifier,multiArgs){var suffixRegexp=new RegExp(escapeIdentRegex(suffix)+"$");var methods=promisifiableMethods(obj,suffix,suffixRegexp,filter);for(var i=0,len=methods.length;i<len;i+=2){var key=methods[i];var fn=methods[i+1];var promisifiedKey=key+suffix;if(promisifier===makeNodePromisified){obj[promisifiedKey]=makeNodePromisified(key,THIS,key,fn,suffix,multiArgs);}else{var promisified=promisifier(fn,function(){return makeNodePromisified(key,THIS,key,fn,suffix,multiArgs);});util.notEnumerableProp(promisified,"__isPromisified__",true);obj[promisifiedKey]=promisified;}}util.toFastProperties(obj);return obj;}function promisify(callback,receiver,multiArgs){return makeNodePromisified(callback,receiver,undefined,callback,null,multiArgs);}Promise.promisify=function(fn,options){if(typeof fn!=="function"){throw new TypeError("expecting a function but got "+util.classString(fn));}if(isPromisified(fn)){return fn;}options=Object(options);var receiver=options.context===undefined?THIS:options.context;var multiArgs=!!options.multiArgs;var ret=promisify(fn,receiver,multiArgs);util.copyDescriptors(fn,ret,propsFilter);return ret;};Promise.promisifyAll=function(target,options){if(typeof target!=="function"&&(typeof target==="undefined"?"undefined":_typeof(target))!=="object"){throw new TypeError("the target of promisifyAll must be an object or a function\n\n    See http://goo.gl/MqrFmX\n");}options=Object(options);var multiArgs=!!options.multiArgs;var suffix=options.suffix;if(typeof suffix!=="string")suffix=defaultSuffix;var filter=options.filter;if(typeof filter!=="function")filter=defaultFilter;var promisifier=options.promisifier;if(typeof promisifier!=="function")promisifier=makeNodePromisified;if(!util.isIdentifier(suffix)){throw new RangeError("suffix must be a valid identifier\n\n    See http://goo.gl/MqrFmX\n");}var keys=util.inheritedDataKeys(target);for(var i=0;i<keys.length;++i){var value=target[keys[i]];if(keys[i]!=="constructor"&&util.isClass(value)){promisifyAll(value.prototype,suffix,filter,promisifier,multiArgs);promisifyAll(value,suffix,filter,promisifier,multiArgs);}}return promisifyAll(target,suffix,filter,promisifier,multiArgs);};};},{"./errors":12,"./nodeback":20,"./util":36}],25:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise,PromiseArray,tryConvertToPromise,apiRejection){var util=_dereq_("./util");var isObject=util.isObject;var es5=_dereq_("./es5");var Es6Map;if(typeof Map==="function")Es6Map=Map;var mapToEntries=function(){var index=0;var size=0;function extractEntry(value,key){this[index]=value;this[index+size]=key;index++;}return function mapToEntries(map){size=map.size;index=0;var ret=new Array(map.size*2);map.forEach(extractEntry,ret);return ret;};}();var entriesToMap=function entriesToMap(entries){var ret=new Es6Map();var length=entries.length/2|0;for(var i=0;i<length;++i){var key=entries[length+i];var value=entries[i];ret.set(key,value);}return ret;};function PropertiesPromiseArray(obj){var isMap=false;var entries;if(Es6Map!==undefined&&obj instanceof Es6Map){entries=mapToEntries(obj);isMap=true;}else{var keys=es5.keys(obj);var len=keys.length;entries=new Array(len*2);for(var i=0;i<len;++i){var key=keys[i];entries[i]=obj[key];entries[i+len]=key;}}this.constructor$(entries);this._isMap=isMap;this._init$(undefined,-3);}util.inherits(PropertiesPromiseArray,PromiseArray);PropertiesPromiseArray.prototype._init=function(){};PropertiesPromiseArray.prototype._promiseFulfilled=function(value,index){this._values[index]=value;var totalResolved=++this._totalResolved;if(totalResolved>=this._length){var val;if(this._isMap){val=entriesToMap(this._values);}else{val={};var keyOffset=this.length();for(var i=0,len=this.length();i<len;++i){val[this._values[i+keyOffset]]=this._values[i];}}this._resolve(val);return true;}return false;};PropertiesPromiseArray.prototype.shouldCopyValues=function(){return false;};PropertiesPromiseArray.prototype.getActualLength=function(len){return len>>1;};function props(promises){var ret;var castValue=tryConvertToPromise(promises);if(!isObject(castValue)){return apiRejection("cannot await properties of a non-object\n\n    See http://goo.gl/MqrFmX\n");}else if(castValue instanceof Promise){ret=castValue._then(Promise.props,undefined,undefined,undefined,undefined);}else{ret=new PropertiesPromiseArray(castValue).promise();}if(castValue instanceof Promise){ret._propagateFrom(castValue,2);}return ret;}Promise.prototype.props=function(){return props(this);};Promise.props=function(promises){return props(promises);};};},{"./es5":13,"./util":36}],26:[function(_dereq_,module,exports){"use strict";function arrayMove(src,srcIndex,dst,dstIndex,len){for(var j=0;j<len;++j){dst[j+dstIndex]=src[j+srcIndex];src[j+srcIndex]=void 0;}}function Queue(capacity){this._capacity=capacity;this._length=0;this._front=0;}Queue.prototype._willBeOverCapacity=function(size){return this._capacity<size;};Queue.prototype._pushOne=function(arg){var length=this.length();this._checkCapacity(length+1);var i=this._front+length&this._capacity-1;this[i]=arg;this._length=length+1;};Queue.prototype._unshiftOne=function(value){var capacity=this._capacity;this._checkCapacity(this.length()+1);var front=this._front;var i=(front-1&capacity-1^capacity)-capacity;this[i]=value;this._front=i;this._length=this.length()+1;};Queue.prototype.unshift=function(fn,receiver,arg){this._unshiftOne(arg);this._unshiftOne(receiver);this._unshiftOne(fn);};Queue.prototype.push=function(fn,receiver,arg){var length=this.length()+3;if(this._willBeOverCapacity(length)){this._pushOne(fn);this._pushOne(receiver);this._pushOne(arg);return;}var j=this._front+length-3;this._checkCapacity(length);var wrapMask=this._capacity-1;this[j+0&wrapMask]=fn;this[j+1&wrapMask]=receiver;this[j+2&wrapMask]=arg;this._length=length;};Queue.prototype.shift=function(){var front=this._front,ret=this[front];this[front]=undefined;this._front=front+1&this._capacity-1;this._length--;return ret;};Queue.prototype.length=function(){return this._length;};Queue.prototype._checkCapacity=function(size){if(this._capacity<size){this._resizeTo(this._capacity<<1);}};Queue.prototype._resizeTo=function(capacity){var oldCapacity=this._capacity;this._capacity=capacity;var front=this._front;var length=this._length;var moveItemsCount=front+length&oldCapacity-1;arrayMove(this,0,this,oldCapacity,moveItemsCount);};module.exports=Queue;},{}],27:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise,INTERNAL,tryConvertToPromise,apiRejection){var util=_dereq_("./util");var raceLater=function raceLater(promise){return promise.then(function(array){return race(array,promise);});};function race(promises,parent){var maybePromise=tryConvertToPromise(promises);if(maybePromise instanceof Promise){return raceLater(maybePromise);}else{promises=util.asArray(promises);if(promises===null)return apiRejection("expecting an array or an iterable object but got "+util.classString(promises));}var ret=new Promise(INTERNAL);if(parent!==undefined){ret._propagateFrom(parent,3);}var fulfill=ret._fulfill;var reject=ret._reject;for(var i=0,len=promises.length;i<len;++i){var val=promises[i];if(val===undefined&&!(i in promises)){continue;}Promise.cast(val)._then(fulfill,reject,undefined,ret,null);}return ret;}Promise.race=function(promises){return race(promises,undefined);};Promise.prototype.race=function(){return race(this,undefined);};};},{"./util":36}],28:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise,PromiseArray,apiRejection,tryConvertToPromise,INTERNAL,debug){var getDomain=Promise._getDomain;var util=_dereq_("./util");var tryCatch=util.tryCatch;function ReductionPromiseArray(promises,fn,initialValue,_each){this.constructor$(promises);var domain=getDomain();this._fn=domain===null?fn:domain.bind(fn);if(initialValue!==undefined){initialValue=Promise.resolve(initialValue);initialValue._attachCancellationCallback(this);}this._initialValue=initialValue;this._currentCancellable=null;this._eachValues=_each===INTERNAL?[]:undefined;this._promise._captureStackTrace();this._init$(undefined,-5);}util.inherits(ReductionPromiseArray,PromiseArray);ReductionPromiseArray.prototype._gotAccum=function(accum){if(this._eachValues!==undefined&&accum!==INTERNAL){this._eachValues.push(accum);}};ReductionPromiseArray.prototype._eachComplete=function(value){this._eachValues.push(value);return this._eachValues;};ReductionPromiseArray.prototype._init=function(){};ReductionPromiseArray.prototype._resolveEmptyArray=function(){this._resolve(this._eachValues!==undefined?this._eachValues:this._initialValue);};ReductionPromiseArray.prototype.shouldCopyValues=function(){return false;};ReductionPromiseArray.prototype._resolve=function(value){this._promise._resolveCallback(value);this._values=null;};ReductionPromiseArray.prototype._resultCancelled=function(sender){if(sender===this._initialValue)return this._cancel();if(this._isResolved())return;this._resultCancelled$();if(this._currentCancellable instanceof Promise){this._currentCancellable.cancel();}if(this._initialValue instanceof Promise){this._initialValue.cancel();}};ReductionPromiseArray.prototype._iterate=function(values){this._values=values;var value;var i;var length=values.length;if(this._initialValue!==undefined){value=this._initialValue;i=0;}else{value=Promise.resolve(values[0]);i=1;}this._currentCancellable=value;if(!value.isRejected()){for(;i<length;++i){var ctx={accum:null,value:values[i],index:i,length:length,array:this};value=value._then(gotAccum,undefined,undefined,ctx,undefined);}}if(this._eachValues!==undefined){value=value._then(this._eachComplete,undefined,undefined,this,undefined);}value._then(completed,completed,undefined,value,this);};Promise.prototype.reduce=function(fn,initialValue){return reduce(this,fn,initialValue,null);};Promise.reduce=function(promises,fn,initialValue,_each){return reduce(promises,fn,initialValue,_each);};function completed(valueOrReason,array){if(this.isFulfilled()){array._resolve(valueOrReason);}else{array._reject(valueOrReason);}}function reduce(promises,fn,initialValue,_each){if(typeof fn!=="function"){return apiRejection("expecting a function but got "+util.classString(fn));}var array=new ReductionPromiseArray(promises,fn,initialValue,_each);return array.promise();}function gotAccum(accum){this.accum=accum;this.array._gotAccum(accum);var value=tryConvertToPromise(this.value,this.array._promise);if(value instanceof Promise){this.array._currentCancellable=value;return value._then(gotValue,undefined,undefined,this,undefined);}else{return gotValue.call(this,value);}}function gotValue(value){var array=this.array;var promise=array._promise;var fn=tryCatch(array._fn);promise._pushContext();var ret;if(array._eachValues!==undefined){ret=fn.call(promise._boundValue(),value,this.index,this.length);}else{ret=fn.call(promise._boundValue(),this.accum,value,this.index,this.length);}if(ret instanceof Promise){array._currentCancellable=ret;}var promiseCreated=promise._popContext();debug.checkForgottenReturns(ret,promiseCreated,array._eachValues!==undefined?"Promise.each":"Promise.reduce",promise);return ret;}};},{"./util":36}],29:[function(_dereq_,module,exports){"use strict";var util=_dereq_("./util");var schedule;var noAsyncScheduler=function noAsyncScheduler(){throw new Error("No async scheduler available\n\n    See http://goo.gl/MqrFmX\n");};var NativePromise=util.getNativePromise();if(util.isNode&&typeof MutationObserver==="undefined"){var GlobalSetImmediate=global.setImmediate;var ProcessNextTick=process.nextTick;schedule=util.isRecentNode?function(fn){GlobalSetImmediate.call(global,fn);}:function(fn){ProcessNextTick.call(process,fn);};}else if(typeof NativePromise==="function"){var nativePromise=NativePromise.resolve();schedule=function schedule(fn){nativePromise.then(fn);};}else if(typeof MutationObserver!=="undefined"&&!(typeof window!=="undefined"&&window.navigator&&window.navigator.standalone)){schedule=function(){var div=document.createElement("div");var opts={attributes:true};var toggleScheduled=false;var div2=document.createElement("div");var o2=new MutationObserver(function(){div.classList.toggle("foo");toggleScheduled=false;});o2.observe(div2,opts);var scheduleToggle=function scheduleToggle(){if(toggleScheduled)return;toggleScheduled=true;div2.classList.toggle("foo");};return function schedule(fn){var o=new MutationObserver(function(){o.disconnect();fn();});o.observe(div,opts);scheduleToggle();};}();}else if(typeof setImmediate!=="undefined"){schedule=function schedule(fn){setImmediate(fn);};}else if(typeof setTimeout!=="undefined"){schedule=function schedule(fn){setTimeout(fn,0);};}else{schedule=noAsyncScheduler;}module.exports=schedule;},{"./util":36}],30:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise,PromiseArray,debug){var PromiseInspection=Promise.PromiseInspection;var util=_dereq_("./util");function SettledPromiseArray(values){this.constructor$(values);}util.inherits(SettledPromiseArray,PromiseArray);SettledPromiseArray.prototype._promiseResolved=function(index,inspection){this._values[index]=inspection;var totalResolved=++this._totalResolved;if(totalResolved>=this._length){this._resolve(this._values);return true;}return false;};SettledPromiseArray.prototype._promiseFulfilled=function(value,index){var ret=new PromiseInspection();ret._bitField=33554432;ret._settledValueField=value;return this._promiseResolved(index,ret);};SettledPromiseArray.prototype._promiseRejected=function(reason,index){var ret=new PromiseInspection();ret._bitField=16777216;ret._settledValueField=reason;return this._promiseResolved(index,ret);};Promise.settle=function(promises){debug.deprecated(".settle()",".reflect()");return new SettledPromiseArray(promises).promise();};Promise.prototype.settle=function(){return Promise.settle(this);};};},{"./util":36}],31:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise,PromiseArray,apiRejection){var util=_dereq_("./util");var RangeError=_dereq_("./errors").RangeError;var AggregateError=_dereq_("./errors").AggregateError;var isArray=util.isArray;var CANCELLATION={};function SomePromiseArray(values){this.constructor$(values);this._howMany=0;this._unwrap=false;this._initialized=false;}util.inherits(SomePromiseArray,PromiseArray);SomePromiseArray.prototype._init=function(){if(!this._initialized){return;}if(this._howMany===0){this._resolve([]);return;}this._init$(undefined,-5);var isArrayResolved=isArray(this._values);if(!this._isResolved()&&isArrayResolved&&this._howMany>this._canPossiblyFulfill()){this._reject(this._getRangeError(this.length()));}};SomePromiseArray.prototype.init=function(){this._initialized=true;this._init();};SomePromiseArray.prototype.setUnwrap=function(){this._unwrap=true;};SomePromiseArray.prototype.howMany=function(){return this._howMany;};SomePromiseArray.prototype.setHowMany=function(count){this._howMany=count;};SomePromiseArray.prototype._promiseFulfilled=function(value){this._addFulfilled(value);if(this._fulfilled()===this.howMany()){this._values.length=this.howMany();if(this.howMany()===1&&this._unwrap){this._resolve(this._values[0]);}else{this._resolve(this._values);}return true;}return false;};SomePromiseArray.prototype._promiseRejected=function(reason){this._addRejected(reason);return this._checkOutcome();};SomePromiseArray.prototype._promiseCancelled=function(){if(this._values instanceof Promise||this._values==null){return this._cancel();}this._addRejected(CANCELLATION);return this._checkOutcome();};SomePromiseArray.prototype._checkOutcome=function(){if(this.howMany()>this._canPossiblyFulfill()){var e=new AggregateError();for(var i=this.length();i<this._values.length;++i){if(this._values[i]!==CANCELLATION){e.push(this._values[i]);}}if(e.length>0){this._reject(e);}else{this._cancel();}return true;}return false;};SomePromiseArray.prototype._fulfilled=function(){return this._totalResolved;};SomePromiseArray.prototype._rejected=function(){return this._values.length-this.length();};SomePromiseArray.prototype._addRejected=function(reason){this._values.push(reason);};SomePromiseArray.prototype._addFulfilled=function(value){this._values[this._totalResolved++]=value;};SomePromiseArray.prototype._canPossiblyFulfill=function(){return this.length()-this._rejected();};SomePromiseArray.prototype._getRangeError=function(count){var message="Input array must contain at least "+this._howMany+" items but contains only "+count+" items";return new RangeError(message);};SomePromiseArray.prototype._resolveEmptyArray=function(){this._reject(this._getRangeError(0));};function some(promises,howMany){if((howMany|0)!==howMany||howMany<0){return apiRejection("expecting a positive integer\n\n    See http://goo.gl/MqrFmX\n");}var ret=new SomePromiseArray(promises);var promise=ret.promise();ret.setHowMany(howMany);ret.init();return promise;}Promise.some=function(promises,howMany){return some(promises,howMany);};Promise.prototype.some=function(howMany){return some(this,howMany);};Promise._SomePromiseArray=SomePromiseArray;};},{"./errors":12,"./util":36}],32:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise){function PromiseInspection(promise){if(promise!==undefined){promise=promise._target();this._bitField=promise._bitField;this._settledValueField=promise._isFateSealed()?promise._settledValue():undefined;}else{this._bitField=0;this._settledValueField=undefined;}}PromiseInspection.prototype._settledValue=function(){return this._settledValueField;};var value=PromiseInspection.prototype.value=function(){if(!this.isFulfilled()){throw new TypeError("cannot get fulfillment value of a non-fulfilled promise\n\n    See http://goo.gl/MqrFmX\n");}return this._settledValue();};var reason=PromiseInspection.prototype.error=PromiseInspection.prototype.reason=function(){if(!this.isRejected()){throw new TypeError("cannot get rejection reason of a non-rejected promise\n\n    See http://goo.gl/MqrFmX\n");}return this._settledValue();};var isFulfilled=PromiseInspection.prototype.isFulfilled=function(){return(this._bitField&33554432)!==0;};var isRejected=PromiseInspection.prototype.isRejected=function(){return(this._bitField&16777216)!==0;};var isPending=PromiseInspection.prototype.isPending=function(){return(this._bitField&50397184)===0;};var isResolved=PromiseInspection.prototype.isResolved=function(){return(this._bitField&50331648)!==0;};PromiseInspection.prototype.isCancelled=Promise.prototype._isCancelled=function(){return(this._bitField&65536)===65536;};Promise.prototype.isCancelled=function(){return this._target()._isCancelled();};Promise.prototype.isPending=function(){return isPending.call(this._target());};Promise.prototype.isRejected=function(){return isRejected.call(this._target());};Promise.prototype.isFulfilled=function(){return isFulfilled.call(this._target());};Promise.prototype.isResolved=function(){return isResolved.call(this._target());};Promise.prototype.value=function(){return value.call(this._target());};Promise.prototype.reason=function(){var target=this._target();target._unsetRejectionIsUnhandled();return reason.call(target);};Promise.prototype._value=function(){return this._settledValue();};Promise.prototype._reason=function(){this._unsetRejectionIsUnhandled();return this._settledValue();};Promise.PromiseInspection=PromiseInspection;};},{}],33:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise,INTERNAL){var util=_dereq_("./util");var errorObj=util.errorObj;var isObject=util.isObject;function tryConvertToPromise(obj,context){if(isObject(obj)){if(obj instanceof Promise)return obj;var then=getThen(obj);if(then===errorObj){if(context)context._pushContext();var ret=Promise.reject(then.e);if(context)context._popContext();return ret;}else if(typeof then==="function"){if(isAnyBluebirdPromise(obj)){var ret=new Promise(INTERNAL);obj._then(ret._fulfill,ret._reject,undefined,ret,null);return ret;}return doThenable(obj,then,context);}}return obj;}function doGetThen(obj){return obj.then;}function getThen(obj){try{return doGetThen(obj);}catch(e){errorObj.e=e;return errorObj;}}var hasProp={}.hasOwnProperty;function isAnyBluebirdPromise(obj){try{return hasProp.call(obj,"_promise0");}catch(e){return false;}}function doThenable(x,then,context){var promise=new Promise(INTERNAL);var ret=promise;if(context)context._pushContext();promise._captureStackTrace();if(context)context._popContext();var synchronous=true;var result=util.tryCatch(then).call(x,resolve,reject);synchronous=false;if(promise&&result===errorObj){promise._rejectCallback(result.e,true,true);promise=null;}function resolve(value){if(!promise)return;promise._resolveCallback(value);promise=null;}function reject(reason){if(!promise)return;promise._rejectCallback(reason,synchronous,true);promise=null;}return ret;}return tryConvertToPromise;};},{"./util":36}],34:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise,INTERNAL,debug){var util=_dereq_("./util");var TimeoutError=Promise.TimeoutError;function HandleWrapper(handle){this.handle=handle;}HandleWrapper.prototype._resultCancelled=function(){clearTimeout(this.handle);};var afterValue=function afterValue(value){return delay(+this).thenReturn(value);};var delay=Promise.delay=function(ms,value){var ret;var handle;if(value!==undefined){ret=Promise.resolve(value)._then(afterValue,null,null,ms,undefined);if(debug.cancellation()&&value instanceof Promise){ret._setOnCancel(value);}}else{ret=new Promise(INTERNAL);handle=setTimeout(function(){ret._fulfill();},+ms);if(debug.cancellation()){ret._setOnCancel(new HandleWrapper(handle));}}ret._setAsyncGuaranteed();return ret;};Promise.prototype.delay=function(ms){return delay(ms,this);};var afterTimeout=function afterTimeout(promise,message,parent){var err;if(typeof message!=="string"){if(message instanceof Error){err=message;}else{err=new TimeoutError("operation timed out");}}else{err=new TimeoutError(message);}util.markAsOriginatingFromRejection(err);promise._attachExtraTrace(err);promise._reject(err);if(parent!=null){parent.cancel();}};function successClear(value){clearTimeout(this.handle);return value;}function failureClear(reason){clearTimeout(this.handle);throw reason;}Promise.prototype.timeout=function(ms,message){ms=+ms;var ret,parent;var handleWrapper=new HandleWrapper(setTimeout(function timeoutTimeout(){if(ret.isPending()){afterTimeout(ret,message,parent);}},ms));if(debug.cancellation()){parent=this.then();ret=parent._then(successClear,failureClear,undefined,handleWrapper,undefined);ret._setOnCancel(handleWrapper);}else{ret=this._then(successClear,failureClear,undefined,handleWrapper,undefined);}return ret;};};},{"./util":36}],35:[function(_dereq_,module,exports){"use strict";module.exports=function(Promise,apiRejection,tryConvertToPromise,createContext,INTERNAL,debug){var util=_dereq_("./util");var TypeError=_dereq_("./errors").TypeError;var inherits=_dereq_("./util").inherits;var errorObj=util.errorObj;var tryCatch=util.tryCatch;var NULL={};function thrower(e){setTimeout(function(){throw e;},0);}function castPreservingDisposable(thenable){var maybePromise=tryConvertToPromise(thenable);if(maybePromise!==thenable&&typeof thenable._isDisposable==="function"&&typeof thenable._getDisposer==="function"&&thenable._isDisposable()){maybePromise._setDisposable(thenable._getDisposer());}return maybePromise;}function dispose(resources,inspection){var i=0;var len=resources.length;var ret=new Promise(INTERNAL);function iterator(){if(i>=len)return ret._fulfill();var maybePromise=castPreservingDisposable(resources[i++]);if(maybePromise instanceof Promise&&maybePromise._isDisposable()){try{maybePromise=tryConvertToPromise(maybePromise._getDisposer().tryDispose(inspection),resources.promise);}catch(e){return thrower(e);}if(maybePromise instanceof Promise){return maybePromise._then(iterator,thrower,null,null,null);}}iterator();}iterator();return ret;}function Disposer(data,promise,context){this._data=data;this._promise=promise;this._context=context;}Disposer.prototype.data=function(){return this._data;};Disposer.prototype.promise=function(){return this._promise;};Disposer.prototype.resource=function(){if(this.promise().isFulfilled()){return this.promise().value();}return NULL;};Disposer.prototype.tryDispose=function(inspection){var resource=this.resource();var context=this._context;if(context!==undefined)context._pushContext();var ret=resource!==NULL?this.doDispose(resource,inspection):null;if(context!==undefined)context._popContext();this._promise._unsetDisposable();this._data=null;return ret;};Disposer.isDisposer=function(d){return d!=null&&typeof d.resource==="function"&&typeof d.tryDispose==="function";};function FunctionDisposer(fn,promise,context){this.constructor$(fn,promise,context);}inherits(FunctionDisposer,Disposer);FunctionDisposer.prototype.doDispose=function(resource,inspection){var fn=this.data();return fn.call(resource,resource,inspection);};function maybeUnwrapDisposer(value){if(Disposer.isDisposer(value)){this.resources[this.index]._setDisposable(value);return value.promise();}return value;}function ResourceList(length){this.length=length;this.promise=null;this[length-1]=null;}ResourceList.prototype._resultCancelled=function(){var len=this.length;for(var i=0;i<len;++i){var item=this[i];if(item instanceof Promise){item.cancel();}}};Promise.using=function(){var len=arguments.length;if(len<2)return apiRejection("you must pass at least 2 arguments to Promise.using");var fn=arguments[len-1];if(typeof fn!=="function"){return apiRejection("expecting a function but got "+util.classString(fn));}var input;var spreadArgs=true;if(len===2&&Array.isArray(arguments[0])){input=arguments[0];len=input.length;spreadArgs=false;}else{input=arguments;len--;}var resources=new ResourceList(len);for(var i=0;i<len;++i){var resource=input[i];if(Disposer.isDisposer(resource)){var disposer=resource;resource=resource.promise();resource._setDisposable(disposer);}else{var maybePromise=tryConvertToPromise(resource);if(maybePromise instanceof Promise){resource=maybePromise._then(maybeUnwrapDisposer,null,null,{resources:resources,index:i},undefined);}}resources[i]=resource;}var reflectedResources=new Array(resources.length);for(var i=0;i<reflectedResources.length;++i){reflectedResources[i]=Promise.resolve(resources[i]).reflect();}var resultPromise=Promise.all(reflectedResources).then(function(inspections){for(var i=0;i<inspections.length;++i){var inspection=inspections[i];if(inspection.isRejected()){errorObj.e=inspection.error();return errorObj;}else if(!inspection.isFulfilled()){resultPromise.cancel();return;}inspections[i]=inspection.value();}promise._pushContext();fn=tryCatch(fn);var ret=spreadArgs?fn.apply(undefined,inspections):fn(inspections);var promiseCreated=promise._popContext();debug.checkForgottenReturns(ret,promiseCreated,"Promise.using",promise);return ret;});var promise=resultPromise.lastly(function(){var inspection=new Promise.PromiseInspection(resultPromise);return dispose(resources,inspection);});resources.promise=promise;promise._setOnCancel(resources);return promise;};Promise.prototype._setDisposable=function(disposer){this._bitField=this._bitField|131072;this._disposer=disposer;};Promise.prototype._isDisposable=function(){return(this._bitField&131072)>0;};Promise.prototype._getDisposer=function(){return this._disposer;};Promise.prototype._unsetDisposable=function(){this._bitField=this._bitField&~131072;this._disposer=undefined;};Promise.prototype.disposer=function(fn){if(typeof fn==="function"){return new FunctionDisposer(fn,this,createContext());}throw new TypeError();};};},{"./errors":12,"./util":36}],36:[function(_dereq_,module,exports){"use strict";var es5=_dereq_("./es5");var canEvaluate=typeof navigator=="undefined";var errorObj={e:{}};var tryCatchTarget;var globalObject=typeof self!=="undefined"?self:typeof window!=="undefined"?window:typeof global!=="undefined"?global:this!==undefined?this:null;function tryCatcher(){try{var target=tryCatchTarget;tryCatchTarget=null;return target.apply(this,arguments);}catch(e){errorObj.e=e;return errorObj;}}function tryCatch(fn){tryCatchTarget=fn;return tryCatcher;}var inherits=function inherits(Child,Parent){var hasProp={}.hasOwnProperty;function T(){this.constructor=Child;this.constructor$=Parent;for(var propertyName in Parent.prototype){if(hasProp.call(Parent.prototype,propertyName)&&propertyName.charAt(propertyName.length-1)!=="$"){this[propertyName+"$"]=Parent.prototype[propertyName];}}}T.prototype=Parent.prototype;Child.prototype=new T();return Child.prototype;};function isPrimitive(val){return val==null||val===true||val===false||typeof val==="string"||typeof val==="number";}function isObject(value){return typeof value==="function"||(typeof value==="undefined"?"undefined":_typeof(value))==="object"&&value!==null;}function maybeWrapAsError(maybeError){if(!isPrimitive(maybeError))return maybeError;return new Error(safeToString(maybeError));}function withAppended(target,appendee){var len=target.length;var ret=new Array(len+1);var i;for(i=0;i<len;++i){ret[i]=target[i];}ret[i]=appendee;return ret;}function getDataPropertyOrDefault(obj,key,defaultValue){if(es5.isES5){var desc=Object.getOwnPropertyDescriptor(obj,key);if(desc!=null){return desc.get==null&&desc.set==null?desc.value:defaultValue;}}else{return{}.hasOwnProperty.call(obj,key)?obj[key]:undefined;}}function notEnumerableProp(obj,name,value){if(isPrimitive(obj))return obj;var descriptor={value:value,configurable:true,enumerable:false,writable:true};es5.defineProperty(obj,name,descriptor);return obj;}function thrower(r){throw r;}var inheritedDataKeys=function(){var excludedPrototypes=[Array.prototype,Object.prototype,Function.prototype];var isExcludedProto=function isExcludedProto(val){for(var i=0;i<excludedPrototypes.length;++i){if(excludedPrototypes[i]===val){return true;}}return false;};if(es5.isES5){var getKeys=Object.getOwnPropertyNames;return function(obj){var ret=[];var visitedKeys=Object.create(null);while(obj!=null&&!isExcludedProto(obj)){var keys;try{keys=getKeys(obj);}catch(e){return ret;}for(var i=0;i<keys.length;++i){var key=keys[i];if(visitedKeys[key])continue;visitedKeys[key]=true;var desc=Object.getOwnPropertyDescriptor(obj,key);if(desc!=null&&desc.get==null&&desc.set==null){ret.push(key);}}obj=es5.getPrototypeOf(obj);}return ret;};}else{var hasProp={}.hasOwnProperty;return function(obj){if(isExcludedProto(obj))return[];var ret=[];/*jshint forin:false */enumeration:for(var key in obj){if(hasProp.call(obj,key)){ret.push(key);}else{for(var i=0;i<excludedPrototypes.length;++i){if(hasProp.call(excludedPrototypes[i],key)){continue enumeration;}}ret.push(key);}}return ret;};}}();var thisAssignmentPattern=/this\s*\.\s*\S+\s*=/;function isClass(fn){try{if(typeof fn==="function"){var keys=es5.names(fn.prototype);var hasMethods=es5.isES5&&keys.length>1;var hasMethodsOtherThanConstructor=keys.length>0&&!(keys.length===1&&keys[0]==="constructor");var hasThisAssignmentAndStaticMethods=thisAssignmentPattern.test(fn+"")&&es5.names(fn).length>0;if(hasMethods||hasMethodsOtherThanConstructor||hasThisAssignmentAndStaticMethods){return true;}}return false;}catch(e){return false;}}function toFastProperties(obj){/*jshint -W027,-W055,-W031*/function FakeConstructor(){}FakeConstructor.prototype=obj;var l=8;while(l--){new FakeConstructor();}return obj;eval(obj);}var rident=/^[a-z$_][a-z$_0-9]*$/i;function isIdentifier(str){return rident.test(str);}function filledRange(count,prefix,suffix){var ret=new Array(count);for(var i=0;i<count;++i){ret[i]=prefix+i+suffix;}return ret;}function safeToString(obj){try{return obj+"";}catch(e){return"[no string representation]";}}function isError(obj){return obj!==null&&(typeof obj==="undefined"?"undefined":_typeof(obj))==="object"&&typeof obj.message==="string"&&typeof obj.name==="string";}function markAsOriginatingFromRejection(e){try{notEnumerableProp(e,"isOperational",true);}catch(ignore){}}function originatesFromRejection(e){if(e==null)return false;return e instanceof Error["__BluebirdErrorTypes__"].OperationalError||e["isOperational"]===true;}function canAttachTrace(obj){return isError(obj)&&es5.propertyIsWritable(obj,"stack");}var ensureErrorObject=function(){if(!("stack"in new Error())){return function(value){if(canAttachTrace(value))return value;try{throw new Error(safeToString(value));}catch(err){return err;}};}else{return function(value){if(canAttachTrace(value))return value;return new Error(safeToString(value));};}}();function classString(obj){return{}.toString.call(obj);}function copyDescriptors(from,to,filter){var keys=es5.names(from);for(var i=0;i<keys.length;++i){var key=keys[i];if(filter(key)){try{es5.defineProperty(to,key,es5.getDescriptor(from,key));}catch(ignore){}}}}var asArray=function asArray(v){if(es5.isArray(v)){return v;}return null;};if(typeof Symbol!=="undefined"&&Symbol.iterator){var ArrayFrom=typeof Array.from==="function"?function(v){return Array.from(v);}:function(v){var ret=[];var it=v[Symbol.iterator]();var itResult;while(!(itResult=it.next()).done){ret.push(itResult.value);}return ret;};asArray=function asArray(v){if(es5.isArray(v)){return v;}else if(v!=null&&typeof v[Symbol.iterator]==="function"){return ArrayFrom(v);}return null;};}var isNode=typeof process!=="undefined"&&classString(process).toLowerCase()==="[object process]";function env(key,def){return isNode?process.env[key]:def;}function getNativePromise(){if(typeof Promise==="function"){try{var promise=new Promise(function(){});if({}.toString.call(promise)==="[object Promise]"){return Promise;}}catch(e){}}}var ret={isClass:isClass,isIdentifier:isIdentifier,inheritedDataKeys:inheritedDataKeys,getDataPropertyOrDefault:getDataPropertyOrDefault,thrower:thrower,isArray:es5.isArray,asArray:asArray,notEnumerableProp:notEnumerableProp,isPrimitive:isPrimitive,isObject:isObject,isError:isError,canEvaluate:canEvaluate,errorObj:errorObj,tryCatch:tryCatch,inherits:inherits,withAppended:withAppended,maybeWrapAsError:maybeWrapAsError,toFastProperties:toFastProperties,filledRange:filledRange,toString:safeToString,canAttachTrace:canAttachTrace,ensureErrorObject:ensureErrorObject,originatesFromRejection:originatesFromRejection,markAsOriginatingFromRejection:markAsOriginatingFromRejection,classString:classString,copyDescriptors:copyDescriptors,hasDevTools:typeof chrome!=="undefined"&&chrome&&typeof chrome.loadTimes==="function",isNode:isNode,env:env,global:globalObject,getNativePromise:getNativePromise};ret.isRecentNode=ret.isNode&&function(){var version=process.versions.node.split(".").map(Number);return version[0]===0&&version[1]>10||version[0]>0;}();if(ret.isNode)ret.toFastProperties(process);try{throw new Error();}catch(e){ret.lastLineError=e;}module.exports=ret;},{"./es5":13}]},{},[4])(4);});;if(typeof window!=='undefined'&&window!==null){window.P=window.Promise;}else if(typeof self!=='undefined'&&self!==null){self.P=self.Promise;}/* WEBPACK VAR INJECTION */}).call(exports,__webpack_require__(2),function(){return this;}(),__webpack_require__(1).setImmediate);/***/},/* 5 *//***/function(module,exports){module.exports=$;/***/}/******/]);/***/}/******/]);/***/}/******/]);/***/}/******/]);/***/}/******/]);/***/}/******/]);
+	/*
+		MIT License http://www.opensource.org/licenses/mit-license.php
+		Author Tobias Koppers @sokra
+	*/
+	// css base code, injected by the css-loader
+	module.exports = function() {
+		var list = [];
+	
+		// return the list of modules as css string
+		list.toString = function toString() {
+			var result = [];
+			for(var i = 0; i < this.length; i++) {
+				var item = this[i];
+				if(item[2]) {
+					result.push("@media " + item[2] + "{" + item[1] + "}");
+				} else {
+					result.push(item[1]);
+				}
+			}
+			return result.join("");
+		};
+	
+		// import a list of modules into the list
+		list.i = function(modules, mediaQuery) {
+			if(typeof modules === "string")
+				modules = [[null, modules, ""]];
+			var alreadyImportedModules = {};
+			for(var i = 0; i < this.length; i++) {
+				var id = this[i][0];
+				if(typeof id === "number")
+					alreadyImportedModules[id] = true;
+			}
+			for(i = 0; i < modules.length; i++) {
+				var item = modules[i];
+				// skip already imported module
+				// this implementation is not 100% perfect for weird media query combinations
+				//  when a module is imported multiple times with different media queries.
+				//  I hope this will never occur (Hey this way we have smaller bundles)
+				if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+					if(mediaQuery && !item[2]) {
+						item[2] = mediaQuery;
+					} else if(mediaQuery) {
+						item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+					}
+					list.push(item);
+				}
+			}
+		};
+		return list;
+	};
+
+
+/***/ },
+/* 2 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+		MIT License http://www.opensource.org/licenses/mit-license.php
+		Author Tobias Koppers @sokra
+	*/
+	var stylesInDom = {},
+		memoize = function(fn) {
+			var memo;
+			return function () {
+				if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+				return memo;
+			};
+		},
+		isOldIE = memoize(function() {
+			return /msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase());
+		}),
+		getHeadElement = memoize(function () {
+			return document.head || document.getElementsByTagName("head")[0];
+		}),
+		singletonElement = null,
+		singletonCounter = 0,
+		styleElementsInsertedAtTop = [];
+	
+	module.exports = function(list, options) {
+		if(false) {
+			if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+		}
+	
+		options = options || {};
+		// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+		// tags it will allow on a page
+		if (typeof options.singleton === "undefined") options.singleton = isOldIE();
+	
+		// By default, add <style> tags to the bottom of <head>.
+		if (typeof options.insertAt === "undefined") options.insertAt = "bottom";
+	
+		var styles = listToStyles(list);
+		addStylesToDom(styles, options);
+	
+		return function update(newList) {
+			var mayRemove = [];
+			for(var i = 0; i < styles.length; i++) {
+				var item = styles[i];
+				var domStyle = stylesInDom[item.id];
+				domStyle.refs--;
+				mayRemove.push(domStyle);
+			}
+			if(newList) {
+				var newStyles = listToStyles(newList);
+				addStylesToDom(newStyles, options);
+			}
+			for(var i = 0; i < mayRemove.length; i++) {
+				var domStyle = mayRemove[i];
+				if(domStyle.refs === 0) {
+					for(var j = 0; j < domStyle.parts.length; j++)
+						domStyle.parts[j]();
+					delete stylesInDom[domStyle.id];
+				}
+			}
+		};
+	}
+	
+	function addStylesToDom(styles, options) {
+		for(var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+			if(domStyle) {
+				domStyle.refs++;
+				for(var j = 0; j < domStyle.parts.length; j++) {
+					domStyle.parts[j](item.parts[j]);
+				}
+				for(; j < item.parts.length; j++) {
+					domStyle.parts.push(addStyle(item.parts[j], options));
+				}
+			} else {
+				var parts = [];
+				for(var j = 0; j < item.parts.length; j++) {
+					parts.push(addStyle(item.parts[j], options));
+				}
+				stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+			}
+		}
+	}
+	
+	function listToStyles(list) {
+		var styles = [];
+		var newStyles = {};
+		for(var i = 0; i < list.length; i++) {
+			var item = list[i];
+			var id = item[0];
+			var css = item[1];
+			var media = item[2];
+			var sourceMap = item[3];
+			var part = {css: css, media: media, sourceMap: sourceMap};
+			if(!newStyles[id])
+				styles.push(newStyles[id] = {id: id, parts: [part]});
+			else
+				newStyles[id].parts.push(part);
+		}
+		return styles;
+	}
+	
+	function insertStyleElement(options, styleElement) {
+		var head = getHeadElement();
+		var lastStyleElementInsertedAtTop = styleElementsInsertedAtTop[styleElementsInsertedAtTop.length - 1];
+		if (options.insertAt === "top") {
+			if(!lastStyleElementInsertedAtTop) {
+				head.insertBefore(styleElement, head.firstChild);
+			} else if(lastStyleElementInsertedAtTop.nextSibling) {
+				head.insertBefore(styleElement, lastStyleElementInsertedAtTop.nextSibling);
+			} else {
+				head.appendChild(styleElement);
+			}
+			styleElementsInsertedAtTop.push(styleElement);
+		} else if (options.insertAt === "bottom") {
+			head.appendChild(styleElement);
+		} else {
+			throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
+		}
+	}
+	
+	function removeStyleElement(styleElement) {
+		styleElement.parentNode.removeChild(styleElement);
+		var idx = styleElementsInsertedAtTop.indexOf(styleElement);
+		if(idx >= 0) {
+			styleElementsInsertedAtTop.splice(idx, 1);
+		}
+	}
+	
+	function createStyleElement(options) {
+		var styleElement = document.createElement("style");
+		styleElement.type = "text/css";
+		insertStyleElement(options, styleElement);
+		return styleElement;
+	}
+	
+	function createLinkElement(options) {
+		var linkElement = document.createElement("link");
+		linkElement.rel = "stylesheet";
+		insertStyleElement(options, linkElement);
+		return linkElement;
+	}
+	
+	function addStyle(obj, options) {
+		var styleElement, update, remove;
+	
+		if (options.singleton) {
+			var styleIndex = singletonCounter++;
+			styleElement = singletonElement || (singletonElement = createStyleElement(options));
+			update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
+			remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
+		} else if(obj.sourceMap &&
+			typeof URL === "function" &&
+			typeof URL.createObjectURL === "function" &&
+			typeof URL.revokeObjectURL === "function" &&
+			typeof Blob === "function" &&
+			typeof btoa === "function") {
+			styleElement = createLinkElement(options);
+			update = updateLink.bind(null, styleElement);
+			remove = function() {
+				removeStyleElement(styleElement);
+				if(styleElement.href)
+					URL.revokeObjectURL(styleElement.href);
+			};
+		} else {
+			styleElement = createStyleElement(options);
+			update = applyToTag.bind(null, styleElement);
+			remove = function() {
+				removeStyleElement(styleElement);
+			};
+		}
+	
+		update(obj);
+	
+		return function updateStyle(newObj) {
+			if(newObj) {
+				if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
+					return;
+				update(obj = newObj);
+			} else {
+				remove();
+			}
+		};
+	}
+	
+	var replaceText = (function () {
+		var textStore = [];
+	
+		return function (index, replacement) {
+			textStore[index] = replacement;
+			return textStore.filter(Boolean).join('\n');
+		};
+	})();
+	
+	function applyToSingletonTag(styleElement, index, remove, obj) {
+		var css = remove ? "" : obj.css;
+	
+		if (styleElement.styleSheet) {
+			styleElement.styleSheet.cssText = replaceText(index, css);
+		} else {
+			var cssNode = document.createTextNode(css);
+			var childNodes = styleElement.childNodes;
+			if (childNodes[index]) styleElement.removeChild(childNodes[index]);
+			if (childNodes.length) {
+				styleElement.insertBefore(cssNode, childNodes[index]);
+			} else {
+				styleElement.appendChild(cssNode);
+			}
+		}
+	}
+	
+	function applyToTag(styleElement, obj) {
+		var css = obj.css;
+		var media = obj.media;
+	
+		if(media) {
+			styleElement.setAttribute("media", media)
+		}
+	
+		if(styleElement.styleSheet) {
+			styleElement.styleSheet.cssText = css;
+		} else {
+			while(styleElement.firstChild) {
+				styleElement.removeChild(styleElement.firstChild);
+			}
+			styleElement.appendChild(document.createTextNode(css));
+		}
+	}
+	
+	function updateLink(linkElement, obj) {
+		var css = obj.css;
+		var sourceMap = obj.sourceMap;
+	
+		if(sourceMap) {
+			// http://stackoverflow.com/a/26603875
+			css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+		}
+	
+		var blob = new Blob([css], { type: "text/css" });
+	
+		var oldSrc = linkElement.href;
+	
+		linkElement.href = URL.createObjectURL(blob);
+	
+		if(oldSrc)
+			URL.revokeObjectURL(oldSrc);
+	}
+
+
+/***/ },
+/* 3 */
+/***/ function(module, exports) {
+
+	"use strict";
+	/**
+	 * Known themes used to tell the client where to insert the datepicker.
+	 */
+	exports.Themes = [
+	    {
+	        id: 79146374,
+	        name: "launchpad-star",
+	        element: {
+	            placement: "before",
+	            selector: "input.btn--secondary.update-cart[name=update]"
+	        }
+	    }
+	];
+
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(1)();
+	// imports
+	
+	
+	// module
+	exports.push([module.id, ".datepicker--cells{display:-ms-flexbox;display:-webkit-box;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap}.datepicker--cell{border-radius:4px;box-sizing:border-box;cursor:pointer;display:-ms-flexbox;display:-webkit-box;display:flex;position:relative;-ms-flex-align:center;-webkit-box-align:center;align-items:center;-ms-flex-pack:center;-webkit-box-pack:center;justify-content:center;height:32px;z-index:1}.datepicker--cell.-focus-{background:#f0f0f0}.datepicker--cell.-current-{color:#4EB5E6}.datepicker--cell.-current-.-focus-{color:#4a4a4a}.datepicker--cell.-current-.-in-range-{color:#4EB5E6}.datepicker--cell.-in-range-{background:rgba(92,196,239,.1);color:#4a4a4a;border-radius:0}.datepicker--cell.-in-range-.-focus-{background-color:rgba(92,196,239,.2)}.datepicker--cell.-disabled-{cursor:default;color:#aeaeae}.datepicker--cell.-disabled-.-focus-{color:#aeaeae}.datepicker--cell.-disabled-.-in-range-{color:#a1a1a1}.datepicker--cell.-disabled-.-current-.-focus-{color:#aeaeae}.datepicker--cell.-range-from-{border:1px solid rgba(92,196,239,.5);background-color:rgba(92,196,239,.1);border-radius:4px 0 0 4px}.datepicker--cell.-range-to-{border:1px solid rgba(92,196,239,.5);background-color:rgba(92,196,239,.1);border-radius:0 4px 4px 0}.datepicker--cell.-selected-, .datepicker--cell.-selected-.-current-{color:#fff;background:#5cc4ef}.datepicker--cell.-range-from-.-range-to-{border-radius:4px}.datepicker--cell.-selected-{border:none}.datepicker--cell.-selected-.-focus-{background:#45bced}.datepicker--cell:empty{cursor:default}.datepicker--days-names{display:-ms-flexbox;display:-webkit-box;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;margin:8px 0 3px}.datepicker--day-name{color:#FF9A19;display:-ms-flexbox;display:-webkit-box;display:flex;-ms-flex-align:center;-webkit-box-align:center;align-items:center;-ms-flex-pack:center;-webkit-box-pack:center;justify-content:center;-ms-flex:1;-webkit-box-flex:1;flex:1;text-align:center;text-transform:uppercase;font-size:.8em}.datepicker--body, .datepicker-inline .datepicker--pointer{display:none}.datepicker--cell-day{width:14.28571%}.datepicker--cells-months{height:170px}.datepicker--cell-month{width:33.33%;height:25%}.datepicker--cells-years, .datepicker--years{height:170px}.datepicker--cell-year{width:25%;height:33.33%}.datepickers-container{position:absolute;left:0;top:0}@media print{.datepickers-container{display:none}}.datepicker{background:#fff;border:1px solid #dbdbdb;box-shadow:0 4px 12px rgba(0,0,0,.15);border-radius:4px;box-sizing:content-box;font-family:Tahoma,sans-serif;font-size:14px;color:#4a4a4a;width:250px;position:absolute;left:-100000px;opacity:0;transition:opacity .3s ease,left 0s .3s,-webkit-transform .3s ease;-webkit-transition:opacity .3s ease,left 0s .3s,-webkit-transform .3s ease;transition:opacity .3s ease,transform .3s ease,left 0s .3s;transition:opacity .3s ease,transform .3s ease,left 0s .3s,-webkit-transform .3s ease;z-index:100}.datepicker.-from-top-{-webkit-transform:translateY(-8px);transform:translateY(-8px)}.datepicker.-from-right-{-webkit-transform:translateX(8px);transform:translateX(8px)}.datepicker.-from-bottom-{-webkit-transform:translateY(8px);transform:translateY(8px)}.datepicker.-from-left-{-webkit-transform:translateX(-8px);transform:translateX(-8px)}.datepicker.active{opacity:1;-webkit-transform:translate(0);transform:translate(0);transition:opacity .3s ease,left 0s 0s,-webkit-transform .3s ease;-webkit-transition:opacity .3s ease,left 0s 0s,-webkit-transform .3s ease;transition:opacity .3s ease,transform .3s ease,left 0s 0s;transition:opacity .3s ease,transform .3s ease,left 0s 0s,-webkit-transform .3s ease}.datepicker-inline .datepicker{border-color:#d7d7d7;box-shadow:none;position:static;left:auto;right:auto;opacity:1;-webkit-transform:none;transform:none}.datepicker--content{box-sizing:content-box;padding:4px}.datepicker--pointer{position:absolute;background:#fff;border-top:1px solid #dbdbdb;border-right:1px solid #dbdbdb;width:10px;height:10px;z-index:-1}.datepicker--nav-action:hover, .datepicker--nav-title:hover{background:#f0f0f0}.-top-center- .datepicker--pointer, .-top-left- .datepicker--pointer, .-top-right- .datepicker--pointer{top:calc(100% - 4px);-webkit-transform:rotate(135deg);transform:rotate(135deg)}.-right-bottom- .datepicker--pointer, .-right-center- .datepicker--pointer, .-right-top- .datepicker--pointer{right:calc(100% - 4px);-webkit-transform:rotate(225deg);transform:rotate(225deg)}.-bottom-center- .datepicker--pointer, .-bottom-left- .datepicker--pointer, .-bottom-right- .datepicker--pointer{bottom:calc(100% - 4px);-webkit-transform:rotate(315deg);transform:rotate(315deg)}.-left-bottom- .datepicker--pointer, .-left-center- .datepicker--pointer, .-left-top- .datepicker--pointer{left:calc(100% - 4px);-webkit-transform:rotate(45deg);transform:rotate(45deg)}.-bottom-left- .datepicker--pointer, .-top-left- .datepicker--pointer{left:10px}.-bottom-right- .datepicker--pointer, .-top-right- .datepicker--pointer{right:10px}.-bottom-center- .datepicker--pointer, .-top-center- .datepicker--pointer{left:calc(50% - 10px / 2)}.-left-top- .datepicker--pointer, .-right-top- .datepicker--pointer{top:10px}.-left-bottom- .datepicker--pointer, .-right-bottom- .datepicker--pointer{bottom:10px}.-left-center- .datepicker--pointer, .-right-center- .datepicker--pointer{top:calc(50% - 10px / 2)}.datepicker--body.active{display:block}.datepicker--nav{display:-ms-flexbox;display:-webkit-box;display:flex;-ms-flex-pack:justify;-webkit-box-pack:justify;justify-content:space-between;border-bottom:1px solid #efefef;min-height:32px;padding:4px}.datepicker--nav-action, .datepicker--nav-title{display:-ms-flexbox;display:-webkit-box;display:flex;cursor:pointer;-ms-flex-align:center;-webkit-box-align:center;align-items:center;-ms-flex-pack:center;-webkit-box-pack:center;justify-content:center}.datepicker--nav-action{width:32px;border-radius:4px;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.datepicker--nav-action.-disabled-{visibility:hidden}.datepicker--nav-action svg{width:32px;height:32px}.datepicker--nav-action path{fill:none;stroke:#9c9c9c;stroke-width:2px}.datepicker--nav-title{border-radius:4px;padding:0 8px}.datepicker--buttons, .datepicker--time{border-top:1px solid #efefef;padding:4px}.datepicker--nav-title i{font-style:normal;color:#9c9c9c;margin-left:5px}.datepicker--nav-title.-disabled-{cursor:default;background:0 0}.datepicker--buttons{display:-ms-flexbox;display:-webkit-box;display:flex}.datepicker--button{color:#4EB5E6;cursor:pointer;border-radius:4px;-ms-flex:1;-webkit-box-flex:1;flex:1;display:-ms-inline-flexbox;display:-webkit-inline-box;display:inline-flex;-ms-flex-pack:center;-webkit-box-pack:center;justify-content:center;-ms-flex-align:center;-webkit-box-align:center;align-items:center;height:32px}.datepicker--button:hover{color:#4a4a4a;background:#f0f0f0}.datepicker--time{display:-ms-flexbox;display:-webkit-box;display:flex;-ms-flex-align:center;-webkit-box-align:center;align-items:center;position:relative}.datepicker--time.-am-pm- .datepicker--time-sliders{-ms-flex:0 1 138px;-webkit-box-flex:0;flex:0 1 138px;max-width:138px}.datepicker--time-sliders{-ms-flex:0 1 153px;-webkit-box-flex:0;flex:0 1 153px;margin-right:10px;max-width:153px}.datepicker--time-label{display:none;font-size:12px}.datepicker--time-current{display:-ms-flexbox;display:-webkit-box;display:flex;-ms-flex-align:center;-webkit-box-align:center;align-items:center;-ms-flex:1;-webkit-box-flex:1;flex:1;font-size:14px;text-align:center;margin:0 0 0 10px}.datepicker--time-current-colon{margin:0 2px 3px;line-height:1}.datepicker--time-current-hours, .datepicker--time-current-minutes{line-height:1;font-size:19px;font-family:\"Century Gothic\",CenturyGothic,AppleGothic,sans-serif;position:relative;z-index:1}.datepicker--time-current-hours:after, .datepicker--time-current-minutes:after{content:'';background:#f0f0f0;border-radius:4px;position:absolute;left:-2px;top:-3px;right:-2px;bottom:-2px;z-index:-1;opacity:0}.datepicker--time-current-hours.-focus-:after, .datepicker--time-current-minutes.-focus-:after{opacity:1}.datepicker--time-current-ampm{text-transform:uppercase;-ms-flex-item-align:end;align-self:flex-end;color:#9c9c9c;margin-left:6px;font-size:11px;margin-bottom:1px}.datepicker--time-row{display:-ms-flexbox;display:-webkit-box;display:flex;-ms-flex-align:center;-webkit-box-align:center;align-items:center;font-size:11px;height:17px;background:-webkit-linear-gradient(left,#dedede,#dedede) left 50%/100% 1px no-repeat;background:linear-gradient(to right,#dedede,#dedede) left 50%/100% 1px no-repeat}.datepicker--time-row:first-child{margin-bottom:4px}.datepicker--time-row input[type=range]{background:0 0;cursor:pointer;-ms-flex:1;-webkit-box-flex:1;flex:1;height:100%;padding:0;margin:0;-webkit-appearance:none}.datepicker--time-row input[type=range]::-ms-tooltip{display:none}.datepicker--time-row input[type=range]:hover::-webkit-slider-thumb{border-color:#b8b8b8}.datepicker--time-row input[type=range]:hover::-moz-range-thumb{border-color:#b8b8b8}.datepicker--time-row input[type=range]:hover::-ms-thumb{border-color:#b8b8b8}.datepicker--time-row input[type=range]:focus{outline:0}.datepicker--time-row input[type=range]:focus::-webkit-slider-thumb{background:#5cc4ef;border-color:#5cc4ef}.datepicker--time-row input[type=range]:focus::-moz-range-thumb{background:#5cc4ef;border-color:#5cc4ef}.datepicker--time-row input[type=range]:focus::-ms-thumb{background:#5cc4ef;border-color:#5cc4ef}.datepicker--time-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;box-sizing:border-box;height:12px;width:12px;border-radius:3px;border:1px solid #dedede;background:#fff;cursor:pointer;-webkit-transition:background .2s;transition:background .2s;margin-top:-6px}.datepicker--time-row input[type=range]::-moz-range-thumb{box-sizing:border-box;height:12px;width:12px;border-radius:3px;border:1px solid #dedede;background:#fff;cursor:pointer;-webkit-transition:background .2s;transition:background .2s}.datepicker--time-row input[type=range]::-ms-thumb{box-sizing:border-box;height:12px;width:12px;border-radius:3px;border:1px solid #dedede;background:#fff;cursor:pointer;-webkit-transition:background .2s;transition:background .2s}.datepicker--time-row input[type=range]::-webkit-slider-runnable-track{border:none;height:1px;cursor:pointer;color:transparent;background:0 0}.datepicker--time-row input[type=range]::-moz-range-track{border:none;height:1px;cursor:pointer;color:transparent;background:0 0}.datepicker--time-row input[type=range]::-ms-track{border:none;height:1px;cursor:pointer;color:transparent;background:0 0}.datepicker--time-row input[type=range]::-ms-fill-lower{background:0 0}.datepicker--time-row input[type=range]::-ms-fill-upper{background:0 0}.datepicker--time-row span{padding:0 12px}.datepicker--time-icon{color:#9c9c9c;border:1px solid;border-radius:50%;font-size:16px;position:relative;margin:0 5px -1px 0;width:1em;height:1em}.datepicker--time-icon:after, .datepicker--time-icon:before{content:'';background:currentColor;position:absolute}.datepicker--time-icon:after{height:.4em;width:1px;left:calc(50% - 1px);top:calc(50% + 1px);-webkit-transform:translateY(-100%);transform:translateY(-100%)}.datepicker--time-icon:before{width:.4em;height:1px;top:calc(50% + 1px);left:calc(50% - 1px)}.datepicker--cell-day.-other-month-, .datepicker--cell-year.-other-decade-{color:#dedede}.datepicker--cell-day.-other-month-:hover, .datepicker--cell-year.-other-decade-:hover{color:#c5c5c5}.-disabled-.-focus-.datepicker--cell-day.-other-month-, .-disabled-.-focus-.datepicker--cell-year.-other-decade-{color:#dedede}.-selected-.datepicker--cell-day.-other-month-, .-selected-.datepicker--cell-year.-other-decade-{color:#fff;background:#a2ddf6}.-selected-.-focus-.datepicker--cell-day.-other-month-, .-selected-.-focus-.datepicker--cell-year.-other-decade-{background:#8ad5f4}.-in-range-.datepicker--cell-day.-other-month-, .-in-range-.datepicker--cell-year.-other-decade-{background-color:rgba(92,196,239,.1);color:#ccc}.-in-range-.-focus-.datepicker--cell-day.-other-month-, .-in-range-.-focus-.datepicker--cell-year.-other-decade-{background-color:rgba(92,196,239,.2)}.datepicker--cell-day.-other-month-:empty, .datepicker--cell-year.-other-decade-:empty{background:0 0;border:none}", ""]);
+	
+	// exports
+
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(1)();
+	// imports
+	
+	
+	// module
+	exports.push([module.id, "div#deliveron-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: end;\n      -ms-flex-pack: end;\n          justify-content: flex-end; }\n  div#deliveron-container input#deliveron-picker {\n    width: auto;\n    min-width: 240px;\n    display: block; }\n", ""]);
+	
+	// exports
+
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	;(function ($) { $.fn.datepicker.language['da'] = {
+	    days: ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'],
+	    daysShort: ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør'],
+	    daysMin: ['Sø', 'Ma', 'Ti', 'On', 'To', 'Fr', 'Lø'],
+	    months: ['Januar','Februar','Marts','April','Maj','Juni', 'Juli','August','September','Oktober','November','December'],
+	    monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'Maj', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'],
+	    today: 'I dag',
+	    clear: 'Nulstil',
+	    dateFormat: 'dd/mm/yyyy',
+	    timeFormat: 'hh:ii',
+	    firstDay: 1
+	}; })(jQuery);
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	;(function ($) { $.fn.datepicker.language['de'] = {
+	    days: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
+	    daysShort: ['Son', 'Mon', 'Die', 'Mit', 'Don', 'Fre', 'Sam'],
+	    daysMin: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
+	    months: ['Januar','Februar','März','April','Mai','Juni', 'Juli','August','September','Oktober','November','Dezember'],
+	    monthsShort: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
+	    today: 'Heute',
+	    clear: 'Aufräumen',
+	    dateFormat: 'dd.mm.yyyy',
+	    timeFormat: 'hh:ii',
+	    firstDay: 1
+	};
+	 })(jQuery);
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	;(function ($) { $.fn.datepicker.language['en'] = {
+	    days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+	    daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+	    daysMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+	    months: ['January','February','March','April','May','June', 'July','August','September','October','November','December'],
+	    monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+	    today: 'Today',
+	    clear: 'Clear',
+	    dateFormat: 'mm/dd/yyyy',
+	    timeFormat: 'hh:ii aa',
+	    firstDay: 0
+	}; })(jQuery);
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	;(function ($) { $.fn.datepicker.language['nl'] = {
+	    days: ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'],
+	    daysShort: ['zo', 'ma', 'di', 'wo', 'do', 'vr', 'za'],
+	    daysMin: ['zo', 'ma', 'di', 'wo', 'do', 'vr', 'za'],
+	    months: ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December'],
+	    monthsShort: ['Jan', 'Feb', 'Mrt', 'Apr', 'Mei', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'],
+	    today: 'Vandaag',
+	    clear: 'Legen',
+	    dateFormat: 'dd-MM-yy',
+	    timeFormat: 'hh:ii',
+	    firstDay: 0
+	}; })(jQuery);
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	;(function ($) { $.fn.datepicker.language['pt-BR'] = {
+	    days: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+	    daysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+	    daysMin: ['Do', 'Se', 'Te', 'Qu', 'Qu', 'Se', 'Sa'],
+	    months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+	    monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+	    today: 'Hoje',
+	    clear: 'Limpar',
+	    dateFormat: 'dd/mm/yyyy',
+	    timeFormat: 'hh:ii',
+	    firstDay: 0
+	}; })(jQuery);
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	;(function ($) { $.fn.datepicker.language['pt'] = {
+	    days: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+	    daysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+	    daysMin: ['Do', 'Se', 'Te', 'Qa', 'Qi', 'Sx', 'Sa'],
+	    months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+	    monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+	    today: 'Hoje',
+	    clear: 'Limpar',
+	    dateFormat: 'dd/mm/yyyy',
+	    timeFormat: 'hh:ii',
+	    firstDay: 1
+	}; })(jQuery);
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+	;(function ($) { $.fn.datepicker.language['ro'] = {
+	    days: ['Duminică', 'Luni', 'Marţi', 'Miercuri', 'Joi', 'Vineri', 'Sâmbătă'],
+	    daysShort: ['Dum', 'Lun', 'Mar', 'Mie', 'Joi', 'Vin', 'Sâm'],
+	    daysMin: ['D', 'L', 'Ma', 'Mi', 'J', 'V', 'S'],
+	    months: ['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'],
+	    monthsShort: ['Ian', 'Feb', 'Mar', 'Apr', 'Mai', 'Iun', 'Iul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
+	    today: 'Azi',
+	    clear: 'Şterge',
+	    dateFormat: 'dd.mm.yyyy',
+	    timeFormat: 'hh:ii',
+	    firstDay: 1
+	};
+	 })(jQuery);
+
+/***/ },
+/* 13 */
+/***/ function(module, exports) {
+
+	;(function ($) { $.fn.datepicker.language['zh'] = {
+	    days: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+	    daysShort: ['日', '一', '二', '三', '四', '五', '六'],
+	    daysMin: ['日', '一', '二', '三', '四', '五', '六'],
+	    months: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+	    monthsShort: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+	    today: '今天',
+	    clear: '清除',
+	    dateFormat: 'yyyy-mm-dd',
+	    timeFormat: 'hh:ii',
+	    firstDay: 1
+	}; })(jQuery);
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(16);
+	__webpack_require__(15);
+	__webpack_require__(17);
+	__webpack_require__(18);
+
+/***/ },
+/* 15 */
+/***/ function(module, exports) {
+
+	;(function () {
+	    var templates = {
+	        days:'' +
+	        '<div class="datepicker--days datepicker--body">' +
+	        '<div class="datepicker--days-names"></div>' +
+	        '<div class="datepicker--cells datepicker--cells-days"></div>' +
+	        '</div>',
+	        months: '' +
+	        '<div class="datepicker--months datepicker--body">' +
+	        '<div class="datepicker--cells datepicker--cells-months"></div>' +
+	        '</div>',
+	        years: '' +
+	        '<div class="datepicker--years datepicker--body">' +
+	        '<div class="datepicker--cells datepicker--cells-years"></div>' +
+	        '</div>'
+	        },
+	        datepicker = $.fn.datepicker,
+	        dp = datepicker.Constructor;
+	
+	    datepicker.Body = function (d, type, opts) {
+	        this.d = d;
+	        this.type = type;
+	        this.opts = opts;
+	
+	        this.init();
+	    };
+	
+	    datepicker.Body.prototype = {
+	        init: function () {
+	            this._buildBaseHtml();
+	            this._render();
+	
+	            this._bindEvents();
+	        },
+	
+	        _bindEvents: function () {
+	            this.$el.on('click', '.datepicker--cell', $.proxy(this._onClickCell, this));
+	        },
+	
+	        _buildBaseHtml: function () {
+	            this.$el = $(templates[this.type]).appendTo(this.d.$content);
+	            this.$names = $('.datepicker--days-names', this.$el);
+	            this.$cells = $('.datepicker--cells', this.$el);
+	        },
+	
+	        _getDayNamesHtml: function (firstDay, curDay, html, i) {
+	            curDay = curDay != undefined ? curDay : firstDay;
+	            html = html ? html : '';
+	            i = i != undefined ? i : 0;
+	
+	            if (i > 7) return html;
+	            if (curDay == 7) return this._getDayNamesHtml(firstDay, 0, html, ++i);
+	
+	            html += '<div class="datepicker--day-name' + (this.d.isWeekend(curDay) ? " -weekend-" : "") + '">' + this.d.loc.daysMin[curDay] + '</div>';
+	
+	            return this._getDayNamesHtml(firstDay, ++curDay, html, ++i);
+	        },
+	
+	        _getCellContents: function (date, type) {
+	            var classes = "datepicker--cell datepicker--cell-" + type,
+	                currentDate = new Date(),
+	                parent = this.d,
+	                opts = parent.opts,
+	                d = dp.getParsedDate(date),
+	                render = {},
+	                html = d.date;
+	
+	            if (opts.onRenderCell) {
+	                render = opts.onRenderCell(date, type) || {};
+	                html = render.html ? render.html : html;
+	                classes += render.classes ? ' ' + render.classes : '';
+	            }
+	
+	            switch (type) {
+	                case 'day':
+	                    if (parent.isWeekend(d.day)) classes += " -weekend-";
+	                    if (d.month != this.d.parsedDate.month) {
+	                        classes += " -other-month-";
+	                        if (!opts.selectOtherMonths) {
+	                            classes += " -disabled-";
+	                        }
+	                        if (!opts.showOtherMonths) html = '';
+	                    }
+	                    break;
+	                case 'month':
+	                    html = parent.loc[parent.opts.monthsField][d.month];
+	                    break;
+	                case 'year':
+	                    var decade = parent.curDecade;
+	                    html = d.year;
+	                    if (d.year < decade[0] || d.year > decade[1]) {
+	                        classes += ' -other-decade-';
+	                        if (!opts.selectOtherYears) {
+	                            classes += " -disabled-";
+	                        }
+	                        if (!opts.showOtherYears) html = '';
+	                    }
+	                    break;
+	            }
+	
+	            if (opts.onRenderCell) {
+	                render = opts.onRenderCell(date, type) || {};
+	                html = render.html ? render.html : html;
+	                classes += render.classes ? ' ' + render.classes : '';
+	            }
+	
+	            if (opts.range) {
+	                if (dp.isSame(parent.minRange, date, type)) classes += ' -range-from-';
+	                if (dp.isSame(parent.maxRange, date, type)) classes += ' -range-to-';
+	
+	                if (parent.selectedDates.length == 1 && parent.focused) {
+	                    if (
+	                        (dp.bigger(parent.minRange, date) && dp.less(parent.focused, date)) ||
+	                        (dp.less(parent.maxRange, date) && dp.bigger(parent.focused, date)))
+	                    {
+	                        classes += ' -in-range-'
+	                    }
+	
+	                    if (dp.less(parent.maxRange, date) && dp.isSame(parent.focused, date)) {
+	                        classes += ' -range-from-'
+	                    }
+	                    if (dp.bigger(parent.minRange, date) && dp.isSame(parent.focused, date)) {
+	                        classes += ' -range-to-'
+	                    }
+	
+	                } else if (parent.selectedDates.length == 2) {
+	                    if (dp.bigger(parent.minRange, date) && dp.less(parent.maxRange, date)) {
+	                        classes += ' -in-range-'
+	                    }
+	                }
+	            }
+	
+	
+	            if (dp.isSame(currentDate, date, type)) classes += ' -current-';
+	            if (parent.focused && dp.isSame(date, parent.focused, type)) classes += ' -focus-';
+	            if (parent._isSelected(date, type)) classes += ' -selected-';
+	            if (!parent._isInRange(date, type) || render.disabled) classes += ' -disabled-';
+	
+	            return {
+	                html: html,
+	                classes: classes
+	            }
+	        },
+	
+	        /**
+	         * Calculates days number to render. Generates days html and returns it.
+	         * @param {object} date - Date object
+	         * @returns {string}
+	         * @private
+	         */
+	        _getDaysHtml: function (date) {
+	            var totalMonthDays = dp.getDaysCount(date),
+	                firstMonthDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay(),
+	                lastMonthDay = new Date(date.getFullYear(), date.getMonth(), totalMonthDays).getDay(),
+	                daysFromPevMonth = firstMonthDay - this.d.loc.firstDay,
+	                daysFromNextMonth = 6 - lastMonthDay + this.d.loc.firstDay;
+	
+	            daysFromPevMonth = daysFromPevMonth < 0 ? daysFromPevMonth + 7 : daysFromPevMonth;
+	            daysFromNextMonth = daysFromNextMonth > 6 ? daysFromNextMonth - 7 : daysFromNextMonth;
+	
+	            var startDayIndex = -daysFromPevMonth + 1,
+	                m, y,
+	                html = '';
+	
+	            for (var i = startDayIndex, max = totalMonthDays + daysFromNextMonth; i <= max; i++) {
+	                y = date.getFullYear();
+	                m = date.getMonth();
+	
+	                html += this._getDayHtml(new Date(y, m, i))
+	            }
+	
+	            return html;
+	        },
+	
+	        _getDayHtml: function (date) {
+	           var content = this._getCellContents(date, 'day');
+	
+	            return '<div class="' + content.classes + '" ' +
+	                'data-date="' + date.getDate() + '" ' +
+	                'data-month="' + date.getMonth() + '" ' +
+	                'data-year="' + date.getFullYear() + '">' + content.html + '</div>';
+	        },
+	
+	        /**
+	         * Generates months html
+	         * @param {object} date - date instance
+	         * @returns {string}
+	         * @private
+	         */
+	        _getMonthsHtml: function (date) {
+	            var html = '',
+	                d = dp.getParsedDate(date),
+	                i = 0;
+	
+	            while(i < 12) {
+	                html += this._getMonthHtml(new Date(d.year, i));
+	                i++
+	            }
+	
+	            return html;
+	        },
+	
+	        _getMonthHtml: function (date) {
+	            var content = this._getCellContents(date, 'month');
+	
+	            return '<div class="' + content.classes + '" data-month="' + date.getMonth() + '">' + content.html + '</div>'
+	        },
+	
+	        _getYearsHtml: function (date) {
+	            var d = dp.getParsedDate(date),
+	                decade = dp.getDecade(date),
+	                firstYear = decade[0] - 1,
+	                html = '',
+	                i = firstYear;
+	
+	            for (i; i <= decade[1] + 1; i++) {
+	                html += this._getYearHtml(new Date(i , 0));
+	            }
+	
+	            return html;
+	        },
+	
+	        _getYearHtml: function (date) {
+	            var content = this._getCellContents(date, 'year');
+	
+	            return '<div class="' + content.classes + '" data-year="' + date.getFullYear() + '">' + content.html + '</div>'
+	        },
+	
+	        _renderTypes: {
+	            days: function () {
+	                var dayNames = this._getDayNamesHtml(this.d.loc.firstDay),
+	                    days = this._getDaysHtml(this.d.currentDate);
+	
+	                this.$cells.html(days);
+	                this.$names.html(dayNames)
+	            },
+	            months: function () {
+	                var html = this._getMonthsHtml(this.d.currentDate);
+	
+	                this.$cells.html(html)
+	            },
+	            years: function () {
+	                var html = this._getYearsHtml(this.d.currentDate);
+	
+	                this.$cells.html(html)
+	            }
+	        },
+	
+	        _render: function () {
+	            this._renderTypes[this.type].bind(this)();
+	        },
+	
+	        _update: function () {
+	            var $cells = $('.datepicker--cell', this.$cells),
+	                _this = this,
+	                classes,
+	                $cell,
+	                date;
+	            $cells.each(function (cell, i) {
+	                $cell = $(this);
+	                date = _this.d._getDateFromCell($(this));
+	                classes = _this._getCellContents(date, _this.d.cellType);
+	                $cell.attr('class',classes.classes)
+	            });
+	        },
+	
+	        show: function () {
+	            this.$el.addClass('active');
+	            this.acitve = true;
+	        },
+	
+	        hide: function () {
+	            this.$el.removeClass('active');
+	            this.active = false;
+	        },
+	
+	        //  Events
+	        // -------------------------------------------------
+	
+	        _handleClick: function (el) {
+	            var date = el.data('date') || 1,
+	                month = el.data('month') || 0,
+	                year = el.data('year') || this.d.parsedDate.year;
+	            // Change view if min view does not reach yet
+	            if (this.d.view != this.opts.minView) {
+	                this.d.down(new Date(year, month, date));
+	                return;
+	            }
+	            // Select date if min view is reached
+	            var selectedDate = new Date(year, month, date),
+	                alreadySelected = this.d._isSelected(selectedDate, this.d.cellType);
+	
+	            if (!alreadySelected) {
+	                this.d._trigger('clickCell', selectedDate);
+	            } else if (alreadySelected && this.opts.toggleSelected){
+	                this.d.removeDate(selectedDate);
+	            } else if (alreadySelected && !this.opts.toggleSelected) {
+	                this.d.lastSelectedDate = alreadySelected;
+	                if (this.d.opts.timepicker) {
+	                    this.d.timepicker._setTime(alreadySelected);
+	                    this.d.timepicker.update();
+	                }
+	            }
+	
+	        },
+	
+	        _onClickCell: function (e) {
+	            var $el = $(e.target).closest('.datepicker--cell');
+	
+	            if ($el.hasClass('-disabled-')) return;
+	
+	            this._handleClick.bind(this)($el);
+	        }
+	    };
+	})();
+
+
+/***/ },
+/* 16 */
+/***/ function(module, exports) {
+
+	;(function () {
+	    var pluginName = 'datepicker',
+	        autoInitSelector = '.datepicker-here',
+	        $body, $datepickersContainer,
+	        containerBuilt = false,
+	        baseTemplate = '' +
+	            '<div class="datepicker">' +
+	            '<i class="datepicker--pointer"></i>' +
+	            '<nav class="datepicker--nav"></nav>' +
+	            '<div class="datepicker--content"></div>' +
+	            '</div>',
+	        defaults = {
+	            classes: '',
+	            inline: false,
+	            language: 'ru',
+	            startDate: new Date(),
+	            firstDay: '',
+	            weekends: [6, 0],
+	            dateFormat: '',
+	            altField: '',
+	            altFieldDateFormat: '@',
+	            toggleSelected: true,
+	            keyboardNav: true,
+	
+	            position: 'bottom left',
+	            offset: 12,
+	
+	            view: 'days',
+	            minView: 'days',
+	
+	            showOtherMonths: true,
+	            selectOtherMonths: true,
+	            moveToOtherMonthsOnSelect: true,
+	
+	            showOtherYears: true,
+	            selectOtherYears: true,
+	            moveToOtherYearsOnSelect: true,
+	
+	            minDate: '',
+	            maxDate: '',
+	            disableNavWhenOutOfRange: true,
+	
+	            multipleDates: false, // Boolean or Number
+	            multipleDatesSeparator: ',',
+	            range: false,
+	
+	            todayButton: false,
+	            clearButton: false,
+	
+	            showEvent: 'focus',
+	            autoClose: false,
+	
+	            // navigation
+	            monthsField: 'monthsShort',
+	            prevHtml: '<svg><path d="M 17,12 l -5,5 l 5,5"></path></svg>',
+	            nextHtml: '<svg><path d="M 14,12 l 5,5 l -5,5"></path></svg>',
+	            navTitles: {
+	                days: 'MM, <i>yyyy</i>',
+	                months: 'yyyy',
+	                years: 'yyyy1 - yyyy2'
+	            },
+	
+	            // timepicker
+	            timepicker: false,
+	            dateTimeSeparator: ' ',
+	            timeFormat: '',
+	            minHours: 0,
+	            maxHours: 24,
+	            minMinutes: 0,
+	            maxMinutes: 59,
+	            hoursStep: 1,
+	            minutesStep: 1,
+	
+	            // events
+	            onSelect: '',
+	            onChangeMonth: '',
+	            onChangeYear: '',
+	            onChangeDecade: '',
+	            onChangeView: '',
+	            onRenderCell: ''
+	        },
+	        hotKeys = {
+	            'ctrlRight': [17, 39],
+	            'ctrlUp': [17, 38],
+	            'ctrlLeft': [17, 37],
+	            'ctrlDown': [17, 40],
+	            'shiftRight': [16, 39],
+	            'shiftUp': [16, 38],
+	            'shiftLeft': [16, 37],
+	            'shiftDown': [16, 40],
+	            'altUp': [18, 38],
+	            'altRight': [18, 39],
+	            'altLeft': [18, 37],
+	            'altDown': [18, 40],
+	            'ctrlShiftUp': [16, 17, 38]
+	        },
+	        datepicker;
+	
+	    var Datepicker  = function (el, options) {
+	        this.el = el;
+	        this.$el = $(el);
+	
+	        this.opts = $.extend(true, {}, defaults, options, this.$el.data());
+	
+	        if ($body == undefined) {
+	            $body = $('body');
+	        }
+	
+	        if (!this.opts.startDate) {
+	            this.opts.startDate = new Date();
+	        }
+	
+	        if (this.el.nodeName == 'INPUT') {
+	            this.elIsInput = true;
+	        }
+	
+	        if (this.opts.altField) {
+	            this.$altField = typeof this.opts.altField == 'string' ? $(this.opts.altField) : this.opts.altField;
+	        }
+	
+	        this.inited = false;
+	        this.visible = false;
+	        this.silent = false; // Need to prevent unnecessary rendering
+	
+	        this.currentDate = this.opts.startDate;
+	        this.currentView = this.opts.view;
+	        this._createShortCuts();
+	        this.selectedDates = [];
+	        this.views = {};
+	        this.keys = [];
+	        this.minRange = '';
+	        this.maxRange = '';
+	        this._prevOnSelectValue = '';
+	
+	        this.init()
+	    };
+	
+	    datepicker = Datepicker;
+	
+	    datepicker.prototype = {
+	        viewIndexes: ['days', 'months', 'years'],
+	
+	        init: function () {
+	            if (!containerBuilt && !this.opts.inline && this.elIsInput) {
+	                this._buildDatepickersContainer();
+	            }
+	            this._buildBaseHtml();
+	            this._defineLocale(this.opts.language);
+	            this._syncWithMinMaxDates();
+	
+	            if (this.elIsInput) {
+	                if (!this.opts.inline) {
+	                    // Set extra classes for proper transitions
+	                    this._setPositionClasses(this.opts.position);
+	                    this._bindEvents()
+	                }
+	                if (this.opts.keyboardNav) {
+	                    this._bindKeyboardEvents();
+	                }
+	                this.$datepicker.on('mousedown', this._onMouseDownDatepicker.bind(this));
+	                this.$datepicker.on('mouseup', this._onMouseUpDatepicker.bind(this));
+	            }
+	
+	            if (this.opts.classes) {
+	                this.$datepicker.addClass(this.opts.classes)
+	            }
+	
+	            if (this.opts.timepicker) {
+	                this.timepicker = new $.fn.datepicker.Timepicker(this, this.opts);
+	                this._bindTimepickerEvents();
+	            }
+	
+	            this.views[this.currentView] = new $.fn.datepicker.Body(this, this.currentView, this.opts);
+	            this.views[this.currentView].show();
+	            this.nav = new $.fn.datepicker.Navigation(this, this.opts);
+	            this.view = this.currentView;
+	
+	            this.$el.on('clickCell.adp', this._onClickCell.bind(this));
+	            this.$datepicker.on('mouseenter', '.datepicker--cell', this._onMouseEnterCell.bind(this));
+	            this.$datepicker.on('mouseleave', '.datepicker--cell', this._onMouseLeaveCell.bind(this));
+	
+	            this.inited = true;
+	        },
+	
+	        _createShortCuts: function () {
+	            this.minDate = this.opts.minDate ? this.opts.minDate : new Date(-8639999913600000);
+	            this.maxDate = this.opts.maxDate ? this.opts.maxDate : new Date(8639999913600000);
+	        },
+	
+	        _bindEvents : function () {
+	            this.$el.on(this.opts.showEvent + '.adp', this._onShowEvent.bind(this));
+	            this.$el.on('mouseup.adp', this._onMouseUpEl.bind(this));
+	            this.$el.on('blur.adp', this._onBlur.bind(this));
+	            this.$el.on('keyup.adp', this._onKeyUpGeneral.bind(this));
+	            $(window).on('resize.adp', this._onResize.bind(this));
+	            $('body').on('mouseup.adp', this._onMouseUpBody.bind(this));
+	        },
+	
+	        _bindKeyboardEvents: function () {
+	            this.$el.on('keydown.adp', this._onKeyDown.bind(this));
+	            this.$el.on('keyup.adp', this._onKeyUp.bind(this));
+	            this.$el.on('hotKey.adp', this._onHotKey.bind(this));
+	        },
+	
+	        _bindTimepickerEvents: function () {
+	            this.$el.on('timeChange.adp', this._onTimeChange.bind(this));
+	        },
+	
+	        isWeekend: function (day) {
+	            return this.opts.weekends.indexOf(day) !== -1;
+	        },
+	
+	        _defineLocale: function (lang) {
+	            if (typeof lang == 'string') {
+	                this.loc = $.fn.datepicker.language[lang];
+	                if (!this.loc) {
+	                    console.warn('Can\'t find language "' + lang + '" in Datepicker.language, will use "ru" instead');
+	                    this.loc = $.extend(true, {}, $.fn.datepicker.language.ru)
+	                }
+	
+	                this.loc = $.extend(true, {}, $.fn.datepicker.language.ru, $.fn.datepicker.language[lang])
+	            } else {
+	                this.loc = $.extend(true, {}, $.fn.datepicker.language.ru, lang)
+	            }
+	
+	            if (this.opts.dateFormat) {
+	                this.loc.dateFormat = this.opts.dateFormat
+	            }
+	
+	            if (this.opts.timeFormat) {
+	                this.loc.timeFormat = this.opts.timeFormat
+	            }
+	
+	            if (this.opts.firstDay !== '') {
+	                this.loc.firstDay = this.opts.firstDay
+	            }
+	
+	            if (this.opts.timepicker) {
+	                this.loc.dateFormat = [this.loc.dateFormat, this.loc.timeFormat].join(this.opts.dateTimeSeparator);
+	            }
+	
+	            var boundary = this._getWordBoundaryRegExp;
+	            if (this.loc.timeFormat.match(boundary('aa')) ||
+	                this.loc.timeFormat.match(boundary('AA'))
+	            ) {
+	               this.ampm = true;
+	            }
+	        },
+	
+	        _buildDatepickersContainer: function () {
+	            containerBuilt = true;
+	            $body.append('<div class="datepickers-container" id="datepickers-container"></div>');
+	            $datepickersContainer = $('#datepickers-container');
+	        },
+	
+	        _buildBaseHtml: function () {
+	            var $appendTarget,
+	                $inline = $('<div class="datepicker-inline">');
+	
+	            if(this.el.nodeName == 'INPUT') {
+	                if (!this.opts.inline) {
+	                    $appendTarget = $datepickersContainer;
+	                } else {
+	                    $appendTarget = $inline.insertAfter(this.$el)
+	                }
+	            } else {
+	                $appendTarget = $inline.appendTo(this.$el)
+	            }
+	
+	            this.$datepicker = $(baseTemplate).appendTo($appendTarget);
+	            this.$content = $('.datepicker--content', this.$datepicker);
+	            this.$nav = $('.datepicker--nav', this.$datepicker);
+	        },
+	
+	        _triggerOnChange: function () {
+	            if (!this.selectedDates.length) {
+	                // Prevent from triggering multiple onSelect callback with same argument (empty string) in IE10-11
+	                if (this._prevOnSelectValue === '') return;
+	                this._prevOnSelectValue = '';
+	                return this.opts.onSelect('', '', this);
+	            }
+	
+	            var selectedDates = this.selectedDates,
+	                parsedSelected = datepicker.getParsedDate(selectedDates[0]),
+	                formattedDates,
+	                _this = this,
+	                dates = new Date(
+	                    parsedSelected.year,
+	                    parsedSelected.month,
+	                    parsedSelected.date,
+	                    parsedSelected.hours,
+	                    parsedSelected.minutes
+	                );
+	
+	                formattedDates = selectedDates.map(function (date) {
+	                    return _this.formatDate(_this.loc.dateFormat, date)
+	                }).join(this.opts.multipleDatesSeparator);
+	
+	            // Create new dates array, to separate it from original selectedDates
+	            if (this.opts.multipleDates || this.opts.range) {
+	                dates = selectedDates.map(function(date) {
+	                    var parsedDate = datepicker.getParsedDate(date);
+	                    return new Date(
+	                        parsedDate.year,
+	                        parsedDate.month,
+	                        parsedDate.date,
+	                        parsedDate.hours,
+	                        parsedDate.minutes
+	                    );
+	                })
+	            }
+	
+	            this._prevOnSelectValue = formattedDates;
+	            this.opts.onSelect(formattedDates, dates, this);
+	        },
+	
+	        next: function () {
+	            var d = this.parsedDate,
+	                o = this.opts;
+	            switch (this.view) {
+	                case 'days':
+	                    this.date = new Date(d.year, d.month + 1, 1);
+	                    if (o.onChangeMonth) o.onChangeMonth(this.parsedDate.month, this.parsedDate.year);
+	                    break;
+	                case 'months':
+	                    this.date = new Date(d.year + 1, d.month, 1);
+	                    if (o.onChangeYear) o.onChangeYear(this.parsedDate.year);
+	                    break;
+	                case 'years':
+	                    this.date = new Date(d.year + 10, 0, 1);
+	                    if (o.onChangeDecade) o.onChangeDecade(this.curDecade);
+	                    break;
+	            }
+	        },
+	
+	        prev: function () {
+	            var d = this.parsedDate,
+	                o = this.opts;
+	            switch (this.view) {
+	                case 'days':
+	                    this.date = new Date(d.year, d.month - 1, 1);
+	                    if (o.onChangeMonth) o.onChangeMonth(this.parsedDate.month, this.parsedDate.year);
+	                    break;
+	                case 'months':
+	                    this.date = new Date(d.year - 1, d.month, 1);
+	                    if (o.onChangeYear) o.onChangeYear(this.parsedDate.year);
+	                    break;
+	                case 'years':
+	                    this.date = new Date(d.year - 10, 0, 1);
+	                    if (o.onChangeDecade) o.onChangeDecade(this.curDecade);
+	                    break;
+	            }
+	        },
+	
+	        formatDate: function (string, date) {
+	            date = date || this.date;
+	            var result = string,
+	                boundary = this._getWordBoundaryRegExp,
+	                locale = this.loc,
+	                leadingZero = datepicker.getLeadingZeroNum,
+	                decade = datepicker.getDecade(date),
+	                d = datepicker.getParsedDate(date),
+	                fullHours = d.fullHours,
+	                hours = d.hours,
+	                dayPeriod = 'am',
+	                validHours;
+	
+	            if (this.opts.timepicker && this.timepicker && this.ampm) {
+	                validHours = this.timepicker._getValidHoursFromDate(date);
+	                fullHours = leadingZero(validHours.hours);
+	                hours = validHours.hours;
+	                dayPeriod = validHours.dayPeriod;
+	            }
+	
+	            switch (true) {
+	                case /@/.test(result):
+	                    result = result.replace(/@/, date.getTime());
+	                case /aa/.test(result):
+	                    result = result.replace(boundary('aa'), dayPeriod);
+	                case /AA/.test(result):
+	                    result = result.replace(boundary('AA'), dayPeriod.toUpperCase());
+	                case /dd/.test(result):
+	                    result = result.replace(boundary('dd'), d.fullDate);
+	                case /d/.test(result):
+	                    result = result.replace(boundary('d'), d.date);
+	                case /DD/.test(result):
+	                    result = result.replace(boundary('DD'), locale.days[d.day]);
+	                case /D/.test(result):
+	                    result = result.replace(boundary('D'), locale.daysShort[d.day]);
+	                case /mm/.test(result):
+	                    result = result.replace(boundary('mm'), d.fullMonth);
+	                case /m/.test(result):
+	                    result = result.replace(boundary('m'), d.month + 1);
+	                case /MM/.test(result):
+	                    result = result.replace(boundary('MM'), this.loc.months[d.month]);
+	                case /M/.test(result):
+	                    result = result.replace(boundary('M'), locale.monthsShort[d.month]);
+	                case /ii/.test(result):
+	                    result = result.replace(boundary('ii'), d.fullMinutes);
+	                case /i/.test(result):
+	                    result = result.replace(boundary('i'), d.minutes);
+	                case /hh/.test(result):
+	                    result = result.replace(boundary('hh'), fullHours);
+	                case /h/.test(result):
+	                    result = result.replace(boundary('h'), hours);
+	                case /yyyy/.test(result):
+	                    result = result.replace(boundary('yyyy'), d.year);
+	                case /yyyy1/.test(result):
+	                    result = result.replace(boundary('yyyy1'), decade[0]);
+	                case /yyyy2/.test(result):
+	                    result = result.replace(boundary('yyyy2'), decade[1]);
+	                case /yy/.test(result):
+	                    result = result.replace(boundary('yy'), d.year.toString().slice(-2));
+	            }
+	
+	            return result;
+	        },
+	
+	        _getWordBoundaryRegExp: function (sign) {
+	            return new RegExp('\\b(?=[a-zA-Z0-9äöüßÄÖÜ<])' + sign + '(?![>a-zA-Z0-9äöüßÄÖÜ])');
+	        },
+	
+	        selectDate: function (date) {
+	            var _this = this,
+	                opts = _this.opts,
+	                d = _this.parsedDate,
+	                selectedDates = _this.selectedDates,
+	                len = selectedDates.length,
+	                newDate = '';
+	
+	            if (Array.isArray(date)) {
+	                date.forEach(function (d) {
+	                    _this.selectDate(d)
+	                });
+	                return;
+	            }
+	
+	            if (!(date instanceof Date)) return;
+	
+	            this.lastSelectedDate = date;
+	
+	            // Set new time values from Date
+	            if (this.timepicker) {
+	                this.timepicker._setTime(date);
+	            }
+	
+	            // On this step timepicker will set valid values in it's instance
+	            _this._trigger('selectDate', date);
+	
+	            // Set correct time values after timepicker's validation
+	            // Prevent from setting hours or minutes which values are lesser then `min` value or
+	            // greater then `max` value
+	            if (this.timepicker) {
+	                date.setHours(this.timepicker.hours);
+	                date.setMinutes(this.timepicker.minutes)
+	            }
+	
+	            if (_this.view == 'days') {
+	                if (date.getMonth() != d.month && opts.moveToOtherMonthsOnSelect) {
+	                    newDate = new Date(date.getFullYear(), date.getMonth(), 1);
+	                }
+	            }
+	
+	            if (_this.view == 'years') {
+	                if (date.getFullYear() != d.year && opts.moveToOtherYearsOnSelect) {
+	                    newDate = new Date(date.getFullYear(), 0, 1);
+	                }
+	            }
+	
+	            if (newDate) {
+	                _this.silent = true;
+	                _this.date = newDate;
+	                _this.silent = false;
+	                _this.nav._render()
+	            }
+	
+	            if (opts.multipleDates && !opts.range) { // Set priority to range functionality
+	                if (len === opts.multipleDates) return;
+	                if (!_this._isSelected(date)) {
+	                    _this.selectedDates.push(date);
+	                }
+	            } else if (opts.range) {
+	                if (len == 2) {
+	                    _this.selectedDates = [date];
+	                    _this.minRange = date;
+	                    _this.maxRange = '';
+	                } else if (len == 1) {
+	                    _this.selectedDates.push(date);
+	                    if (!_this.maxRange){
+	                        _this.maxRange = date;
+	                    } else {
+	                        _this.minRange = date;
+	                    }
+	                    // Swap dates if they were selected via dp.selectDate() and second date was smaller then first
+	                    if (datepicker.bigger(_this.maxRange, _this.minRange)) {
+	                        _this.maxRange = _this.minRange;
+	                        _this.minRange = date;
+	                    }
+	                    _this.selectedDates = [_this.minRange, _this.maxRange]
+	
+	                } else {
+	                    _this.selectedDates = [date];
+	                    _this.minRange = date;
+	                }
+	            } else {
+	                _this.selectedDates = [date];
+	            }
+	
+	            _this._setInputValue();
+	
+	            if (opts.onSelect) {
+	                _this._triggerOnChange();
+	            }
+	
+	            if (opts.autoClose && !this.timepickerIsActive) {
+	                if (!opts.multipleDates && !opts.range) {
+	                    _this.hide();
+	                } else if (opts.range && _this.selectedDates.length == 2) {
+	                    _this.hide();
+	                }
+	            }
+	
+	            _this.views[this.currentView]._render()
+	        },
+	
+	        removeDate: function (date) {
+	            var selected = this.selectedDates,
+	                _this = this;
+	
+	            if (!(date instanceof Date)) return;
+	
+	            return selected.some(function (curDate, i) {
+	                if (datepicker.isSame(curDate, date)) {
+	                    selected.splice(i, 1);
+	
+	                    if (!_this.selectedDates.length) {
+	                        _this.minRange = '';
+	                        _this.maxRange = '';
+	                        _this.lastSelectedDate = '';
+	                    } else {
+	                        _this.lastSelectedDate = _this.selectedDates[_this.selectedDates.length - 1];
+	                    }
+	
+	                    _this.views[_this.currentView]._render();
+	                    _this._setInputValue();
+	
+	                    if (_this.opts.onSelect) {
+	                        _this._triggerOnChange();
+	                    }
+	
+	                    return true
+	                }
+	            })
+	        },
+	
+	        today: function () {
+	            this.silent = true;
+	            this.view = this.opts.minView;
+	            this.silent = false;
+	            this.date = new Date();
+	
+	            if (this.opts.todayButton instanceof Date) {
+	                this.selectDate(this.opts.todayButton)
+	            }
+	        },
+	
+	        clear: function () {
+	            this.selectedDates = [];
+	            this.minRange = '';
+	            this.maxRange = '';
+	            this.views[this.currentView]._render();
+	            this._setInputValue();
+	            if (this.opts.onSelect) {
+	                this._triggerOnChange()
+	            }
+	        },
+	
+	        /**
+	         * Updates datepicker options
+	         * @param {String|Object} param - parameter's name to update. If object then it will extend current options
+	         * @param {String|Number|Object} [value] - new param value
+	         */
+	        update: function (param, value) {
+	            var len = arguments.length;
+	
+	            if (len == 2) {
+	                this.opts[param] = value;
+	            } else if (len == 1 && typeof param == 'object') {
+	                this.opts = $.extend(true, this.opts, param)
+	            }
+	
+	            this._createShortCuts();
+	            this._syncWithMinMaxDates();
+	            this._defineLocale(this.opts.language);
+	            this.nav._addButtonsIfNeed();
+	            this.nav._render();
+	            this.views[this.currentView]._render();
+	
+	            if (this.elIsInput && !this.opts.inline) {
+	                this._setPositionClasses(this.opts.position);
+	                if (this.visible) {
+	                    this.setPosition(this.opts.position)
+	                }
+	            }
+	
+	            if (this.opts.classes) {
+	                this.$datepicker.addClass(this.opts.classes)
+	            }
+	
+	            if (this.opts.timepicker) {
+	                this.timepicker._handleDate(this.lastSelectedDate);
+	                this.timepicker._updateRanges();
+	                this.timepicker._updateCurrentTime();
+	                // Change hours and minutes if it's values have been changed through min/max hours/minutes
+	                if (this.lastSelectedDate) {
+	                    this.lastSelectedDate.setHours(this.timepicker.hours);
+	                    this.lastSelectedDate.setMinutes(this.timepicker.minutes);
+	                }
+	            }
+	
+	            this._setInputValue();
+	
+	            return this;
+	        },
+	
+	        _syncWithMinMaxDates: function () {
+	            var curTime = this.date.getTime();
+	            this.silent = true;
+	            if (this.minTime > curTime) {
+	                this.date = this.minDate;
+	            }
+	
+	            if (this.maxTime < curTime) {
+	                this.date = this.maxDate;
+	            }
+	            this.silent = false;
+	        },
+	
+	        _isSelected: function (checkDate, cellType) {
+	            var res = false;
+	            this.selectedDates.some(function (date) {
+	                if (datepicker.isSame(date, checkDate, cellType)) {
+	                    res = date;
+	                    return true;
+	                }
+	            });
+	            return res;
+	        },
+	
+	        _setInputValue: function () {
+	            var _this = this,
+	                opts = _this.opts,
+	                format = _this.loc.dateFormat,
+	                altFormat = opts.altFieldDateFormat,
+	                value = _this.selectedDates.map(function (date) {
+	                    return _this.formatDate(format, date)
+	                }),
+	                altValues;
+	
+	            if (opts.altField && _this.$altField.length) {
+	                altValues = this.selectedDates.map(function (date) {
+	                    return _this.formatDate(altFormat, date)
+	                });
+	                altValues = altValues.join(this.opts.multipleDatesSeparator);
+	                this.$altField.val(altValues);
+	            }
+	
+	            value = value.join(this.opts.multipleDatesSeparator);
+	
+	            this.$el.val(value)
+	        },
+	
+	        /**
+	         * Check if date is between minDate and maxDate
+	         * @param date {object} - date object
+	         * @param type {string} - cell type
+	         * @returns {boolean}
+	         * @private
+	         */
+	        _isInRange: function (date, type) {
+	            var time = date.getTime(),
+	                d = datepicker.getParsedDate(date),
+	                min = datepicker.getParsedDate(this.minDate),
+	                max = datepicker.getParsedDate(this.maxDate),
+	                dMinTime = new Date(d.year, d.month, min.date).getTime(),
+	                dMaxTime = new Date(d.year, d.month, max.date).getTime(),
+	                types = {
+	                    day: time >= this.minTime && time <= this.maxTime,
+	                    month: dMinTime >= this.minTime && dMaxTime <= this.maxTime,
+	                    year: d.year >= min.year && d.year <= max.year
+	                };
+	            return type ? types[type] : types.day
+	        },
+	
+	        _getDimensions: function ($el) {
+	            var offset = $el.offset();
+	
+	            return {
+	                width: $el.outerWidth(),
+	                height: $el.outerHeight(),
+	                left: offset.left,
+	                top: offset.top
+	            }
+	        },
+	
+	        _getDateFromCell: function (cell) {
+	            var curDate = this.parsedDate,
+	                year = cell.data('year') || curDate.year,
+	                month = cell.data('month') == undefined ? curDate.month : cell.data('month'),
+	                date = cell.data('date') || 1;
+	
+	            return new Date(year, month, date);
+	        },
+	
+	        _setPositionClasses: function (pos) {
+	            pos = pos.split(' ');
+	            var main = pos[0],
+	                sec = pos[1],
+	                classes = 'datepicker -' + main + '-' + sec + '- -from-' + main + '-';
+	
+	            if (this.visible) classes += ' active';
+	
+	            this.$datepicker
+	                .removeAttr('class')
+	                .addClass(classes);
+	        },
+	
+	        setPosition: function (position) {
+	            position = position || this.opts.position;
+	
+	            var dims = this._getDimensions(this.$el),
+	                selfDims = this._getDimensions(this.$datepicker),
+	                pos = position.split(' '),
+	                top, left,
+	                offset = this.opts.offset,
+	                main = pos[0],
+	                secondary = pos[1];
+	
+	            switch (main) {
+	                case 'top':
+	                    top = dims.top - selfDims.height - offset;
+	                    break;
+	                case 'right':
+	                    left = dims.left + dims.width + offset;
+	                    break;
+	                case 'bottom':
+	                    top = dims.top + dims.height + offset;
+	                    break;
+	                case 'left':
+	                    left = dims.left - selfDims.width - offset;
+	                    break;
+	            }
+	
+	            switch(secondary) {
+	                case 'top':
+	                    top = dims.top;
+	                    break;
+	                case 'right':
+	                    left = dims.left + dims.width - selfDims.width;
+	                    break;
+	                case 'bottom':
+	                    top = dims.top + dims.height - selfDims.height;
+	                    break;
+	                case 'left':
+	                    left = dims.left;
+	                    break;
+	                case 'center':
+	                    if (/left|right/.test(main)) {
+	                        top = dims.top + dims.height/2 - selfDims.height/2;
+	                    } else {
+	                        left = dims.left + dims.width/2 - selfDims.width/2;
+	                    }
+	            }
+	
+	            this.$datepicker
+	                .css({
+	                    left: left,
+	                    top: top
+	                })
+	        },
+	
+	        show: function () {
+	            this.setPosition(this.opts.position);
+	            this.$datepicker.addClass('active');
+	            this.visible = true;
+	        },
+	
+	        hide: function () {
+	            this.$datepicker
+	                .removeClass('active')
+	                .css({
+	                    left: '-100000px'
+	                });
+	
+	            this.focused = '';
+	            this.keys = [];
+	
+	            this.inFocus = false;
+	            this.visible = false;
+	            this.$el.blur();
+	        },
+	
+	        down: function (date) {
+	            this._changeView(date, 'down');
+	        },
+	
+	        up: function (date) {
+	            this._changeView(date, 'up');
+	        },
+	
+	        _changeView: function (date, dir) {
+	            date = date || this.focused || this.date;
+	
+	            var nextView = dir == 'up' ? this.viewIndex + 1 : this.viewIndex - 1;
+	            if (nextView > 2) nextView = 2;
+	            if (nextView < 0) nextView = 0;
+	
+	            this.silent = true;
+	            this.date = new Date(date.getFullYear(), date.getMonth(), 1);
+	            this.silent = false;
+	            this.view = this.viewIndexes[nextView];
+	
+	        },
+	
+	        _handleHotKey: function (key) {
+	            var date = datepicker.getParsedDate(this._getFocusedDate()),
+	                focusedParsed,
+	                o = this.opts,
+	                newDate,
+	                totalDaysInNextMonth,
+	                monthChanged = false,
+	                yearChanged = false,
+	                decadeChanged = false,
+	                y = date.year,
+	                m = date.month,
+	                d = date.date;
+	
+	            switch (key) {
+	                case 'ctrlRight':
+	                case 'ctrlUp':
+	                    m += 1;
+	                    monthChanged = true;
+	                    break;
+	                case 'ctrlLeft':
+	                case 'ctrlDown':
+	                    m -= 1;
+	                    monthChanged = true;
+	                    break;
+	                case 'shiftRight':
+	                case 'shiftUp':
+	                    yearChanged = true;
+	                    y += 1;
+	                    break;
+	                case 'shiftLeft':
+	                case 'shiftDown':
+	                    yearChanged = true;
+	                    y -= 1;
+	                    break;
+	                case 'altRight':
+	                case 'altUp':
+	                    decadeChanged = true;
+	                    y += 10;
+	                    break;
+	                case 'altLeft':
+	                case 'altDown':
+	                    decadeChanged = true;
+	                    y -= 10;
+	                    break;
+	                case 'ctrlShiftUp':
+	                    this.up();
+	                    break;
+	            }
+	
+	            totalDaysInNextMonth = datepicker.getDaysCount(new Date(y,m));
+	            newDate = new Date(y,m,d);
+	
+	            // If next month has less days than current, set date to total days in that month
+	            if (totalDaysInNextMonth < d) d = totalDaysInNextMonth;
+	
+	            // Check if newDate is in valid range
+	            if (newDate.getTime() < this.minTime) {
+	                newDate = this.minDate;
+	            } else if (newDate.getTime() > this.maxTime) {
+	                newDate = this.maxDate;
+	            }
+	
+	            this.focused = newDate;
+	
+	            focusedParsed = datepicker.getParsedDate(newDate);
+	            if (monthChanged && o.onChangeMonth) {
+	                o.onChangeMonth(focusedParsed.month, focusedParsed.year)
+	            }
+	            if (yearChanged && o.onChangeYear) {
+	                o.onChangeYear(focusedParsed.year)
+	            }
+	            if (decadeChanged && o.onChangeDecade) {
+	                o.onChangeDecade(this.curDecade)
+	            }
+	        },
+	
+	        _registerKey: function (key) {
+	            var exists = this.keys.some(function (curKey) {
+	                return curKey == key;
+	            });
+	
+	            if (!exists) {
+	                this.keys.push(key)
+	            }
+	        },
+	
+	        _unRegisterKey: function (key) {
+	            var index = this.keys.indexOf(key);
+	
+	            this.keys.splice(index, 1);
+	        },
+	
+	        _isHotKeyPressed: function () {
+	            var currentHotKey,
+	                found = false,
+	                _this = this,
+	                pressedKeys = this.keys.sort();
+	
+	            for (var hotKey in hotKeys) {
+	                currentHotKey = hotKeys[hotKey];
+	                if (pressedKeys.length != currentHotKey.length) continue;
+	
+	                if (currentHotKey.every(function (key, i) { return key == pressedKeys[i]})) {
+	                    _this._trigger('hotKey', hotKey);
+	                    found = true;
+	                }
+	            }
+	
+	            return found;
+	        },
+	
+	        _trigger: function (event, args) {
+	            this.$el.trigger(event, args)
+	        },
+	
+	        _focusNextCell: function (keyCode, type) {
+	            type = type || this.cellType;
+	
+	            var date = datepicker.getParsedDate(this._getFocusedDate()),
+	                y = date.year,
+	                m = date.month,
+	                d = date.date;
+	
+	            if (this._isHotKeyPressed()){
+	                return;
+	            }
+	
+	            switch(keyCode) {
+	                case 37: // left
+	                    type == 'day' ? (d -= 1) : '';
+	                    type == 'month' ? (m -= 1) : '';
+	                    type == 'year' ? (y -= 1) : '';
+	                    break;
+	                case 38: // up
+	                    type == 'day' ? (d -= 7) : '';
+	                    type == 'month' ? (m -= 3) : '';
+	                    type == 'year' ? (y -= 4) : '';
+	                    break;
+	                case 39: // right
+	                    type == 'day' ? (d += 1) : '';
+	                    type == 'month' ? (m += 1) : '';
+	                    type == 'year' ? (y += 1) : '';
+	                    break;
+	                case 40: // down
+	                    type == 'day' ? (d += 7) : '';
+	                    type == 'month' ? (m += 3) : '';
+	                    type == 'year' ? (y += 4) : '';
+	                    break;
+	            }
+	
+	            var nd = new Date(y,m,d);
+	            if (nd.getTime() < this.minTime) {
+	                nd = this.minDate;
+	            } else if (nd.getTime() > this.maxTime) {
+	                nd = this.maxDate;
+	            }
+	
+	            this.focused = nd;
+	
+	        },
+	
+	        _getFocusedDate: function () {
+	            var focused  = this.focused || this.selectedDates[this.selectedDates.length - 1],
+	                d = this.parsedDate;
+	
+	            if (!focused) {
+	                switch (this.view) {
+	                    case 'days':
+	                        focused = new Date(d.year, d.month, new Date().getDate());
+	                        break;
+	                    case 'months':
+	                        focused = new Date(d.year, d.month, 1);
+	                        break;
+	                    case 'years':
+	                        focused = new Date(d.year, 0, 1);
+	                        break;
+	                }
+	            }
+	
+	            return focused;
+	        },
+	
+	        _getCell: function (date, type) {
+	            type = type || this.cellType;
+	
+	            var d = datepicker.getParsedDate(date),
+	                selector = '.datepicker--cell[data-year="' + d.year + '"]',
+	                $cell;
+	
+	            switch (type) {
+	                case 'month':
+	                    selector = '[data-month="' + d.month + '"]';
+	                    break;
+	                case 'day':
+	                    selector += '[data-month="' + d.month + '"][data-date="' + d.date + '"]';
+	                    break;
+	            }
+	            $cell = this.views[this.currentView].$el.find(selector);
+	
+	            return $cell.length ? $cell : '';
+	        },
+	
+	        destroy: function () {
+	            var _this = this;
+	            _this.$el
+	                .off('.adp')
+	                .data('datepicker', '');
+	
+	            _this.selectedDates = [];
+	            _this.focused = '';
+	            _this.views = {};
+	            _this.keys = [];
+	            _this.minRange = '';
+	            _this.maxRange = '';
+	
+	            if (_this.opts.inline || !_this.elIsInput) {
+	                _this.$datepicker.closest('.datepicker-inline').remove();
+	            } else {
+	                _this.$datepicker.remove();
+	            }
+	        },
+	
+	        _onShowEvent: function (e) {
+	            if (!this.visible) {
+	                this.show();
+	            }
+	        },
+	
+	        _onBlur: function () {
+	            if (!this.inFocus && this.visible) {
+	                this.hide();
+	            }
+	        },
+	
+	        _onMouseDownDatepicker: function (e) {
+	            this.inFocus = true;
+	        },
+	
+	        _onMouseUpDatepicker: function (e) {
+	            this.inFocus = false;
+	            e.originalEvent.inFocus = true;
+	            if (!e.originalEvent.timepickerFocus) this.$el.focus();
+	        },
+	
+	        _onKeyUpGeneral: function (e) {
+	            var val = this.$el.val();
+	
+	            if (!val) {
+	                this.clear();
+	            }
+	        },
+	
+	        _onResize: function () {
+	            if (this.visible) {
+	                this.setPosition();
+	            }
+	        },
+	
+	        _onMouseUpBody: function (e) {
+	            if (e.originalEvent.inFocus) return;
+	
+	            if (this.visible && !this.inFocus) {
+	                this.hide();
+	            }
+	        },
+	
+	        _onMouseUpEl: function (e) {
+	            e.originalEvent.inFocus = true;
+	            setTimeout(this._onKeyUpGeneral.bind(this),4);
+	        },
+	
+	        _onKeyDown: function (e) {
+	            var code = e.which;
+	            this._registerKey(code);
+	
+	            // Arrows
+	            if (code >= 37 && code <= 40) {
+	                e.preventDefault();
+	                this._focusNextCell(code);
+	            }
+	
+	            // Enter
+	            if (code == 13) {
+	                if (this.focused) {
+	                    if (this._getCell(this.focused).hasClass('-disabled-')) return;
+	                    if (this.view != this.opts.minView) {
+	                        this.down()
+	                    } else {
+	                        var alreadySelected = this._isSelected(this.focused, this.cellType);
+	
+	                        if (!alreadySelected) {
+	                            if (this.timepicker) {
+	                                this.focused.setHours(this.timepicker.hours);
+	                                this.focused.setMinutes(this.timepicker.minutes);
+	                            }
+	                            this.selectDate(this.focused);
+	                        } else if (alreadySelected && this.opts.toggleSelected){
+	                            this.removeDate(this.focused);
+	                        }
+	                    }
+	                }
+	            }
+	
+	            // Esc
+	            if (code == 27) {
+	                this.hide();
+	            }
+	        },
+	
+	        _onKeyUp: function (e) {
+	            var code = e.which;
+	            this._unRegisterKey(code);
+	        },
+	
+	        _onHotKey: function (e, hotKey) {
+	            this._handleHotKey(hotKey);
+	        },
+	
+	        _onMouseEnterCell: function (e) {
+	            var $cell = $(e.target).closest('.datepicker--cell'),
+	                date = this._getDateFromCell($cell);
+	
+	            // Prevent from unnecessary rendering and setting new currentDate
+	            this.silent = true;
+	
+	            if (this.focused) {
+	                this.focused = ''
+	            }
+	
+	            $cell.addClass('-focus-');
+	
+	            this.focused = date;
+	            this.silent = false;
+	
+	            if (this.opts.range && this.selectedDates.length == 1) {
+	                this.minRange = this.selectedDates[0];
+	                this.maxRange = '';
+	                if (datepicker.less(this.minRange, this.focused)) {
+	                    this.maxRange = this.minRange;
+	                    this.minRange = '';
+	                }
+	                this.views[this.currentView]._update();
+	            }
+	        },
+	
+	        _onMouseLeaveCell: function (e) {
+	            var $cell = $(e.target).closest('.datepicker--cell');
+	
+	            $cell.removeClass('-focus-');
+	
+	            this.silent = true;
+	            this.focused = '';
+	            this.silent = false;
+	        },
+	
+	        _onTimeChange: function (e, h, m) {
+	            var date = new Date(),
+	                selectedDates = this.selectedDates,
+	                selected = false;
+	
+	            if (selectedDates.length) {
+	                selected = true;
+	                date = this.lastSelectedDate;
+	            }
+	
+	            date.setHours(h);
+	            date.setMinutes(m);
+	
+	            if (!selected && !this._getCell(date).hasClass('-disabled-')) {
+	                this.selectDate(date);
+	            } else {
+	                this._setInputValue();
+	                if (this.opts.onSelect) {
+	                    this._triggerOnChange();
+	                }
+	            }
+	        },
+	
+	        _onClickCell: function (e, date) {
+	            if (this.timepicker) {
+	                date.setHours(this.timepicker.hours);
+	                date.setMinutes(this.timepicker.minutes);
+	            }
+	            this.selectDate(date);
+	        },
+	
+	        set focused(val) {
+	            if (!val && this.focused) {
+	                var $cell = this._getCell(this.focused);
+	
+	                if ($cell.length) {
+	                    $cell.removeClass('-focus-')
+	                }
+	            }
+	            this._focused = val;
+	            if (this.opts.range && this.selectedDates.length == 1) {
+	                this.minRange = this.selectedDates[0];
+	                this.maxRange = '';
+	                if (datepicker.less(this.minRange, this._focused)) {
+	                    this.maxRange = this.minRange;
+	                    this.minRange = '';
+	                }
+	            }
+	            if (this.silent) return;
+	            this.date = val;
+	        },
+	
+	        get focused() {
+	            return this._focused;
+	        },
+	
+	        get parsedDate() {
+	            return datepicker.getParsedDate(this.date);
+	        },
+	
+	        set date (val) {
+	            if (!(val instanceof Date)) return;
+	
+	            this.currentDate = val;
+	
+	            if (this.inited && !this.silent) {
+	                this.views[this.view]._render();
+	                this.nav._render();
+	                if (this.visible && this.elIsInput) {
+	                    this.setPosition();
+	                }
+	            }
+	            return val;
+	        },
+	
+	        get date () {
+	            return this.currentDate
+	        },
+	
+	        set view (val) {
+	            this.viewIndex = this.viewIndexes.indexOf(val);
+	
+	            if (this.viewIndex < 0) {
+	                return;
+	            }
+	
+	            this.prevView = this.currentView;
+	            this.currentView = val;
+	
+	            if (this.inited) {
+	                if (!this.views[val]) {
+	                    this.views[val] = new  $.fn.datepicker.Body(this, val, this.opts)
+	                } else {
+	                    this.views[val]._render();
+	                }
+	
+	                this.views[this.prevView].hide();
+	                this.views[val].show();
+	                this.nav._render();
+	
+	                if (this.opts.onChangeView) {
+	                    this.opts.onChangeView(val)
+	                }
+	                if (this.elIsInput && this.visible) this.setPosition();
+	            }
+	
+	            return val
+	        },
+	
+	        get view() {
+	            return this.currentView;
+	        },
+	
+	        get cellType() {
+	            return this.view.substring(0, this.view.length - 1)
+	        },
+	
+	        get minTime() {
+	            var min = datepicker.getParsedDate(this.minDate);
+	            return new Date(min.year, min.month, min.date).getTime()
+	        },
+	
+	        get maxTime() {
+	            var max = datepicker.getParsedDate(this.maxDate);
+	            return new Date(max.year, max.month, max.date).getTime()
+	        },
+	
+	        get curDecade() {
+	            return datepicker.getDecade(this.date)
+	        }
+	    };
+	
+	    //  Utils
+	    // -------------------------------------------------
+	
+	    datepicker.getDaysCount = function (date) {
+	        return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+	    };
+	
+	    datepicker.getParsedDate = function (date) {
+	        return {
+	            year: date.getFullYear(),
+	            month: date.getMonth(),
+	            fullMonth: (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1, // One based
+	            date: date.getDate(),
+	            fullDate: date.getDate() < 10 ? '0' + date.getDate() : date.getDate(),
+	            day: date.getDay(),
+	            hours: date.getHours(),
+	            fullHours:  date.getHours() < 10 ? '0' + date.getHours() :  date.getHours() ,
+	            minutes: date.getMinutes(),
+	            fullMinutes:  date.getMinutes() < 10 ? '0' + date.getMinutes() :  date.getMinutes()
+	        }
+	    };
+	
+	    datepicker.getDecade = function (date) {
+	        var firstYear = Math.floor(date.getFullYear() / 10) * 10;
+	
+	        return [firstYear, firstYear + 9];
+	    };
+	
+	    datepicker.template = function (str, data) {
+	        return str.replace(/#\{([\w]+)\}/g, function (source, match) {
+	            if (data[match] || data[match] === 0) {
+	                return data[match]
+	            }
+	        });
+	    };
+	
+	    datepicker.isSame = function (date1, date2, type) {
+	        if (!date1 || !date2) return false;
+	        var d1 = datepicker.getParsedDate(date1),
+	            d2 = datepicker.getParsedDate(date2),
+	            _type = type ? type : 'day',
+	
+	            conditions = {
+	                day: d1.date == d2.date && d1.month == d2.month && d1.year == d2.year,
+	                month: d1.month == d2.month && d1.year == d2.year,
+	                year: d1.year == d2.year
+	            };
+	
+	        return conditions[_type];
+	    };
+	
+	    datepicker.less = function (dateCompareTo, date, type) {
+	        if (!dateCompareTo || !date) return false;
+	        return date.getTime() < dateCompareTo.getTime();
+	    };
+	
+	    datepicker.bigger = function (dateCompareTo, date, type) {
+	        if (!dateCompareTo || !date) return false;
+	        return date.getTime() > dateCompareTo.getTime();
+	    };
+	
+	    datepicker.getLeadingZeroNum = function (num) {
+	        return parseInt(num) < 10 ? '0' + num : num;
+	    };
+	
+	    $.fn.datepicker = function ( options ) {
+	        return this.each(function () {
+	            if (!$.data(this, pluginName)) {
+	                $.data(this,  pluginName,
+	                    new Datepicker( this, options ));
+	            } else {
+	                var _this = $.data(this, pluginName);
+	
+	                _this.opts = $.extend(true, _this.opts, options);
+	                _this.update();
+	            }
+	        });
+	    };
+	
+	    $.fn.datepicker.Constructor = Datepicker;
+	
+	    $.fn.datepicker.language = {
+	        ru: {
+	            days: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
+	            daysShort: ['Вос','Пон','Вто','Сре','Чет','Пят','Суб'],
+	            daysMin: ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
+	            months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+	            monthsShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+	            today: 'Сегодня',
+	            clear: 'Очистить',
+	            dateFormat: 'dd.mm.yyyy',
+	            timeFormat: 'hh:ii',
+	            firstDay: 1
+	        }
+	    };
+	
+	    $(function () {
+	        $(autoInitSelector).datepicker();
+	    })
+	
+	})();
+
+
+/***/ },
+/* 17 */
+/***/ function(module, exports) {
+
+	;(function () {
+	    var template = '' +
+	        '<div class="datepicker--nav-action" data-action="prev">#{prevHtml}</div>' +
+	        '<div class="datepicker--nav-title">#{title}</div>' +
+	        '<div class="datepicker--nav-action" data-action="next">#{nextHtml}</div>',
+	        buttonsContainerTemplate = '<div class="datepicker--buttons"></div>',
+	        button = '<span class="datepicker--button" data-action="#{action}">#{label}</span>',
+	        datepicker = $.fn.datepicker,
+	        dp = datepicker.Constructor;
+	
+	    datepicker.Navigation = function (d, opts) {
+	        this.d = d;
+	        this.opts = opts;
+	
+	        this.$buttonsContainer = '';
+	
+	        this.init();
+	    };
+	
+	    datepicker.Navigation.prototype = {
+	        init: function () {
+	            this._buildBaseHtml();
+	            this._bindEvents();
+	        },
+	
+	        _bindEvents: function () {
+	            this.d.$nav.on('click', '.datepicker--nav-action', $.proxy(this._onClickNavButton, this));
+	            this.d.$nav.on('click', '.datepicker--nav-title', $.proxy(this._onClickNavTitle, this));
+	            this.d.$datepicker.on('click', '.datepicker--button', $.proxy(this._onClickNavButton, this));
+	        },
+	
+	        _buildBaseHtml: function () {
+	            this._render();
+	            this._addButtonsIfNeed();
+	        },
+	
+	        _addButtonsIfNeed: function () {
+	            if (this.opts.todayButton) {
+	                this._addButton('today')
+	            }
+	            if (this.opts.clearButton) {
+	                this._addButton('clear')
+	            }
+	        },
+	
+	        _render: function () {
+	            var title = this._getTitle(this.d.currentDate),
+	                html = dp.template(template, $.extend({title: title}, this.opts));
+	            this.d.$nav.html(html);
+	            if (this.d.view == 'years') {
+	                $('.datepicker--nav-title', this.d.$nav).addClass('-disabled-');
+	            }
+	            this.setNavStatus();
+	        },
+	
+	        _getTitle: function (date) {
+	            return this.d.formatDate(this.opts.navTitles[this.d.view], date)
+	        },
+	
+	        _addButton: function (type) {
+	            if (!this.$buttonsContainer.length) {
+	                this._addButtonsContainer();
+	            }
+	
+	            var data = {
+	                    action: type,
+	                    label: this.d.loc[type]
+	                },
+	                html = dp.template(button, data);
+	
+	            if ($('[data-action=' + type + ']', this.$buttonsContainer).length) return;
+	            this.$buttonsContainer.append(html);
+	        },
+	
+	        _addButtonsContainer: function () {
+	            this.d.$datepicker.append(buttonsContainerTemplate);
+	            this.$buttonsContainer = $('.datepicker--buttons', this.d.$datepicker);
+	        },
+	
+	        setNavStatus: function () {
+	            if (!(this.opts.minDate || this.opts.maxDate) || !this.opts.disableNavWhenOutOfRange) return;
+	
+	            var date = this.d.parsedDate,
+	                m = date.month,
+	                y = date.year,
+	                d = date.date;
+	
+	            switch (this.d.view) {
+	                case 'days':
+	                    if (!this.d._isInRange(new Date(y, m-1, d), 'month')) {
+	                        this._disableNav('prev')
+	                    }
+	                    if (!this.d._isInRange(new Date(y, m+1, d), 'month')) {
+	                        this._disableNav('next')
+	                    }
+	                    break;
+	                case 'months':
+	                    if (!this.d._isInRange(new Date(y-1, m, d), 'year')) {
+	                        this._disableNav('prev')
+	                    }
+	                    if (!this.d._isInRange(new Date(y+1, m, d), 'year')) {
+	                        this._disableNav('next')
+	                    }
+	                    break;
+	                case 'years':
+	                    if (!this.d._isInRange(new Date(y-10, m, d), 'year')) {
+	                        this._disableNav('prev')
+	                    }
+	                    if (!this.d._isInRange(new Date(y+10, m, d), 'year')) {
+	                        this._disableNav('next')
+	                    }
+	                    break;
+	            }
+	        },
+	
+	        _disableNav: function (nav) {
+	            $('[data-action="' + nav + '"]', this.d.$nav).addClass('-disabled-')
+	        },
+	
+	        _activateNav: function (nav) {
+	            $('[data-action="' + nav + '"]', this.d.$nav).removeClass('-disabled-')
+	        },
+	
+	        _onClickNavButton: function (e) {
+	            var $el = $(e.target).closest('[data-action]'),
+	                action = $el.data('action');
+	
+	            this.d[action]();
+	        },
+	
+	        _onClickNavTitle: function (e) {
+	            if ($(e.target).hasClass('-disabled-')) return;
+	
+	            if (this.d.view == 'days') {
+	                return this.d.view = 'months'
+	            }
+	
+	            this.d.view = 'years';
+	        }
+	    }
+	
+	})();
+
+
+/***/ },
+/* 18 */
+/***/ function(module, exports) {
+
+	;(function () {
+	    var template = '<div class="datepicker--time">' +
+	        '<div class="datepicker--time-current">' +
+	        '   <span class="datepicker--time-current-hours">#{hourValue}</span>' +
+	        '   <span class="datepicker--time-current-colon">:</span>' +
+	        '   <span class="datepicker--time-current-minutes">#{minValue}</span>' +
+	        '</div>' +
+	        '<div class="datepicker--time-sliders">' +
+	        '   <div class="datepicker--time-row">' +
+	        '      <input type="range" name="hours" value="#{hourValue}" min="#{hourMin}" max="#{hourMax}" step="#{hourStep}"/>' +
+	        '   </div>' +
+	        '   <div class="datepicker--time-row">' +
+	        '      <input type="range" name="minutes" value="#{minValue}" min="#{minMin}" max="#{minMax}" step="#{minStep}"/>' +
+	        '   </div>' +
+	        '</div>' +
+	        '</div>',
+	        datepicker = $.fn.datepicker,
+	        dp = datepicker.Constructor;
+	
+	    datepicker.Timepicker = function (inst, opts) {
+	        this.d = inst;
+	        this.opts = opts;
+	
+	        this.init();
+	    };
+	
+	    datepicker.Timepicker.prototype = {
+	        init: function () {
+	            var input = 'input';
+	            this._setTime(this.d.date);
+	            this._buildHTML();
+	
+	            if (navigator.userAgent.match(/trident/gi)) {
+	                input = 'change';
+	            }
+	
+	            this.d.$el.on('selectDate', this._onSelectDate.bind(this));
+	            this.$ranges.on(input, this._onChangeRange.bind(this));
+	            this.$ranges.on('mouseup', this._onMouseUpRange.bind(this));
+	            this.$ranges.on('mousemove focus ', this._onMouseEnterRange.bind(this));
+	            this.$ranges.on('mouseout blur', this._onMouseOutRange.bind(this));
+	        },
+	
+	        _setTime: function (date) {
+	            var _date = dp.getParsedDate(date);
+	
+	            this._handleDate(date);
+	            this.hours = _date.hours < this.minHours ? this.minHours : _date.hours;
+	            this.minutes = _date.minutes < this.minMinutes ? this.minMinutes : _date.minutes;
+	        },
+	
+	        _setMinTimeFromDate: function (date) {
+	            this.minHours = date.getHours();
+	            this.minMinutes = date.getMinutes();
+	        },
+	
+	        _setMaxTimeFromDate: function (date) {
+	            this.maxHours = date.getHours();
+	            this.maxMinutes = date.getMinutes();
+	        },
+	
+	        _setDefaultMinMaxTime: function () {
+	            var maxHours = 23,
+	                maxMinutes = 59,
+	                opts = this.opts;
+	
+	            this.minHours = opts.minHours < 0 || opts.minHours > maxHours ? 0 : opts.minHours;
+	            this.minMinutes = opts.minMinutes < 0 || opts.minMinutes > maxMinutes ? 0 : opts.minMinutes;
+	            this.maxHours = opts.maxHours < 0 || opts.maxHours > maxHours ? maxHours : opts.maxHours;
+	            this.maxMinutes = opts.maxMinutes < 0 || opts.maxMinutes > maxMinutes ? maxMinutes : opts.maxMinutes;
+	        },
+	
+	        /**
+	         * Looks for min/max hours/minutes and if current values
+	         * are out of range sets valid values.
+	         * @private
+	         */
+	        _validateHoursMinutes: function (date) {
+	            if (this.hours < this.minHours) {
+	                this.hours = this.minHours;
+	            } else if (this.hours > this.maxHours) {
+	                this.hours = this.maxHours;
+	            }
+	
+	            if (this.minutes < this.minMinutes) {
+	                this.minutes = this.minMinutes;
+	            } else if (this.minutes > this.maxMinutes) {
+	                this.minutes = this.maxMinutes;
+	            }
+	        },
+	
+	        _buildHTML: function () {
+	            var lz = dp.getLeadingZeroNum,
+	                data = {
+	                    hourMin: this.minHours,
+	                    hourMax: lz(this.maxHours),
+	                    hourStep: this.opts.hoursStep,
+	                    hourValue: lz(this.displayHours),
+	                    minMin: this.minMinutes,
+	                    minMax: lz(this.maxMinutes),
+	                    minStep: this.opts.minutesStep,
+	                    minValue: lz(this.minutes)
+	                },
+	                _template = dp.template(template, data);
+	
+	            this.$timepicker = $(_template).appendTo(this.d.$datepicker);
+	            this.$ranges = $('[type="range"]', this.$timepicker);
+	            this.$hours = $('[name="hours"]', this.$timepicker);
+	            this.$minutes = $('[name="minutes"]', this.$timepicker);
+	            this.$hoursText = $('.datepicker--time-current-hours', this.$timepicker);
+	            this.$minutesText = $('.datepicker--time-current-minutes', this.$timepicker);
+	
+	            if (this.d.ampm) {
+	                this.$ampm = $('<span class="datepicker--time-current-ampm">')
+	                    .appendTo($('.datepicker--time-current', this.$timepicker))
+	                    .html(this.dayPeriod);
+	
+	                this.$timepicker.addClass('-am-pm-');
+	            }
+	        },
+	
+	        _updateCurrentTime: function () {
+	            var h =  dp.getLeadingZeroNum(this.displayHours),
+	                m = dp.getLeadingZeroNum(this.minutes);
+	
+	            this.$hoursText.html(h);
+	            this.$minutesText.html(m);
+	
+	            if (this.d.ampm) {
+	                this.$ampm.html(this.dayPeriod);
+	            }
+	        },
+	
+	        _updateRanges: function () {
+	            this.$hours.attr({
+	                min: this.minHours,
+	                max: this.maxHours
+	            }).val(this.hours);
+	
+	            this.$minutes.attr({
+	                min: this.minMinutes,
+	                max: this.maxMinutes
+	            }).val(this.minutes)
+	        },
+	
+	        /**
+	         * Sets minHours, minMinutes etc. from date. If date is not passed, than sets
+	         * values from options
+	         * @param [date] {object} - Date object, to get values from
+	         * @private
+	         */
+	        _handleDate: function (date) {
+	            this._setDefaultMinMaxTime();
+	
+	            if (date) {
+	                if (dp.isSame(date, this.d.opts.minDate)) {
+	                    this._setMinTimeFromDate(this.d.opts.minDate);
+	                } else if (dp.isSame(date, this.d.opts.maxDate)) {
+	                    this._setMaxTimeFromDate(this.d.opts.maxDate);
+	                }
+	            }
+	
+	            this._validateHoursMinutes(date);
+	        },
+	
+	        update: function () {
+	            this._updateRanges();
+	            this._updateCurrentTime();
+	        },
+	
+	        /**
+	         * Calculates valid hour value to display in text input and datepicker's body.
+	         * @param date {Date|Number} - date or hours
+	         * @returns {{hours: *, dayPeriod: string}}
+	         * @private
+	         */
+	        _getValidHoursFromDate: function (date) {
+	            var d = date,
+	                hours = date;
+	
+	            if (date instanceof Date) {
+	                d = dp.getParsedDate(date);
+	                hours = d.hours;
+	            }
+	
+	            var ampm = this.d.ampm,
+	                dayPeriod = 'am';
+	
+	            if (ampm) {
+	                switch(true) {
+	                    case hours == 0:
+	                        hours = 12;
+	                        break;
+	                    case hours == 12:
+	                        dayPeriod = 'pm';
+	                        break;
+	                    case hours > 11:
+	                        hours = hours - 12;
+	                        dayPeriod = 'pm';
+	                        break;
+	                    default:
+	                        break;
+	                }
+	            }
+	
+	            return {
+	                hours: hours,
+	                dayPeriod: dayPeriod
+	            }
+	        },
+	
+	        set hours (val) {
+	            this._hours = val;
+	
+	            var displayHours = this._getValidHoursFromDate(val);
+	
+	            this.displayHours = displayHours.hours;
+	            this.dayPeriod = displayHours.dayPeriod;
+	        },
+	
+	        get hours() {
+	            return this._hours;
+	        },
+	
+	        //  Events
+	        // -------------------------------------------------
+	
+	        _onChangeRange: function (e) {
+	            var $target = $(e.target),
+	                name = $target.attr('name');
+	            
+	            this.d.timepickerIsActive = true;
+	
+	            this[name] = $target.val();
+	            this._updateCurrentTime();
+	            this.d._trigger('timeChange', [this.hours, this.minutes])
+	        },
+	
+	        _onSelectDate: function (e, data) {
+	            this._handleDate(data);
+	            this.update();
+	        },
+	
+	        _onMouseEnterRange: function (e) {
+	            var name = $(e.target).attr('name');
+	            $('.datepicker--time-current-' + name, this.$timepicker).addClass('-focus-');
+	        },
+	
+	        _onMouseOutRange: function (e) {
+	            var name = $(e.target).attr('name');
+	            if (this.d.inFocus) return; // Prevent removing focus when mouse out of range slider
+	            $('.datepicker--time-current-' + name, this.$timepicker).removeClass('-focus-');
+	        },
+	
+	        _onMouseUpRange: function (e) {
+	            this.d.timepickerIsActive = false;
+	        }
+	    };
+	})();
+
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+	
+	// load the styles
+	var content = __webpack_require__(4);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(2)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../css-loader/index.js!./../../../postcss-loader/index.js!./datepicker.min.css", function() {
+				var newContent = require("!!./../../../css-loader/index.js!./../../../postcss-loader/index.js!./datepicker.min.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+	
+	// load the styles
+	var content = __webpack_require__(5);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(2)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../node_modules/css-loader/index.js!./../node_modules/postcss-loader/index.js!./../node_modules/sass-loader/index.js!./themes.scss", function() {
+				var newContent = require("!!./../node_modules/css-loader/index.js!./../node_modules/postcss-loader/index.js!./../node_modules/sass-loader/index.js!./themes.scss");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 21 */
+/***/ function(module, exports) {
+
+	module.exports = $;
 
 /***/ }
 /******/ ]);
+//# sourceMappingURL=index.js.map

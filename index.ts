@@ -1,5 +1,4 @@
 import * as $ from "jquery";
-import * as Promise from "bluebird";
 import {Themes, Theme} from "./modules/themes";
 
 declare const Shopify: {theme: {id: number, name: string, role: string}};
@@ -7,6 +6,20 @@ declare const Shopify: {theme: {id: number, name: string, role: string}};
 //Variables set by webpack during build.
 declare const VERSION: string;
 declare const TEST_MODE: boolean;
+declare const require: any;
+
+//Import libs and styles
+require("air-datepicker");
+require("air-datepicker/dist/js/i18n/datepicker.da.js");
+require("air-datepicker/dist/js/i18n/datepicker.de.js");
+require("air-datepicker/dist/js/i18n/datepicker.en.js");
+require("air-datepicker/dist/js/i18n/datepicker.nl.js");
+require("air-datepicker/dist/js/i18n/datepicker.pt.js");
+require("air-datepicker/dist/js/i18n/datepicker.pt-BR.js");
+require("air-datepicker/dist/js/i18n/datepicker.ro.js");
+require("air-datepicker/dist/js/i18n/datepicker.zh.js");
+require("node_modules/air-datepicker/dist/css/datepicker.min.css");
+require("sass/themes.scss");
 
 export interface Config 
 {
@@ -43,8 +56,12 @@ export class Client
             if (!this.theme)
             {
                 // TODO: Make an educated guess as to where the widget should be inserted into the DOM.
+                throw new Error("No suitable Deliveron picker host found.");
             }
         }
+
+        //Add the theme name as a class on the body element
+        document.body.classList.add(Shopify.theme.name);
 
         this.loadWidget();
     }
@@ -58,29 +75,34 @@ export class Client
         }
     }
 
-    private jquery = $.noConflict();
-
     private loadWidget()
     {
-        console.log("Ensuring jQuery datepicker");
+        const container = document.createElement("div");
+        container.id = "deliveron-container";
 
-        // TODO: Load the widget + jquery datepicker.
-        this.ensureJqueryDatepicker().then((result) =>
+        const input = document.createElement("input");
+        input.placeholder = this.config.label;
+        input.type = "text";
+        input.id = "deliveron-picker";
+
+        container.appendChild(input);
+
+        const placement = this.theme.element.placement;
+        const element = document.querySelector(this.theme.element.selector);
+
+        if (placement === "in")
         {
-            
-        })
-    }
-
-    private ensureJqueryDatepicker()
-    {
-        return new Promise<void>((resolve, reject) =>
+            element.appendChild(container);
+        }
+        else
         {
-            // TODO: If jquery datepicker exists, resolve immediately. Else load it from npmcdn.
+            element.parentNode.insertBefore(container, element);
+        }
 
-            const script = document.createElement("script");
-            script.src = "";
-            script.type = "text/javascript";
-        });
+        $(input)["datepicker"]({
+            minDate: new Date(),
+            language: "en",
+        }) 
     }
 }
 
