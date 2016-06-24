@@ -1,6 +1,8 @@
 import * as $ from "jquery";
 import {Themes, Theme} from "./modules/themes";
 
+declare type CartAttributes = { deliverOn: string, deliverOnIso: string | Date };
+
 //Variables set by webpack during build.
 declare const VERSION: string;
 declare const TEST_MODE: boolean;
@@ -112,11 +114,16 @@ export class Client
         const container = document.createElement("div");
         container.id = "deliveron-container";
 
+        const label = document.createElement("p");
+        label.id = "deliveron-label";
+        label.textContent = this.config.label;
+
         const input = document.createElement("input");
-        input.placeholder = this.config.label;
+        input.placeholder = "Click/tap to select";
         input.type = "text";
         input.id = "deliveron-picker";
 
+        container.appendChild(label);
         container.appendChild(input);
 
         const placement = this.theme.element.placement;
@@ -131,10 +138,39 @@ export class Client
             element.parentNode.insertBefore(container, element);
         }
 
-        $(input)["datepicker"]({
+        const picker = $(input)["datepicker"]({
             minDate: new Date(),
             language: "en",
-        }) 
+        }).data("datepicker");
+
+        // Get the user's cart to check if they've already set a date
+        Shopify.getCart((cart) =>
+        {
+            const att = cart.attributes as CartAttributes;
+
+            if (att.deliverOn && att.deliverOnIso)
+            {
+                const startDate = new Date(att.deliverOnIso as string);
+
+                picker.selectDate(startDate);
+            }
+
+            // Update the picker with the onSelect handler. Set *after* the default date has been selected so there isn't 
+            // an extraneous update call just for loading the picker.
+            picker.update({
+                onSelect: (formattedDate, date, picker) => this.updateDate(formattedDate, date, picker),
+            })
+        })
+    }
+
+    private updateDate(formattedDate: string, date: Date, instance: DatepickerInstance)
+    {
+        const att: CartAttributes = {
+            deliverOn: formattedDate,
+            deliverOnIso: date,
+        };
+
+        Shopify.updateCartAttributes(att, () => console.log("Delivery date updated to %s", formattedDate));
     }
 }
 

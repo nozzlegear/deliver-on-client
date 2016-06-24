@@ -2,6 +2,12 @@ div#deliveron-container
 {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
+
+    p#deliveron-label
+    {
+        padding-right:7px;
+    }
 
     input#deliveron-picker
     {

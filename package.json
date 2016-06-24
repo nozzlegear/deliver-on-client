@@ -29,7 +29,7 @@
     "air-datepicker": "^2.0.2"
   },
   "devDependencies": {
-    "@types/air-datepicker.d.ts": "github:nozzlegear/air-datepicker.d.ts#9581917",
+    "@types/air-datepicker.d.ts": "github:nozzlegear/air-datepicker.d.ts#e3ed813",
     "@types/jquery": "^1.10.21-alpha",
     "@types/shopify.d.ts": "github:nozzlegear/shopify.d.ts#2ae31fa",
     "autoprefixer": "^6.3.6",

@@ -121,12 +121,17 @@ var DeliverOn =
 	        document.body.appendChild(script);
 	    };
 	    Client.prototype.loadWidget = function () {
+	        var _this = this;
 	        var container = document.createElement("div");
 	        container.id = "deliveron-container";
+	        var label = document.createElement("p");
+	        label.id = "deliveron-label";
+	        label.textContent = this.config.label;
 	        var input = document.createElement("input");
-	        input.placeholder = this.config.label;
+	        input.placeholder = "Click/tap to select";
 	        input.type = "text";
 	        input.id = "deliveron-picker";
+	        container.appendChild(label);
 	        container.appendChild(input);
 	        var placement = this.theme.element.placement;
 	        var element = document.querySelector(this.theme.element.selector);
@@ -136,10 +141,30 @@ var DeliverOn =
 	        else {
 	            element.parentNode.insertBefore(container, element);
 	        }
-	        $(input)["datepicker"]({
+	        var picker = $(input)["datepicker"]({
 	            minDate: new Date(),
 	            language: "en",
+	        }).data("datepicker");
+	        // Get the user's cart to check if they've already set a date
+	        Shopify.getCart(function (cart) {
+	            var att = cart.attributes;
+	            if (att.deliverOn && att.deliverOnIso) {
+	                var startDate = new Date(att.deliverOnIso);
+	                picker.selectDate(startDate);
+	            }
+	            // Update the picker with the onSelect handler. Set *after* the default date has been selected so there isn't 
+	            // an extraneous update call just for loading the picker.
+	            picker.update({
+	                onSelect: function (formattedDate, date, picker) { return _this.updateDate(formattedDate, date, picker); },
+	            });
 	        });
+	    };
+	    Client.prototype.updateDate = function (formattedDate, date, instance) {
+	        var att = {
+	            deliverOn: formattedDate,
+	            deliverOnIso: date,
+	        };
+	        Shopify.updateCartAttributes(att, function () { return console.log("Delivery date updated to %s", formattedDate); });
 	    };
 	    return Client;
 	}());
@@ -505,7 +530,7 @@ var DeliverOn =
 	
 	
 	// module
-	exports.push([module.id, "div#deliveron-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: end;\n      -ms-flex-pack: end;\n          justify-content: flex-end; }\n  div#deliveron-container input#deliveron-picker {\n    width: auto;\n    min-width: 240px;\n    display: block; }\n", ""]);
+	exports.push([module.id, "div#deliveron-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: end;\n      -ms-flex-pack: end;\n          justify-content: flex-end;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center; }\n  div#deliveron-container p#deliveron-label {\n    padding-right: 7px; }\n  div#deliveron-container input#deliveron-picker {\n    width: auto;\n    min-width: 240px;\n    display: block; }\n", ""]);
 	
 	// exports
 
