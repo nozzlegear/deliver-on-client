@@ -1,8 +1,6 @@
 import * as $ from "jquery";
 import {Themes, Theme} from "./modules/themes";
 
-declare const Shopify: {theme: {id: number, name: string, role: string}};
-
 //Variables set by webpack during build.
 declare const VERSION: string;
 declare const TEST_MODE: boolean;
@@ -63,7 +61,13 @@ export class Client
         //Add the theme name as a class on the body element
         document.body.classList.add(Shopify.theme.name);
 
-        this.loadWidget();
+        //Ensure the Shopify API wrapper is loaded and then load the widget.
+        this.ensureShopifyWrapper(() => this.loadWidget());
+    }
+
+    public static get VERSION()
+    {
+        return VERSION;   
     }
 
     private theme: Theme = {
@@ -73,6 +77,34 @@ export class Client
             selector: "[data-deliveronhost]",
             placement: "in",
         }
+    }
+
+    private ensureShopifyWrapper(cb: () => void)
+    {
+        if (typeof Shopify.updateCartAttributes === "function")
+        {
+            cb();
+
+            return;
+        }
+
+        const script = document.createElement("script");
+        script.src = "https://cdn.shopify.com/s/assets/themes_support/api.jquery-c1754bd1a7bb06d28ce2b85087252f0d8af6d848c75139f5e2a263741ba089b0.js";
+        script.type = "text/javascript";
+        script.onload = (e) =>
+        {
+            const interval = setInterval(() =>
+            {
+                if (typeof Shopify.updateCartAttributes === "function")
+                {
+                    clearInterval(interval);
+
+                    cb();
+                }
+            }, 250);
+        } 
+
+        document.body.appendChild(script);
     }
 
     private loadWidget()

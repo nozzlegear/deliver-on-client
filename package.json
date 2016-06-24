@@ -31,6 +31,7 @@
   "devDependencies": {
     "@types/air-datepicker.d.ts": "github:nozzlegear/air-datepicker.d.ts#9581917",
     "@types/jquery": "^1.10.21-alpha",
+    "@types/shopify.d.ts": "github:nozzlegear/shopify.d.ts#2ae31fa",
     "autoprefixer": "^6.3.6",
     "awesome-typescript-loader": "^1.1.1",
     "babel-loader": "^6.2.4",

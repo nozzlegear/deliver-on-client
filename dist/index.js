@@ -92,8 +92,34 @@ var DeliverOn =
 	        }
 	        //Add the theme name as a class on the body element
 	        document.body.classList.add(Shopify.theme.name);
-	        this.loadWidget();
+	        //Ensure the Shopify API wrapper is loaded and then load the widget.
+	        this.ensureShopifyWrapper(function () { return _this.loadWidget(); });
 	    }
+	    Object.defineProperty(Client, "VERSION", {
+	        get: function () {
+	            return ("0.4.0");
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Client.prototype.ensureShopifyWrapper = function (cb) {
+	        if (typeof Shopify.updateCartAttributes === "function") {
+	            cb();
+	            return;
+	        }
+	        var script = document.createElement("script");
+	        script.src = "https://cdn.shopify.com/s/assets/themes_support/api.jquery-c1754bd1a7bb06d28ce2b85087252f0d8af6d848c75139f5e2a263741ba089b0.js";
+	        script.type = "text/javascript";
+	        script.onload = function (e) {
+	            var interval = setInterval(function () {
+	                if (typeof Shopify.updateCartAttributes === "function") {
+	                    clearInterval(interval);
+	                    cb();
+	                }
+	            }, 250);
+	        };
+	        document.body.appendChild(script);
+	    };
 	    Client.prototype.loadWidget = function () {
 	        var container = document.createElement("div");
 	        container.id = "deliveron-container";
@@ -118,7 +144,7 @@ var DeliverOn =
 	    return Client;
 	}());
 	exports.Client = Client;
-	if (false) {
+	if (true) {
 	    window["deli"] = new Client({
 	        label: "Pick your delivery date:",
 	        format: "mm/dd/yyyy",
