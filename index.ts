@@ -42,6 +42,7 @@ export class Client
         {
             const themeId = Shopify.theme.id;
             const matchingThemes = Themes.filter((theme, index) => theme.id === themeId);
+            let found = false;
 
             // Try to find a matching theme and container
             matchingThemes.forEach((theme, index) => 
@@ -49,12 +50,13 @@ export class Client
                 if (document.querySelector(theme.element.selector))
                 {
                     this.theme = theme;
+                    found = true;
 
                     return false;
                 }
             });
 
-            if (!this.theme)
+            if (!found)
             {
                 // TODO: Make an educated guess as to where the widget should be inserted into the DOM.
                 throw new Error("No suitable Deliveron picker host found.");

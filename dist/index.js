@@ -78,14 +78,16 @@ var DeliverOn =
 	        if (!document.querySelector(this.theme.element.selector)) {
 	            var themeId_1 = Shopify.theme.id;
 	            var matchingThemes = themes_1.Themes.filter(function (theme, index) { return theme.id === themeId_1; });
+	            var found_1 = false;
 	            // Try to find a matching theme and container
 	            matchingThemes.forEach(function (theme, index) {
 	                if (document.querySelector(theme.element.selector)) {
 	                    _this.theme = theme;
+	                    found_1 = true;
 	                    return false;
 	                }
 	            });
-	            if (!this.theme) {
+	            if (!found_1) {
 	                // TODO: Make an educated guess as to where the widget should be inserted into the DOM.
 	                throw new Error("No suitable Deliveron picker host found.");
 	            }
