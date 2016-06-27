@@ -72,6 +72,8 @@ var DeliverOn =
 	                placement: "in",
 	            }
 	        };
+	        //Add the theme name as a class on the body element
+	        document.body.classList.add("shopify-theme-" + Shopify.theme.id);
 	        // Search for a data-deliveronhost to load the widget into. If it doesn't exist,
 	        // determine which theme the shop is using and load the widget into the appropriate element.
 	        if (!document.querySelector(this.theme.element.selector)) {
@@ -91,8 +93,6 @@ var DeliverOn =
 	                throw new Error("No suitable Deliveron picker host found.");
 	            }
 	        }
-	        //Add the theme name as a class on the body element
-	        document.body.classList.add("shopify-theme-" + Shopify.theme.id);
 	        //Ensure the Shopify API wrapper is loaded and then load the widget.
 	        this.ensureShopifyWrapper(function () { return _this.loadWidget(); });
 	    }
@@ -123,17 +123,24 @@ var DeliverOn =
 	    };
 	    Client.prototype.loadWidget = function () {
 	        var _this = this;
+	        var config = this.config;
+	        var placementClass = "placement-" + config.labelPlacement;
+	        var flexContainer = document.createElement("div");
+	        flexContainer.id = "deliveron-flex-aligner";
 	        var container = document.createElement("div");
 	        container.id = "deliveron-container";
+	        container.classList.add(placementClass);
 	        var label = document.createElement("label");
 	        label.htmlFor = "deliveron-picker";
 	        label.id = "deliveron-label";
-	        label.textContent = this.config.label;
+	        label.classList.add(placementClass);
+	        label.textContent = config.label;
 	        var input = document.createElement("input");
 	        input.placeholder = "Click/tap to select";
 	        input.type = "text";
 	        input.name = "deliveron-picker";
 	        input.id = "deliveron-picker";
+	        input.classList.add(this.theme.element.inputClasses, placementClass);
 	        input.onchange = function (e) {
 	            e.preventDefault();
 	            if (_this.lastDate) {
@@ -142,18 +149,19 @@ var DeliverOn =
 	        };
 	        container.appendChild(label);
 	        container.appendChild(input);
+	        flexContainer.appendChild(container);
 	        var placement = this.theme.element.placement;
 	        var element = document.querySelector(this.theme.element.selector);
 	        if (placement === "in") {
-	            element.appendChild(container);
+	            element.appendChild(flexContainer);
 	        }
 	        else {
-	            element.parentNode.insertBefore(container, element);
+	            element.parentNode.insertBefore(flexContainer, element);
 	        }
 	        var maxDate;
-	        if (this.config.maxDays) {
+	        if (config.maxDays) {
 	            maxDate = new Date();
-	            maxDate.setDate(maxDate.getDate() + this.config.maxDays);
+	            maxDate.setDate(maxDate.getDate() + config.maxDays);
 	        }
 	        var picker = $(input)["datepicker"]({
 	            minDate: new Date(),
@@ -188,6 +196,7 @@ var DeliverOn =
 	if (true) {
 	    window["deli"] = new Client({
 	        label: "Pick your delivery date:",
+	        labelPlacement: "top",
 	        format: "mm/dd/yyyy",
 	        addPickerToCheckout: false,
 	        allowChangeFromCheckout: false,
@@ -520,6 +529,15 @@ var DeliverOn =
 	            placement: "before",
 	            selector: "input.btn--secondary.update-cart[name=update]"
 	        }
+	    },
+	    {
+	        id: 135351494,
+	        name: "Atlantic",
+	        element: {
+	            placement: "in",
+	            selector: "div.cart-tools > div.instructions",
+	            inputClasses: "field",
+	        }
 	    }
 	];
 
@@ -547,7 +565,7 @@ var DeliverOn =
 	
 	
 	// module
-	exports.push([module.id, "div#deliveron-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: end;\n      -ms-flex-pack: end;\n          justify-content: flex-end;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center; }\n  div#deliveron-container label#deliveron-label {\n    padding-right: 7px; }\n  div#deliveron-container input#deliveron-picker {\n    width: auto;\n    min-width: 240px;\n    display: block; }\n", ""]);
+	exports.push([module.id, "@charset \"UTF-8\";\n.shopify-theme-79146374 div#deliveron-flex-aligner {\n  /**\r\n         * Launchpad Star\r\n         */\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: end;\n      -ms-flex-pack: end;\n          justify-content: flex-end; }\n\ndiv#deliveron-flex-aligner div#deliveron-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: horizontal;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: row;\n          flex-direction: row;\n  -webkit-box-pack: end;\n      -ms-flex-pack: end;\n          justify-content: flex-end;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center; }\n  div#deliveron-flex-aligner div#deliveron-container.placement-top, div#deliveron-flex-aligner div#deliveron-container.placement-bottom {\n    -webkit-box-align: start;\n        -ms-flex-align: start;\n                -ms-grid-row-align: flex-start;\n            align-items: flex-start; }\n    div#deliveron-flex-aligner div#deliveron-container.placement-top.placement-top, div#deliveron-flex-aligner div#deliveron-container.placement-bottom.placement-top {\n      -webkit-box-orient: vertical;\n      -webkit-box-direction: normal;\n          -ms-flex-direction: column;\n              flex-direction: column; }\n    div#deliveron-flex-aligner div#deliveron-container.placement-top.placement-bottom, div#deliveron-flex-aligner div#deliveron-container.placement-bottom.placement-bottom {\n      -webkit-box-orient: vertical;\n      -webkit-box-direction: reverse;\n          -ms-flex-direction: column-reverse;\n              flex-direction: column-reverse; }\n  div#deliveron-flex-aligner div#deliveron-container.placement-right {\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: reverse;\n        -ms-flex-direction: row-reverse;\n            flex-direction: row-reverse; }\n  div#deliveron-flex-aligner div#deliveron-container label#deliveron-label {\n    padding: 0;\n    margin: 0; }\n    div#deliveron-flex-aligner div#deliveron-container label#deliveron-label.placement-right {\n      padding-left: 7px; }\n    div#deliveron-flex-aligner div#deliveron-container label#deliveron-label.placement-left {\n      padding-right: 7px; }\n  div#deliveron-flex-aligner div#deliveron-container input#deliveron-picker {\n    width: auto;\n    min-width: 240px;\n    display: block;\n    margin: 0; }\n  .shopify-theme-135351494 div#deliveron-flex-aligner div#deliveron-container {\n    /** \r\n            * Atlantic — https://themes.shopify.com/themes/atlantic/styles/modern\r\n            */\n    margin: 15px 0; }\n    .shopify-theme-135351494 div#deliveron-flex-aligner div#deliveron-container label#deliveron-label.placement-top {\n      margin-bottom: 15px; }\n    .shopify-theme-135351494 div#deliveron-flex-aligner div#deliveron-container label#deliveron-label.placement-bottom {\n      margin-top: 15px; }\n    .shopify-theme-135351494 div#deliveron-flex-aligner div#deliveron-container input#deliveron-picker {\n      min-height: auto; }\n      .shopify-theme-135351494 div#deliveron-flex-aligner div#deliveron-container input#deliveron-picker.placement-top, .shopify-theme-135351494 div#deliveron-flex-aligner div#deliveron-container input#deliveron-picker.placement-bottom {\n        width: 100%; }\n      .shopify-theme-135351494 div#deliveron-flex-aligner div#deliveron-container input#deliveron-picker.placement-right, .shopify-theme-135351494 div#deliveron-flex-aligner div#deliveron-container input#deliveron-picker.placement-left {\n        -webkit-box-flex: 1;\n            -ms-flex: 1;\n                flex: 1; }\n  .shopify-theme-79146374 div#deliveron-flex-aligner div#deliveron-container {\n    margin: 0 0 15px 0; }\n", ""]);
 	
 	// exports
 

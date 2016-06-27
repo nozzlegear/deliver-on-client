@@ -28,12 +28,16 @@ export interface Config
     addPickerToCheckout?: boolean;
     allowChangeFromCheckout?: boolean;
     maxDays?: number;
+    labelPlacement: "top" | "right" | "bottom" | "left",
 }
 
 export class Client
 {
     constructor(private config: Config)
     {
+        //Add the theme name as a class on the body element
+        document.body.classList.add("shopify-theme-" + Shopify.theme.id);
+
         // Search for a data-deliveronhost to load the widget into. If it doesn't exist,
         // determine which theme the shop is using and load the widget into the appropriate element.
         if (! document.querySelector(this.theme.element.selector))
@@ -60,9 +64,6 @@ export class Client
                 throw new Error("No suitable Deliveron picker host found.");
             }
         }
-
-        //Add the theme name as a class on the body element
-        document.body.classList.add("shopify-theme-" + Shopify.theme.id);
 
         //Ensure the Shopify API wrapper is loaded and then load the widget.
         this.ensureShopifyWrapper(() => this.loadWidget());
@@ -114,19 +115,27 @@ export class Client
 
     private loadWidget()
     {
+        const config = this.config;
+        const placementClass = `placement-${config.labelPlacement}`;
+        const flexContainer = document.createElement("div");
+        flexContainer.id = "deliveron-flex-aligner";
+
         const container = document.createElement("div");
         container.id = "deliveron-container";
+        container.classList.add(placementClass);
 
         const label = document.createElement("label");
         label.htmlFor = "deliveron-picker";
         label.id = "deliveron-label";
-        label.textContent = this.config.label;
+        label.classList.add(placementClass);
+        label.textContent = config.label;
 
         const input = document.createElement("input");
         input.placeholder = "Click/tap to select";
         input.type = "text";
         input.name = "deliveron-picker";
         input.id = "deliveron-picker";
+        input.classList.add(this.theme.element.inputClasses, placementClass);
         input.onchange = (e) => 
         {
             e.preventDefault();
@@ -139,25 +148,26 @@ export class Client
 
         container.appendChild(label);
         container.appendChild(input);
+        flexContainer.appendChild(container);
 
         const placement = this.theme.element.placement;
         const element = document.querySelector(this.theme.element.selector);
 
         if (placement === "in")
         {
-            element.appendChild(container);
+            element.appendChild(flexContainer);
         }
         else
         {
-            element.parentNode.insertBefore(container, element);
+            element.parentNode.insertBefore(flexContainer, element);
         }
 
         let maxDate: Date;
 
-        if (this.config.maxDays)
+        if (config.maxDays)
         {
             maxDate = new Date();
-            maxDate.setDate(maxDate.getDate() + this.config.maxDays);
+            maxDate.setDate(maxDate.getDate() + config.maxDays);
         }
 
         const picker = $(input)["datepicker"]({
@@ -203,6 +213,7 @@ if (TEST_MODE)
 {
     window["deli"] = new Client({
         label: "Pick your delivery date:",
+        labelPlacement: "top",
         format: "mm/dd/yyyy",
         addPickerToCheckout: false,
         allowChangeFromCheckout: false,

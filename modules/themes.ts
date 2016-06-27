@@ -4,6 +4,7 @@ export interface Theme {
     element: {
         placement: "before" | "in",
         selector: string,
+        inputClasses?: string,
     }
 }
 
@@ -17,6 +18,15 @@ export const Themes: Theme[] = [
         element: {
             placement: "before",
             selector: "input.btn--secondary.update-cart[name=update]"
+        }
+    },
+    {
+        id: 135351494,
+        name: "Atlantic",
+        element: {
+            placement: "in",
+            selector: "div.cart-tools > div.instructions",
+            inputClasses: "field",
         }
     }
 ]

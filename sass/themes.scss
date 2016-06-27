@@ -1,18 +1,110 @@
-div#deliveron-container
+div#deliveron-flex-aligner
 {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-
-    label#deliveron-label
+    .shopify-theme-79146374 &
     {
-        padding-right:7px;
+        /**
+         * Launchpad Star
+         */
+
+        display: flex;
+        justify-content: flex-end;
     }
 
-    input#deliveron-picker
+    div#deliveron-container
     {
-        width: auto;
-        min-width: 240px;
-        display: block;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+
+        &.placement-top, &.placement-bottom
+        {
+            align-items: flex-start;
+
+            &.placement-top
+            {
+                flex-direction: column;
+            }
+
+            &.placement-bottom
+            {
+                flex-direction: column-reverse;
+            }
+        }
+
+        &.placement-right
+        {
+            flex-direction: row-reverse;
+        }
+
+        label#deliveron-label
+        {
+            padding: 0;
+            margin: 0;
+
+            $padding: 7px;
+
+            &.placement-right  
+            {
+                padding-left: $padding;
+            }
+
+            &.placement-left
+            {
+                padding-right: $padding;
+            }
+        }
+
+        input#deliveron-picker
+        {
+            width: auto;
+            min-width: 240px;
+            display: block;
+            margin: 0;
+        }
+
+        .shopify-theme-135351494 & 
+        {
+            /** 
+            * Atlantic — https://themes.shopify.com/themes/atlantic/styles/modern
+            */
+
+            $margin: 15px;
+
+            margin:$margin 0;
+
+            label#deliveron-label
+            {
+                &.placement-top
+                {
+                    margin-bottom:$margin;
+                }
+
+                &.placement-bottom
+                {
+                    margin-top: $margin;
+                }
+            }
+
+            input#deliveron-picker
+            {
+                min-height: auto;
+
+                &.placement-top, &.placement-bottom
+                {
+                    width: 100%;
+                }
+
+                &.placement-right, &.placement-left
+                {
+                    flex: 1;
+                }
+            }
+        }
+
+        .shopify-theme-79146374 &
+        {
+            margin: 0 0 15px 0;
+        }
     }
 }
