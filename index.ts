@@ -34,8 +34,6 @@ export class Client
 {
     constructor(private config: Config)
     {
-        console.log("Starting Deliveron Client with settings", config);
-
         // Search for a data-deliveronhost to load the widget into. If it doesn't exist,
         // determine which theme the shop is using and load the widget into the appropriate element.
         if (! document.querySelector(this.theme.element.selector))
@@ -119,13 +117,15 @@ export class Client
         const container = document.createElement("div");
         container.id = "deliveron-container";
 
-        const label = document.createElement("p");
+        const label = document.createElement("label");
+        label.htmlFor = "deliveron-picker";
         label.id = "deliveron-label";
         label.textContent = this.config.label;
 
         const input = document.createElement("input");
         input.placeholder = "Click/tap to select";
         input.type = "text";
+        input.name = "deliveron-picker";
         input.id = "deliveron-picker";
         input.onchange = (e) => 
         {

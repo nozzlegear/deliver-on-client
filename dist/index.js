@@ -72,7 +72,6 @@ var DeliverOn =
 	                placement: "in",
 	            }
 	        };
-	        console.log("Starting Deliveron Client with settings", config);
 	        // Search for a data-deliveronhost to load the widget into. If it doesn't exist,
 	        // determine which theme the shop is using and load the widget into the appropriate element.
 	        if (!document.querySelector(this.theme.element.selector)) {
@@ -126,12 +125,14 @@ var DeliverOn =
 	        var _this = this;
 	        var container = document.createElement("div");
 	        container.id = "deliveron-container";
-	        var label = document.createElement("p");
+	        var label = document.createElement("label");
+	        label.htmlFor = "deliveron-picker";
 	        label.id = "deliveron-label";
 	        label.textContent = this.config.label;
 	        var input = document.createElement("input");
 	        input.placeholder = "Click/tap to select";
 	        input.type = "text";
+	        input.name = "deliveron-picker";
 	        input.id = "deliveron-picker";
 	        input.onchange = function (e) {
 	            e.preventDefault();
@@ -546,7 +547,7 @@ var DeliverOn =
 	
 	
 	// module
-	exports.push([module.id, "div#deliveron-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: end;\n      -ms-flex-pack: end;\n          justify-content: flex-end;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center; }\n  div#deliveron-container p#deliveron-label {\n    padding-right: 7px; }\n  div#deliveron-container input#deliveron-picker {\n    width: auto;\n    min-width: 240px;\n    display: block; }\n", ""]);
+	exports.push([module.id, "div#deliveron-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: end;\n      -ms-flex-pack: end;\n          justify-content: flex-end;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center; }\n  div#deliveron-container label#deliveron-label {\n    padding-right: 7px; }\n  div#deliveron-container input#deliveron-picker {\n    width: auto;\n    min-width: 240px;\n    display: block; }\n", ""]);
 	
 	// exports
 
