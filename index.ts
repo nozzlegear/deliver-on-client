@@ -27,6 +27,7 @@ export interface Config
     format?: "mm/dd/yyyy" | "dd/mm/yyyy";
     addPickerToCheckout?: boolean;
     allowChangeFromCheckout?: boolean;
+    maxDays?: number;
 }
 
 export class Client
@@ -81,6 +82,8 @@ export class Client
         }
     }
 
+    private lastDate: Date;
+
     private ensureShopifyWrapper(cb: () => void)
     {
         if (typeof Shopify.updateCartAttributes === "function")
@@ -122,6 +125,15 @@ export class Client
         input.placeholder = "Click/tap to select";
         input.type = "text";
         input.id = "deliveron-picker";
+        input.onchange = (e) => 
+        {
+            e.preventDefault();
+            
+            if (this.lastDate)
+            {
+                picker.selectDate(this.lastDate);
+            }
+        }
 
         container.appendChild(label);
         container.appendChild(input);
@@ -138,9 +150,18 @@ export class Client
             element.parentNode.insertBefore(container, element);
         }
 
+        let maxDate: Date;
+
+        if (this.config.maxDays)
+        {
+            maxDate = new Date();
+            maxDate.setDate(maxDate.getDate() + this.config.maxDays);
+        }
+
         const picker = $(input)["datepicker"]({
             minDate: new Date(),
             language: "en",
+            maxDate: maxDate || undefined,
         }).data("datepicker");
 
         // Get the user's cart to check if they've already set a date
@@ -150,9 +171,9 @@ export class Client
 
             if (att.deliverOn && att.deliverOnIso)
             {
-                const startDate = new Date(att.deliverOnIso as string);
+                this.lastDate = new Date(att.deliverOnIso as string);
 
-                picker.selectDate(startDate);
+                picker.selectDate(this.lastDate);
             }
 
             // Update the picker with the onSelect handler. Set *after* the default date has been selected so there isn't 
@@ -165,6 +186,8 @@ export class Client
 
     private updateDate(formattedDate: string, date: Date, instance: DatepickerInstance)
     {
+        this.lastDate = date;
+
         const att: CartAttributes = {
             deliverOn: formattedDate,
             deliverOnIso: date,
@@ -181,5 +204,6 @@ if (TEST_MODE)
         format: "mm/dd/yyyy",
         addPickerToCheckout: false,
         allowChangeFromCheckout: false,
+        maxDays: 7,
     })
 }

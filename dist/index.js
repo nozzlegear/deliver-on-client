@@ -131,6 +131,12 @@ var DeliverOn =
 	        input.placeholder = "Click/tap to select";
 	        input.type = "text";
 	        input.id = "deliveron-picker";
+	        input.onchange = function (e) {
+	            e.preventDefault();
+	            if (_this.lastDate) {
+	                picker.selectDate(_this.lastDate);
+	            }
+	        };
 	        container.appendChild(label);
 	        container.appendChild(input);
 	        var placement = this.theme.element.placement;
@@ -141,16 +147,22 @@ var DeliverOn =
 	        else {
 	            element.parentNode.insertBefore(container, element);
 	        }
+	        var maxDate;
+	        if (this.config.maxDays) {
+	            maxDate = new Date();
+	            maxDate.setDate(maxDate.getDate() + this.config.maxDays);
+	        }
 	        var picker = $(input)["datepicker"]({
 	            minDate: new Date(),
 	            language: "en",
+	            maxDate: maxDate || undefined,
 	        }).data("datepicker");
 	        // Get the user's cart to check if they've already set a date
 	        Shopify.getCart(function (cart) {
 	            var att = cart.attributes;
 	            if (att.deliverOn && att.deliverOnIso) {
-	                var startDate = new Date(att.deliverOnIso);
-	                picker.selectDate(startDate);
+	                _this.lastDate = new Date(att.deliverOnIso);
+	                picker.selectDate(_this.lastDate);
 	            }
 	            // Update the picker with the onSelect handler. Set *after* the default date has been selected so there isn't 
 	            // an extraneous update call just for loading the picker.
@@ -160,6 +172,7 @@ var DeliverOn =
 	        });
 	    };
 	    Client.prototype.updateDate = function (formattedDate, date, instance) {
+	        this.lastDate = date;
 	        var att = {
 	            deliverOn: formattedDate,
 	            deliverOnIso: date,
@@ -175,6 +188,7 @@ var DeliverOn =
 	        format: "mm/dd/yyyy",
 	        addPickerToCheckout: false,
 	        allowChangeFromCheckout: false,
+	        maxDays: 7,
 	    });
 	}
 

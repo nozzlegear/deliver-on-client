@@ -33,7 +33,7 @@
     "@types/jquery": "^1.10.21-alpha",
     "@types/shopify.d.ts": "github:nozzlegear/shopify.d.ts#2ae31fa",
     "autoprefixer": "^6.3.6",
-    "awesome-typescript-loader": "^1.1.1",
+    "awesome-typescript-loader": "^2.0.0-rc.14",
     "babel-loader": "^6.2.4",
     "babel-preset-es2015": "^6.9.0",
     "chokidar": "^1.6.0",
@@ -48,7 +48,7 @@
     "sass-loader": "^3.2.1",
     "source-map-loader": "^0.1.5",
     "style-loader": "^0.13.1",
-    "typescript": "^1.9.0-dev.20160615-1.0",
+    "typescript": "^1.9.0-dev.20160627-1.0",
     "webpack": "^1.13.1",
     "webpack-stream": "^3.2.0"
   }
