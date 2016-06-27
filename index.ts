@@ -62,7 +62,7 @@ export class Client
         }
 
         //Add the theme name as a class on the body element
-        document.body.classList.add(Shopify.theme.name);
+        document.body.classList.add("shopify-theme-" + Shopify.theme.id);
 
         //Ensure the Shopify API wrapper is loaded and then load the widget.
         this.ensureShopifyWrapper(() => this.loadWidget());
