@@ -29,11 +29,11 @@
     "air-datepicker": "^2.0.2"
   },
   "devDependencies": {
-    "@types/air-datepicker.d.ts": "github:nozzlegear/air-datepicker.d.ts#e3ed813",
+    "@types/air-datepicker": "github:nozzlegear/air-datepicker.d.ts#286565f",
     "@types/jquery": "^1.10.21-alpha",
-    "@types/shopify.d.ts": "github:nozzlegear/shopify.d.ts#2ae31fa",
+    "@types/shopify": "github:nozzlegear/shopify.d.ts#3d21c89",
     "autoprefixer": "^6.3.6",
-    "awesome-typescript-loader": "^2.0.0-rc.14",
+    "awesome-typescript-loader": "^2.0.0",
     "babel-loader": "^6.2.4",
     "babel-preset-es2015": "^6.9.0",
     "chokidar": "^1.6.0",

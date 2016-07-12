@@ -45,9 +45,10 @@ var DeliverOn =
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/// <reference path="node_modules/@types/shopify/shopify.d.ts" />
+	/// <reference path="node_modules/@types/air-datepicker/air-datepicker.d.ts" />
 	"use strict";
 	var $ = __webpack_require__(21);
-	var themes_1 = __webpack_require__(3);
 	//Import libs and styles
 	__webpack_require__(14);
 	__webpack_require__(6);
@@ -64,34 +65,14 @@ var DeliverOn =
 	    function Client(config) {
 	        var _this = this;
 	        this.config = config;
-	        this.theme = {
-	            id: Shopify.theme.id,
-	            name: Shopify.theme.name,
-	            element: {
-	                selector: "[data-deliveronhost]",
-	                placement: "in",
-	            }
-	        };
 	        //Add the theme name as a class on the body element
 	        document.body.classList.add("shopify-theme-" + Shopify.theme.id);
+	        this.targetElement = document.querySelector("[data-deliveronhost]");
 	        // Search for a data-deliveronhost to load the widget into. If it doesn't exist,
-	        // determine which theme the shop is using and load the widget into the appropriate element.
-	        if (!document.querySelector(this.theme.element.selector)) {
-	            var themeId_1 = Shopify.theme.id;
-	            var matchingThemes = themes_1.Themes.filter(function (theme, index) { return theme.id === themeId_1; });
-	            var found_1 = false;
-	            // Try to find a matching theme and container
-	            matchingThemes.forEach(function (theme, index) {
-	                if (document.querySelector(theme.element.selector)) {
-	                    _this.theme = theme;
-	                    found_1 = true;
-	                    return false;
-	                }
-	            });
-	            if (!found_1) {
-	                // TODO: Make an educated guess as to where the widget should be inserted into the DOM.
-	                throw new Error("No suitable Deliveron picker host found.");
-	            }
+	        // try to make an intelligent decision on where to insert the widget.
+	        // Only guess when on the /cart page. If the user wants it on other pages, they'll
+	        // need to add the [data-deliveronhost].
+	        if (!this.targetElement && /cart/ig.test(window.location.pathname)) {
 	        }
 	        //Ensure the Shopify API wrapper is loaded and then load the widget.
 	        this.ensureShopifyWrapper(function () { return _this.loadWidget(); });
@@ -124,7 +105,7 @@ var DeliverOn =
 	    Client.prototype.loadWidget = function () {
 	        var _this = this;
 	        var config = this.config;
-	        var placementClass = "placement-" + config.labelPlacement;
+	        var placementClass = "placement-" + config.label.placement;
 	        var flexContainer = document.createElement("div");
 	        flexContainer.id = "deliveron-flex-aligner";
 	        var container = document.createElement("div");
@@ -133,14 +114,14 @@ var DeliverOn =
 	        var label = document.createElement("label");
 	        label.htmlFor = "deliveron-picker";
 	        label.id = "deliveron-label";
-	        label.classList.add(placementClass);
-	        label.textContent = config.label;
+	        label.classList.add(placementClass, config.label.classes);
+	        label.textContent = config.label.text;
 	        var input = document.createElement("input");
 	        input.placeholder = "Click/tap to select";
 	        input.type = "text";
 	        input.name = "deliveron-picker";
 	        input.id = "deliveron-picker";
-	        input.classList.add(this.theme.element.inputClasses, placementClass);
+	        input.classList.add(config.input.classes);
 	        input.onchange = function (e) {
 	            e.preventDefault();
 	            if (_this.lastDate) {
@@ -514,35 +495,7 @@ var DeliverOn =
 
 
 /***/ },
-/* 3 */
-/***/ function(module, exports) {
-
-	"use strict";
-	/**
-	 * Known themes used to tell the client where to insert the datepicker.
-	 */
-	exports.Themes = [
-	    {
-	        id: 79146374,
-	        name: "launchpad-star",
-	        element: {
-	            placement: "before",
-	            selector: "input.btn--secondary.update-cart[name=update]"
-	        }
-	    },
-	    {
-	        id: 135351494,
-	        name: "Atlantic",
-	        element: {
-	            placement: "in",
-	            selector: "div.cart-tools > div.instructions",
-	            inputClasses: "field",
-	        }
-	    }
-	];
-
-
-/***/ },
+/* 3 */,
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -783,6 +736,8 @@ var DeliverOn =
 	            var classes = "datepicker--cell datepicker--cell-" + type,
 	                currentDate = new Date(),
 	                parent = this.d,
+	                minRange = dp.resetTime(parent.minRange),
+	                maxRange = dp.resetTime(parent.maxRange),
 	                opts = parent.opts,
 	                d = dp.getParsedDate(date),
 	                render = {},
@@ -826,28 +781,27 @@ var DeliverOn =
 	                html = render.html ? render.html : html;
 	                classes += render.classes ? ' ' + render.classes : '';
 	            }
-	
 	            if (opts.range) {
-	                if (dp.isSame(parent.minRange, date, type)) classes += ' -range-from-';
-	                if (dp.isSame(parent.maxRange, date, type)) classes += ' -range-to-';
+	                if (dp.isSame(minRange, date, type)) classes += ' -range-from-';
+	                if (dp.isSame(maxRange, date, type)) classes += ' -range-to-';
 	
 	                if (parent.selectedDates.length == 1 && parent.focused) {
 	                    if (
-	                        (dp.bigger(parent.minRange, date) && dp.less(parent.focused, date)) ||
-	                        (dp.less(parent.maxRange, date) && dp.bigger(parent.focused, date)))
+	                        (dp.bigger(minRange, date) && dp.less(parent.focused, date)) ||
+	                        (dp.less(maxRange, date) && dp.bigger(parent.focused, date)))
 	                    {
 	                        classes += ' -in-range-'
 	                    }
 	
-	                    if (dp.less(parent.maxRange, date) && dp.isSame(parent.focused, date)) {
+	                    if (dp.less(maxRange, date) && dp.isSame(parent.focused, date)) {
 	                        classes += ' -range-from-'
 	                    }
-	                    if (dp.bigger(parent.minRange, date) && dp.isSame(parent.focused, date)) {
+	                    if (dp.bigger(minRange, date) && dp.isSame(parent.focused, date)) {
 	                        classes += ' -range-to-'
 	                    }
 	
 	                } else if (parent.selectedDates.length == 2) {
-	                    if (dp.bigger(parent.minRange, date) && dp.less(parent.maxRange, date)) {
+	                    if (dp.bigger(minRange, date) && dp.less(maxRange, date)) {
 	                        classes += ' -in-range-'
 	                    }
 	                }
@@ -1003,10 +957,11 @@ var DeliverOn =
 	        _handleClick: function (el) {
 	            var date = el.data('date') || 1,
 	                month = el.data('month') || 0,
-	                year = el.data('year') || this.d.parsedDate.year;
+	                year = el.data('year') || this.d.parsedDate.year,
+	                dp = this.d;
 	            // Change view if min view does not reach yet
-	            if (this.d.view != this.opts.minView) {
-	                this.d.down(new Date(year, month, date));
+	            if (dp.view != this.opts.minView) {
+	                dp.down(new Date(year, month, date));
 	                return;
 	            }
 	            // Select date if min view is reached
@@ -1014,17 +969,28 @@ var DeliverOn =
 	                alreadySelected = this.d._isSelected(selectedDate, this.d.cellType);
 	
 	            if (!alreadySelected) {
-	                this.d._trigger('clickCell', selectedDate);
-	            } else if (alreadySelected && this.opts.toggleSelected){
-	                this.d.removeDate(selectedDate);
-	            } else if (alreadySelected && !this.opts.toggleSelected) {
-	                this.d.lastSelectedDate = alreadySelected;
-	                if (this.d.opts.timepicker) {
-	                    this.d.timepicker._setTime(alreadySelected);
-	                    this.d.timepicker.update();
-	                }
+	                dp._trigger('clickCell', selectedDate);
 	            }
 	
+	            if (alreadySelected && this.opts.range) {
+	                // Add possibility to select same date when range is true
+	                if (dp.selectedDates.length != 2 && !this.opts.toggleSelected || this.opts.toggleSelected) {
+	                    dp._trigger('clickCell', selectedDate);
+	                    // Change last selected date to be able to change time on last date
+	                    dp.lastSelectedDate = alreadySelected;
+	                }
+	            } else if (alreadySelected && this.opts.toggleSelected){
+	                dp.removeDate(selectedDate);
+	            }
+	
+	            // Change last selected date to be able to change time when clicking on this cell
+	            if (alreadySelected && !this.opts.toggleSelected) {
+	                dp.lastSelectedDate = alreadySelected;
+	                if (dp.opts.timepicker) {
+	                    dp.timepicker._setTime(alreadySelected);
+	                    dp.timepicker.update();
+	                }
+	            }
 	        },
 	
 	        _onClickCell: function (e) {
@@ -1406,11 +1372,12 @@ var DeliverOn =
 	                d = datepicker.getParsedDate(date),
 	                fullHours = d.fullHours,
 	                hours = d.hours,
+	                ampm = string.match(boundary('aa')) || string.match(boundary('AA')),
 	                dayPeriod = 'am',
 	                validHours;
 	
-	            if (this.opts.timepicker && this.timepicker && this.ampm) {
-	                validHours = this.timepicker._getValidHoursFromDate(date);
+	            if (this.opts.timepicker && this.timepicker && ampm) {
+	                validHours = this.timepicker._getValidHoursFromDate(date, ampm);
 	                fullHours = leadingZero(validHours.hours);
 	                hours = validHours.hours;
 	                dayPeriod = validHours.dayPeriod;
@@ -1625,7 +1592,8 @@ var DeliverOn =
 	         * @param {String|Number|Object} [value] - new param value
 	         */
 	        update: function (param, value) {
-	            var len = arguments.length;
+	            var len = arguments.length,
+	                lastSelectedDate = this.lastSelectedDate;
 	
 	            if (len == 2) {
 	                this.opts[param] = value;
@@ -1652,13 +1620,13 @@ var DeliverOn =
 	            }
 	
 	            if (this.opts.timepicker) {
-	                this.timepicker._handleDate(this.lastSelectedDate);
+	                if (lastSelectedDate) this.timepicker._handleDate(lastSelectedDate);
 	                this.timepicker._updateRanges();
 	                this.timepicker._updateCurrentTime();
 	                // Change hours and minutes if it's values have been changed through min/max hours/minutes
-	                if (this.lastSelectedDate) {
-	                    this.lastSelectedDate.setHours(this.timepicker.hours);
-	                    this.lastSelectedDate.setMinutes(this.timepicker.minutes);
+	                if (lastSelectedDate) {
+	                    lastSelectedDate.setHours(this.timepicker.hours);
+	                    lastSelectedDate.setMinutes(this.timepicker.minutes);
 	                }
 	            }
 	
@@ -2418,6 +2386,16 @@ var DeliverOn =
 	        return parseInt(num) < 10 ? '0' + num : num;
 	    };
 	
+	    /**
+	     * Returns copy of date with hours and minutes equals to 0
+	     * @param date {Date}
+	     */
+	    datepicker.resetTime = function (date) {
+	        if (typeof date != 'object') return;
+	        date = datepicker.getParsedDate(date);
+	        return new Date(date.year, date.month, date.date)
+	    };
+	
 	    $.fn.datepicker = function ( options ) {
 	        return this.each(function () {
 	            if (!$.data(this, pluginName)) {
@@ -2659,14 +2637,34 @@ var DeliverOn =
 	            this.minutes = _date.minutes < this.minMinutes ? this.minMinutes : _date.minutes;
 	        },
 	
+	        /**
+	         * Sets minHours and minMinutes from date (usually it's a minDate)
+	         * Also changes minMinutes if current hours are bigger then @date hours
+	         * @param date {Date}
+	         * @private
+	         */
 	        _setMinTimeFromDate: function (date) {
 	            this.minHours = date.getHours();
 	            this.minMinutes = date.getMinutes();
+	
+	            // If, for example, min hours are 10, and current hours are 12,
+	            // update minMinutes to default value, to be able to choose whole range of values
+	            if (this.d.lastSelectedDate) {
+	                if (this.d.lastSelectedDate.getHours() > date.getHours()) {
+	                    this.minMinutes = this.opts.minMinutes;
+	                }
+	            }
 	        },
 	
 	        _setMaxTimeFromDate: function (date) {
 	            this.maxHours = date.getHours();
 	            this.maxMinutes = date.getMinutes();
+	
+	            if (this.d.lastSelectedDate) {
+	                if (this.d.lastSelectedDate.getHours() < date.getHours()) {
+	                    this.maxMinutes = this.opts.maxMinutes;
+	                }
+	            }
 	        },
 	
 	        _setDefaultMinMaxTime: function () {
@@ -2761,7 +2759,6 @@ var DeliverOn =
 	         */
 	        _handleDate: function (date) {
 	            this._setDefaultMinMaxTime();
-	
 	            if (date) {
 	                if (dp.isSame(date, this.d.opts.minDate)) {
 	                    this._setMinTimeFromDate(this.d.opts.minDate);
@@ -2781,10 +2778,11 @@ var DeliverOn =
 	        /**
 	         * Calculates valid hour value to display in text input and datepicker's body.
 	         * @param date {Date|Number} - date or hours
+	         * @param [ampm] {Boolean} - 12 hours mode
 	         * @returns {{hours: *, dayPeriod: string}}
 	         * @private
 	         */
-	        _getValidHoursFromDate: function (date) {
+	        _getValidHoursFromDate: function (date, ampm) {
 	            var d = date,
 	                hours = date;
 	
@@ -2793,10 +2791,10 @@ var DeliverOn =
 	                hours = d.hours;
 	            }
 	
-	            var ampm = this.d.ampm,
+	            var _ampm = ampm || this.d.ampm,
 	                dayPeriod = 'am';
 	
-	            if (ampm) {
+	            if (_ampm) {
 	                switch(true) {
 	                    case hours == 0:
 	                        hours = 12;
@@ -2843,7 +2841,10 @@ var DeliverOn =
 	
 	            this[name] = $target.val();
 	            this._updateCurrentTime();
-	            this.d._trigger('timeChange', [this.hours, this.minutes])
+	            this.d._trigger('timeChange', [this.hours, this.minutes]);
+	
+	            this._handleDate(this.d.lastSelectedDate);
+	            this.update()
 	        },
 	
 	        _onSelectDate: function (e, data) {

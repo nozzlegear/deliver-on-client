@@ -1,5 +1,7 @@
+/// <reference path="node_modules/@types/shopify/shopify.d.ts" />
+/// <reference path="node_modules/@types/air-datepicker/air-datepicker.d.ts" />
+
 import * as $ from "jquery";
-import {Themes, Theme} from "./modules/themes";
 
 declare type CartAttributes = { deliverOn: string, deliverOnIso: string | Date };
 
@@ -23,12 +25,20 @@ require("sass/themes.scss");
 
 export interface Config 
 {
-    label?: string;
+    label: {
+        text: string;
+        placement: "top" | "right" | "bottom" | "left";
+        alignment: "left" | "right";
+        classes: string;
+    };
+    input: {
+        classes: string;
+        alignment: "left" | "right";
+    }
     format?: "mm/dd/yyyy" | "dd/mm/yyyy";
     addPickerToCheckout?: boolean;
     allowChangeFromCheckout?: boolean;
     maxDays?: number;
-    labelPlacement: "top" | "right" | "bottom" | "left",
 }
 
 export class Client
@@ -38,31 +48,15 @@ export class Client
         //Add the theme name as a class on the body element
         document.body.classList.add("shopify-theme-" + Shopify.theme.id);
 
+        this.targetElement = document.querySelector("[data-deliveronhost]");
+
         // Search for a data-deliveronhost to load the widget into. If it doesn't exist,
-        // determine which theme the shop is using and load the widget into the appropriate element.
-        if (! document.querySelector(this.theme.element.selector))
+        // try to make an intelligent decision on where to insert the widget.
+        // Only guess when on the /cart page. If the user wants it on other pages, they'll
+        // need to add the [data-deliveronhost].
+        if (! this.targetElement && /cart/ig.test(window.location.pathname))
         {
-            const themeId = Shopify.theme.id;
-            const matchingThemes = Themes.filter((theme, index) => theme.id === themeId);
-            let found = false;
-
-            // Try to find a matching theme and container
-            matchingThemes.forEach((theme, index) => 
-            {
-                if (document.querySelector(theme.element.selector))
-                {
-                    this.theme = theme;
-                    found = true;
-
-                    return false;
-                }
-            });
-
-            if (!found)
-            {
-                // TODO: Make an educated guess as to where the widget should be inserted into the DOM.
-                throw new Error("No suitable Deliveron picker host found.");
-            }
+            // TODO: Find the input[name=update] tag and append the widget before it.
         }
 
         //Ensure the Shopify API wrapper is loaded and then load the widget.
@@ -74,14 +68,7 @@ export class Client
         return VERSION;   
     }
 
-    private theme: Theme = {
-        id: Shopify.theme.id,
-        name: Shopify.theme.name,
-        element: {
-            selector: "[data-deliveronhost]",
-            placement: "in",
-        }
-    }
+    private targetElement: Element;
 
     private lastDate: Date;
 
@@ -116,7 +103,7 @@ export class Client
     private loadWidget()
     {
         const config = this.config;
-        const placementClass = `placement-${config.labelPlacement}`;
+        const placementClass = `placement-${config.label.placement}`;
         const flexContainer = document.createElement("div");
         flexContainer.id = "deliveron-flex-aligner";
 
@@ -127,15 +114,15 @@ export class Client
         const label = document.createElement("label");
         label.htmlFor = "deliveron-picker";
         label.id = "deliveron-label";
-        label.classList.add(placementClass);
-        label.textContent = config.label;
+        label.classList.add(placementClass, config.label.classes);
+        label.textContent = config.label.text;
 
         const input = document.createElement("input");
         input.placeholder = "Click/tap to select";
         input.type = "text";
         input.name = "deliveron-picker";
         input.id = "deliveron-picker";
-        input.classList.add(this.theme.element.inputClasses, placementClass);
+        input.classList.add(config.input.classes);
         input.onchange = (e) => 
         {
             e.preventDefault();
