@@ -1,2 +1,2 @@
 # deliver-on-client
-The Deliveron client that gets loaded into a Shopify storefront.
+The frontend client for [Deliver-On](https://github.com/nozzlegear/deliver-on), which gets loaded into a Shopify storefront via ScriptTag.
