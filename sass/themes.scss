@@ -1,15 +1,19 @@
 div#deliveron-flex-aligner
 {
-    .shopify-theme-79146374 &
-    {
-        /**
-         * Launchpad Star
-         */
+    display: flex;
+    margin-top:15px;
+    margin-bottom:15px;
 
-        display: flex;
+    &.placement-right
+    {
         justify-content: flex-end;
     }
 
+    &.placement-center
+    {
+        justify-content: center;
+    }
+    
     div#deliveron-container
     {
         display: flex;
@@ -39,6 +43,7 @@ div#deliveron-flex-aligner
 
         label#deliveron-label
         {
+            display: block;
             padding: 0;
             margin: 0;
 
@@ -53,6 +58,20 @@ div#deliveron-flex-aligner
             {
                 padding-right: $padding;
             }
+
+            &.placement-top, &.placement-bottom
+            {
+                &.text-align-right
+                {
+                    width: 100%;
+                    text-align: right;
+                }
+
+                &.text-align-left &
+                {
+                    text-align: left;
+                }
+            }
         }
 
         input#deliveron-picker
@@ -61,50 +80,6 @@ div#deliveron-flex-aligner
             min-width: 240px;
             display: block;
             margin: 0;
-        }
-
-        .shopify-theme-135351494 & 
-        {
-            /** 
-            * Atlantic — https://themes.shopify.com/themes/atlantic/styles/modern
-            */
-
-            $margin: 15px;
-
-            margin:$margin 0;
-
-            label#deliveron-label
-            {
-                &.placement-top
-                {
-                    margin-bottom:$margin;
-                }
-
-                &.placement-bottom
-                {
-                    margin-top: $margin;
-                }
-            }
-
-            input#deliveron-picker
-            {
-                min-height: auto;
-
-                &.placement-top, &.placement-bottom
-                {
-                    width: 100%;
-                }
-
-                &.placement-right, &.placement-left
-                {
-                    flex: 1;
-                }
-            }
-        }
-
-        .shopify-theme-79146374 &
-        {
-            margin: 0 0 15px 0;
         }
     }
 }

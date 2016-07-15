@@ -61,7 +61,10 @@ function buildWebpackOptions(shouldMinify, shouldWatch)
             new webpack.optimize.OccurenceOrderPlugin,
             new webpack.DefinePlugin({
                 VERSION: JSON.stringify(pkg.version),
-                TEST_MODE: !!shouldWatch
+                TEST_MODE: !!shouldWatch,
+                "process.env" : {
+                    "NODE_ENV": shouldMinify ? `"production"` : `"development"`
+                }
             })
         ],
         output: {
@@ -113,6 +116,6 @@ gulp.task("watch", (cb) =>
         https: true,
     }));
 
-    compileWebpack(gulp.src("index.ts"), buildWebpackOptions(false, true));
-    compileWebpack(gulp.src("index.ts"), buildWebpackOptions(true, true));
+    compileWebpack(gulp.src("index.tsx"), buildWebpackOptions(false, true));
+    compileWebpack(gulp.src("index.tsx"), buildWebpackOptions(true, true));
 })

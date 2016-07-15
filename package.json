@@ -1,6 +1,6 @@
 {
   "name": "deliver-on-client",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "description": "The Deliveron client that gets loaded into a Shopify storefront.",
   "main": "dist/index.js",
   "scripts": {
@@ -26,7 +26,15 @@
   },
   "homepage": "https://github.com/nozzlegear/deliver-on-client#readme",
   "dependencies": {
-    "air-datepicker": "^2.0.2"
+    "@types/classnames": "0.0.28",
+    "@types/lodash": "0.0.27",
+    "@types/react": "^0.14.27",
+    "@types/react-dom": "^0.14.13",
+    "air-datepicker": "^2.0.2",
+    "classnames": "^2.2.5",
+    "lodash": "^4.13.1",
+    "react": "^15.2.1",
+    "react-dom": "^15.2.1"
   },
   "devDependencies": {
     "@types/air-datepicker": "github:nozzlegear/air-datepicker.d.ts#286565f",
