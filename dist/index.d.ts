@@ -1,5 +1,3 @@
-/// <reference path="node_modules/@types/shopify/shopify.d.ts" />
-/// <reference path="node_modules/@types/air-datepicker/air-datepicker.d.ts" />
 import * as React from 'react';
 export interface IProps extends React.Props<any> {
     label: {

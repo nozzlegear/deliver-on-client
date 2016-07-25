@@ -26,7 +26,7 @@ function buildWebpackOptions(shouldMinify)
         },
         externals: {
             "jquery": "$",
-            "Shopify": "Shopify",
+            "shopify": "Shopify",
         },
         module: {
             loaders: [

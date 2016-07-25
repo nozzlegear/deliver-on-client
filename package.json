@@ -1,6 +1,6 @@
 {
   "name": "deliver-on-client",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "The Deliveron client that gets loaded into a Shopify storefront.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -35,7 +35,7 @@
     "@types/lodash": "0.0.27",
     "@types/react": "^0.14.27",
     "@types/react-dom": "github:nozzlegear/react-dom.d.ts#c125ab5",
-    "@types/shopify": "github:nozzlegear/shopify.d.ts#3d21c89",
+    "@types/shopify": "github:nozzlegear/shopify.d.ts#0dad265",
     "air-datepicker": "^2.0.2",
     "classnames": "^2.2.5",
     "lodash": "^4.13.1",

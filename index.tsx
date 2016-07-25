@@ -1,10 +1,9 @@
-/// <reference path="node_modules/@types/shopify/shopify.d.ts" />
-/// <reference path="node_modules/@types/air-datepicker/air-datepicker.d.ts" />
-
 import * as $ from "jquery";
+import {clone} from 'lodash';
 import * as React from 'react'; 
 import * as Dom from "react-dom";
-import {clone} from 'lodash';
+import * as Shopify from "shopify";
+import {DatepickerInstance} from "air-datepicker";
 
 declare type CartAttributes = { deliverOn: string, deliverOnIso: string | Date };
 
@@ -49,8 +48,6 @@ export interface IState
 {
     
 }
-
-
 
 export class DeliverOnWidget extends React.Component<IProps, IState>
 {
@@ -99,7 +96,7 @@ export class DeliverOnWidget extends React.Component<IProps, IState>
             deliverOn: formattedDate,
             deliverOnIso: date,
         };
-
+ 
         Shopify.updateCartAttributes(att, () => console.log("Delivery date updated to %s", formattedDate));
     }
 

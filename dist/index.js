@@ -45,8 +45,6 @@ var DeliverOn =
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/// <reference path="node_modules/@types/shopify/shopify.d.ts" />
-	/// <reference path="node_modules/@types/air-datepicker/air-datepicker.d.ts" />
 	"use strict";
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -69,6 +67,7 @@ var DeliverOn =
 	var $ = __webpack_require__(190);
 	var React = __webpack_require__(187);
 	var Dom = __webpack_require__(119);
+	var Shopify = __webpack_require__(191);
 	//Import libs and styles
 	__webpack_require__(99);
 	__webpack_require__(91);
@@ -264,7 +263,7 @@ var DeliverOn =
 	    }], [{
 	        key: "VERSION",
 	        get: function get() {
-	            return ("1.2.1");
+	            return ("1.2.2");
 	        }
 	    }]);
 	
@@ -23863,6 +23862,12 @@ var DeliverOn =
 /***/ function(module, exports) {
 
 	module.exports = $;
+
+/***/ },
+/* 191 */
+/***/ function(module, exports) {
+
+	module.exports = Shopify;
 
 /***/ }
 /******/ ]);
