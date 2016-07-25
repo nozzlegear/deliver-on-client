@@ -264,7 +264,7 @@ var DeliverOn =
 	    }], [{
 	        key: "VERSION",
 	        get: function get() {
-	            return ("1.2.0");
+	            return ("1.2.1");
 	        }
 	    }]);
 	
