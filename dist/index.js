@@ -48,16 +48,21 @@ var DeliverOn =
 	/// <reference path="node_modules/@types/shopify/shopify.d.ts" />
 	/// <reference path="node_modules/@types/air-datepicker/air-datepicker.d.ts" />
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var __assign = (this && this.__assign) || Object.assign || function(t) {
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var __assign = undefined && undefined.__assign || Object.assign || function (t) {
 	    for (var s, i = 1, n = arguments.length; i < n; i++) {
 	        s = arguments[i];
-	        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-	            t[p] = s[p];
+	        for (var p in s) {
+	            if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+	        }
 	    }
 	    return t;
 	};
@@ -76,106 +81,144 @@ var DeliverOn =
 	__webpack_require__(98);
 	__webpack_require__(188);
 	__webpack_require__(189);
-	var DeliverOnWidget = (function (_super) {
-	    __extends(DeliverOnWidget, _super);
+	
+	var DeliverOnWidget = function (_React$Component) {
+	    _inherits(DeliverOnWidget, _React$Component);
+	
 	    function DeliverOnWidget(props) {
-	        _super.call(this, props);
-	        this.state = {};
-	        this.configureState(props, false);
+	        _classCallCheck(this, DeliverOnWidget);
+	
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DeliverOnWidget).call(this, props));
+	
+	        _this.state = {};
+	        _this.configureState(props, false);
+	        return _this;
 	    }
 	    //#region Utility functions
-	    DeliverOnWidget.prototype.configureState = function (props, useSetState) {
-	        var state = {};
-	        if (!useSetState) {
-	            this.state = state;
-	            return;
-	        }
-	        this.setState(state);
-	    };
-	    //#endregion
-	    //#region Event handlers
-	    DeliverOnWidget.prototype.updateDate = function (formattedDate, date, instance) {
-	        this.lastDate = date;
-	        var att = {
-	            deliverOn: formattedDate,
-	            deliverOnIso: date,
-	        };
-	        Shopify.updateCartAttributes(att, function () { return console.log("Delivery date updated to %s", formattedDate); });
-	    };
-	    /**
-	     * Prevents the user from entering dates by typing them into the text field. Will reselect their last selected date
-	     * if available, else it will clear the input.
-	     */
-	    DeliverOnWidget.prototype.preventTextEntry = function (e) {
-	        e.preventDefault();
-	        var val = e.target.value;
-	        // Let the user clear the input if the delete the date.
-	        if (!val || !this.lastDate) {
-	            this.picker.clear();
-	            if (!val) {
-	                this.updateDate(undefined, undefined);
+	
+	
+	    _createClass(DeliverOnWidget, [{
+	        key: "configureState",
+	        value: function configureState(props, useSetState) {
+	            var state = {};
+	            if (!useSetState) {
+	                this.state = state;
+	                return;
 	            }
+	            this.setState(state);
 	        }
-	        else {
-	            this.picker.selectDate(this.lastDate || new Date());
-	        }
-	    };
-	    //#endregion
-	    DeliverOnWidget.prototype.componentDidMount = function () {
-	        var _this = this;
-	        var maxDate;
-	        if (this.props.maxDays) {
-	            maxDate = new Date();
-	            maxDate.setDate(maxDate.getDate() + this.props.maxDays);
-	        }
-	        // The Shopify admin bar can interfere with the datepicker's offset when open. 
-	        // If it exists and has a width of 40px, offset the datepicker by -40(height)
-	        var adminBar = document.querySelector("#admin_bar_iframe");
-	        this.picker = $(this.input)["datepicker"]({
-	            minDate: new Date(),
-	            language: "en",
-	            maxDate: maxDate || undefined,
-	            offset: adminBar && adminBar.clientWidth > 40 ? (adminBar.clientHeight * -1) : 0,
-	        }).data("datepicker");
-	        // Get the user's cart to check if they've already set a date
-	        Shopify.getCart(function (cart) {
-	            var att = cart.attributes;
-	            console.log("Got cart attributes", att);
-	            if (att.deliverOn && att.deliverOnIso) {
-	                _this.lastDate = new Date(att.deliverOnIso);
-	                _this.picker.selectDate(_this.lastDate);
-	            }
-	            // Update the picker with the onSelect handler. Set *after* the default date has been selected so there isn't 
-	            // an extraneous update call just for loading the picker.
-	            _this.picker.update({
-	                onSelect: function (formattedDate, date, picker) { return _this.updateDate(formattedDate, date, picker); },
+	        //#endregion
+	        //#region Event handlers
+	
+	    }, {
+	        key: "updateDate",
+	        value: function updateDate(formattedDate, date, instance) {
+	            this.lastDate = date;
+	            var att = {
+	                deliverOn: formattedDate,
+	                deliverOnIso: date
+	            };
+	            Shopify.updateCartAttributes(att, function () {
+	                return console.log("Delivery date updated to %s", formattedDate);
 	            });
-	        });
-	    };
-	    DeliverOnWidget.prototype.componentDidUpdate = function () {
-	    };
-	    DeliverOnWidget.prototype.shouldComponentUpdate = function () {
-	        // State never changes, component should never need to re-render.
-	        return false;
-	    };
-	    DeliverOnWidget.prototype.componentWillReceiveProps = function (props) {
-	        this.configureState(props, true);
-	    };
-	    DeliverOnWidget.prototype.render = function () {
-	        var _this = this;
-	        var props = this.props;
-	        return (React.createElement("div", {id: "deliveron-flex-aligner", className: "placement-" + props.placement}, 
-	            React.createElement("div", {id: "deliveron-container", className: "placement-" + props.label.placement}, 
-	                React.createElement("label", {htmlFor: "deliveron-picker", id: "deliveron-label", className: "placement-" + props.label.placement + " text-align-" + props.label.textAlignment + " " + (props.label.classes || "")}, props.label.text), 
-	                React.createElement("input", {placeholder: props.input.placeholder, name: "deliveron-picker", id: "deliveron-picker", className: props.input.classes || "", ref: function (r) { return _this.input = r; }, onChange: function (e) { return _this.preventTextEntry(e); }, type: "text"}))
-	        ));
-	    };
+	        }
+	        /**
+	         * Prevents the user from entering dates by typing them into the text field. Will reselect their last selected date
+	         * if available, else it will clear the input.
+	         */
+	
+	    }, {
+	        key: "preventTextEntry",
+	        value: function preventTextEntry(e) {
+	            e.preventDefault();
+	            var val = e.target.value;
+	            // Let the user clear the input if the delete the date.
+	            if (!val || !this.lastDate) {
+	                this.picker.clear();
+	                if (!val) {
+	                    this.updateDate(undefined, undefined);
+	                }
+	            } else {
+	                this.picker.selectDate(this.lastDate || new Date());
+	            }
+	        }
+	        //#endregion
+	
+	    }, {
+	        key: "componentDidMount",
+	        value: function componentDidMount() {
+	            var _this2 = this;
+	
+	            var maxDate = void 0;
+	            if (this.props.maxDays) {
+	                maxDate = new Date();
+	                maxDate.setDate(maxDate.getDate() + this.props.maxDays);
+	            }
+	            // The Shopify admin bar can interfere with the datepicker's offset when open. 
+	            // If it exists and has a width of 40px, offset the datepicker by -40(height)
+	            var adminBar = document.querySelector("#admin_bar_iframe");
+	            this.picker = $(this.input)["datepicker"]({
+	                minDate: new Date(),
+	                language: "en",
+	                maxDate: maxDate || undefined,
+	                offset: adminBar && adminBar.clientWidth > 40 ? adminBar.clientHeight * -1 : 0
+	            }).data("datepicker");
+	            // Get the user's cart to check if they've already set a date
+	            Shopify.getCart(function (cart) {
+	                var att = cart.attributes;
+	                console.log("Got cart attributes", att);
+	                if (att.deliverOn && att.deliverOnIso) {
+	                    _this2.lastDate = new Date(att.deliverOnIso);
+	                    _this2.picker.selectDate(_this2.lastDate);
+	                }
+	                // Update the picker with the onSelect handler. Set *after* the default date has been selected so there isn't 
+	                // an extraneous update call just for loading the picker.
+	                _this2.picker.update({
+	                    onSelect: function onSelect(formattedDate, date, picker) {
+	                        return _this2.updateDate(formattedDate, date, picker);
+	                    }
+	                });
+	            });
+	        }
+	    }, {
+	        key: "componentDidUpdate",
+	        value: function componentDidUpdate() {}
+	    }, {
+	        key: "shouldComponentUpdate",
+	        value: function shouldComponentUpdate() {
+	            // State never changes, component should never need to re-render.
+	            return false;
+	        }
+	    }, {
+	        key: "componentWillReceiveProps",
+	        value: function componentWillReceiveProps(props) {
+	            this.configureState(props, true);
+	        }
+	    }, {
+	        key: "render",
+	        value: function render() {
+	            var _this3 = this;
+	
+	            var props = this.props;
+	            return React.createElement("div", { id: "deliveron-flex-aligner", className: "placement-" + props.placement }, React.createElement("div", { id: "deliveron-container", className: "placement-" + props.label.placement }, React.createElement("label", { htmlFor: "deliveron-picker", id: "deliveron-label", className: "placement-" + props.label.placement + " text-align-" + props.label.textAlignment + " " + (props.label.classes || "") }, props.label.text), React.createElement("input", { placeholder: props.input.placeholder, name: "deliveron-picker", id: "deliveron-picker", className: props.input.classes || "", ref: function ref(r) {
+	                    return _this3.input = r;
+	                }, onChange: function onChange(e) {
+	                    return _this3.preventTextEntry(e);
+	                }, type: "text" })));
+	        }
+	    }]);
+	
 	    return DeliverOnWidget;
-	}(React.Component));
+	}(React.Component);
+	
 	exports.DeliverOnWidget = DeliverOnWidget;
-	var Client = (function () {
+	
+	var Client = function () {
 	    function Client(props) {
-	        var _this = this;
+	        var _this4 = this;
+	
+	        _classCallCheck(this, Client);
+	
 	        this.props = props;
 	        //Add the theme name as a class on the body element
 	        document.body.classList.add("shopify-theme-" + Shopify.theme.id);
@@ -194,55 +237,58 @@ var DeliverOn =
 	        }
 	        //Ensure the Shopify API wrapper is loaded and then load the widget.
 	        this.ensureShopifyWrapper(function () {
-	            Dom.render(React.createElement(DeliverOnWidget, __assign({}, props)), _this.targetElement);
+	            Dom.render(React.createElement(DeliverOnWidget, __assign({}, props)), _this4.targetElement);
 	        });
 	    }
-	    Object.defineProperty(Client, "VERSION", {
-	        get: function () {
-	            return ("0.4.0");
-	        },
-	        enumerable: true,
-	        configurable: true
-	    });
-	    Client.prototype.ensureShopifyWrapper = function (cb) {
-	        if (typeof Shopify.updateCartAttributes === "function") {
-	            cb();
-	            return;
+	
+	    _createClass(Client, [{
+	        key: "ensureShopifyWrapper",
+	        value: function ensureShopifyWrapper(cb) {
+	            if (typeof Shopify.updateCartAttributes === "function") {
+	                cb();
+	                return;
+	            }
+	            var script = document.createElement("script");
+	            script.src = "https://cdn.shopify.com/s/assets/themes_support/api.jquery-c1754bd1a7bb06d28ce2b85087252f0d8af6d848c75139f5e2a263741ba089b0.js";
+	            script.type = "text/javascript";
+	            script.onload = function (e) {
+	                var interval = setInterval(function () {
+	                    if (typeof Shopify.updateCartAttributes === "function") {
+	                        clearInterval(interval);
+	                        cb();
+	                    }
+	                }, 250);
+	            };
+	            document.body.appendChild(script);
 	        }
-	        var script = document.createElement("script");
-	        script.src = "https://cdn.shopify.com/s/assets/themes_support/api.jquery-c1754bd1a7bb06d28ce2b85087252f0d8af6d848c75139f5e2a263741ba089b0.js";
-	        script.type = "text/javascript";
-	        script.onload = function (e) {
-	            var interval = setInterval(function () {
-	                if (typeof Shopify.updateCartAttributes === "function") {
-	                    clearInterval(interval);
-	                    cb();
-	                }
-	            }, 250);
-	        };
-	        document.body.appendChild(script);
-	    };
+	    }], [{
+	        key: "VERSION",
+	        get: function get() {
+	            return ("1.2.0");
+	        }
+	    }]);
+	
 	    return Client;
-	}());
+	}();
+	
 	exports.Client = Client;
-	if (true) {
+	if (false) {
 	    window["deli"] = new Client({
 	        label: {
 	            text: "Pick your delivery date:",
 	            textAlignment: "left",
-	            placement: "top",
+	            placement: "top"
 	        },
 	        input: {
-	            placeholder: "Click/tap to select",
+	            placeholder: "Click/tap to select"
 	        },
 	        placement: "right",
 	        format: "mm/dd/yyyy",
 	        addPickerToCheckout: false,
 	        allowChangeFromCheckout: false,
-	        maxDays: 7,
+	        maxDays: 7
 	    });
 	}
-
 
 /***/ },
 /* 1 */
